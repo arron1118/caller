@@ -18,7 +18,7 @@
             </a-menu>
         </a-layout-sider>
         <a-layout>
-            <a-layout-header theme="light" :class="'bg-white'">
+            <a-layout-header :style="{ backgroundColor: '#fff'}">
                 <menu-unfold-outlined
                     v-if="collapsed"
                     class="trigger"
