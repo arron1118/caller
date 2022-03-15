@@ -5,7 +5,9 @@
             <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
                 <a-menu-item key="1">
                     <user-outlined />
-                    <span>nav 1</span>
+                    <Link :href="route('dashboard')">
+                        <span>nav 1</span>
+                    </Link>
                 </a-menu-item>
                 <a-menu-item key="2">
                     <video-camera-outlined />
@@ -29,7 +31,9 @@
             <a-layout-content
                 :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
             >
-                Content
+                <template #Content>
+                    Content
+                </template>
             </a-layout-content>
         </a-layout>
     </a-layout>
@@ -37,8 +41,10 @@
 <script>
 import { UserOutlined, VideoCameraOutlined, UploadOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 import { defineComponent, ref } from 'vue';
+import { Link } from '@inertiajs/inertia-vue3'
 export default defineComponent({
     components: {
+        Link,
         UserOutlined,
         VideoCameraOutlined,
         UploadOutlined,
