@@ -23,24 +23,33 @@
         </div>
         <div class="mb-6 bg-white rounded shadow p-4">
            <div class="border rounded">
-               <div class="m-2"> <el-button type="primary" @click="open()">开通账户</el-button></div>
+               <div class="m-2">
+                   <el-button type="primary" @click="dialogFormVisible = true">开通账户</el-button>
+               </div>
                <Table2 :tableTitle="tableTitle" :tableData="tableData" />
            </div>
         </div>
     </admin-layout>
+    <!--        弹框-->
+    <el-dialog v-model="dialogFormVisible" title="开通账号">
+        <add-form @clickFu="receive" @clickCancel="receive2" :loading="loading"></add-form>
+    </el-dialog>
 </template>
 
 <script>
-import AdminLayout from "../../Layouts/AdminLayout";
+import AdminLayout from "../../Layouts/AdminLayout"
 import Table2 from '../components/tables/Table2.vue'
-import {reactive, unref, ref} from "vue";
+import {reactive, unref, ref} from "vue"
+import { Link } from '@inertiajs/inertia-vue3'
+import { ElMessage, ElMessageBox } from "element-plus"
+import AddForm from './sub/Add.vue'
 export default {
     name: "User",
     components: {
-        AdminLayout, Table2
+        AdminLayout, Table2, Link, AddForm
     },
    setup(){
-        //表单
+        const loading = ref(false)
        const ruleFormRef = ref(null)
        const ruleForm =  reactive({
            name: '',
@@ -57,16 +66,14 @@ export default {
                console.log('参数', params)
                // todo
            } catch (error) {
-
            }
        }
-       // 重置
        const resetForm = () => {
            const form = unref(ruleFormRef)
            if (!form) return
            form.resetFields()
        }
-     // 表格
+       const dialogFormVisible  = ref(false)
        const tableTitle = [
            {
                label: '记事本',
@@ -97,17 +104,29 @@ export default {
            }
 
        ]
-       const open = () => {
-           console.log('kaiy')
+        const receive = (e, r) =>{
+           console.log('zhe',e)
+            console.log('zhe',r)
+            loading.value = r
+            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
+            setTimeout(function(){ loading.value = false }, 3000);
+            dialogFormVisible.value = false
+
+       }
+       const receive2 = (e) => {
+           dialogFormVisible.value = e
        }
        return {
+           loading,
            ruleForm,
            resetForm,
            submitForm,
            ruleFormRef,
            tableTitle,
            tableData,
-           open
+           dialogFormVisible,
+           receive,
+           receive2
        }
    }
 }

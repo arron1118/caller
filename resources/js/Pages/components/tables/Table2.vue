@@ -15,6 +15,17 @@
             :label="item.label"
             :sortable="item.value === 'money'"
         />
+                <el-table-column label="状态">
+                    <template #default="scope">
+                        <el-switch
+                            v-model="state"
+                            inline-prompt
+                            active-text="禁止"
+                            inactive-text="正常"
+                            :width="width"
+                        />
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template #default="scope">
                         <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
@@ -35,7 +46,7 @@
 
 <script>
 import { Phone } from '@element-plus/icons-vue'
-import { h } from 'vue'
+import { h, ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 export default {
     name: "Table2",
@@ -44,6 +55,8 @@ export default {
     },
     props:[ 'tableTitle', 'tableData'],
     setup(){
+        const width =ref(60)
+        const state = ref(false)
         const handleEdit = (index, row) => {
             console.log(index, row)
         }
@@ -83,7 +96,9 @@ export default {
         }
         return{
             handleEdit,
-            handleDelete
+            handleDelete,
+            state,
+            width
 
         }
     }

@@ -31,6 +31,14 @@ Route::get('/admin/user', function () {
     return \Inertia\Inertia::render('User', []);
 })->name('/admin/user');
 
+Route::get('/admin/sub/add', function () {
+    return \Inertia\Inertia::render('sub/Add', []);
+})->name('/admin/sub/add');
+
+Route::get('/admin/sub/edit', function () {
+    return \Inertia\Inertia::render('sub/Edit', []);
+})->name('/admin/sub/edit');
+
 Route::get('/admin/callhistorylist', function () {
     return \Inertia\Inertia::render('CallHistoryList', []);
 })->name('/admin/callhistorylist');
