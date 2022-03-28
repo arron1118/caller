@@ -19,7 +19,18 @@ Route::get('/', function () {
         'title' => 'Welcome'
     ]);
 });
+Route::get('/admin/login', function () {
+    return \Inertia\Inertia::render('Login', []);
+})->name('/admin/login');
 
-Route::get('/dashboard', function () {
+Route::get('/admin/dashboard', function () {
     return \Inertia\Inertia::render('Dashboard', []);
-})->name('dashboard');
+})->name('/admin/dashboard');
+
+Route::get('/admin/user', function () {
+    return \Inertia\Inertia::render('User', []);
+})->name('/admin/user');
+
+Route::get('/admin/callhistorylist', function () {
+    return \Inertia\Inertia::render('CallHistoryList', []);
+})->name('/admin/callhistorylist');
