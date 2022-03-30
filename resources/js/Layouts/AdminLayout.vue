@@ -2,7 +2,6 @@
     <el-container class="layout-container-demo" ref="home">
         <el-aside class="h-screen">
             <el-menu
-                mode="inline"
                 background-color="#545c64"
                 class="el-menu-vertical-demo h-screen w-full"
                 text-color="#fff"
@@ -12,7 +11,7 @@
                     <el-image class="h-12" src="../../img/logo1.png" fit="contain" />
                 </div>
                     <Link :href="route('/admin/dashboard')">
-                            <el-menu-item index="/admin/dashboard" >
+                            <el-menu-item>
                                 <div :class="{'text-blue-300': route().current('/admin/dashboard')}">
                                 <el-icon><odometer /></el-icon>
                                 <span>解析</span>
@@ -21,7 +20,7 @@
                     </Link>
 
                     <Link :href="route('/admin/user')">
-                    <el-menu-item index="2" >
+                    <el-menu-item>
                         <div :class="{'text-blue-300': route().current('/admin/user')}">
                             <el-icon><user /></el-icon>
                                 <span>用户管理</span>
@@ -29,7 +28,7 @@
                     </el-menu-item>
                     </Link>
                     <Link :href="route('/admin/callhistorylist')">
-                    <el-menu-item index="3" class="">
+                    <el-menu-item>
                         <div :class="{'text-blue-300': route().current('/admin/callhistorylist')}">
                             <el-icon><headset /></el-icon>
                                 <span class="">通话记录</span>
@@ -37,7 +36,7 @@
                     </el-menu-item>
                     </Link>
                 <Link :href="route('/admin/callhistorylist')">
-                    <el-menu-item index="3" class="">
+                    <el-menu-item>
                         <div :class="{'text-blue-300': route().current('/admin/callhistorylist')}">
                             <el-icon><money /></el-icon>
                             <span class="">充值管理</span>
@@ -45,7 +44,7 @@
                     </el-menu-item>
                 </Link>
                 <Link :href="route('/admin/callhistorylist')">
-                    <el-menu-item index="3" class="">
+                    <el-menu-item>
                         <div :class="{'text-blue-300': route().current('/admin/callhistorylist')}">
                             <el-icon><data-analysis /></el-icon>
                             <span class="">通话记录报告</span>
@@ -53,7 +52,7 @@
                     </el-menu-item>
                 </Link>
                 <Link :href="route('/admin/callhistorylist')">
-                    <el-menu-item index="3" class="">
+                    <el-menu-item>
                         <div :class="{'text-blue-300': route().current('/admin/callhistorylist')}">
                             <el-icon><document /></el-icon>
                             <span class="">资讯</span>

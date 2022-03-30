@@ -21,7 +21,7 @@
                     <div class="block">
                         <el-input-number
                             v-model="ruleForm2.sit"
-                            :min="ruleForm2.sit"
+                            :min="1"
                             controls-position="right"
                             @change="handleChangeSit"
                         />
@@ -34,7 +34,7 @@
                     <div class="block">
                         <el-input-number
                             v-model="ruleForm2.limitNumber"
-                            :min="ruleForm2.limitNumber"
+                            :min="0"
                             controls-position="right"
                             @change="handleChangeLimitNumber"
                         />
@@ -47,7 +47,7 @@
                     <div class="block">
                         <el-input-number
                             v-model="ruleForm2.rate"
-                            :min="ruleForm2.rate"
+                            :min="0.15"
                             controls-position="right"
                             @change="handleChangeRate"
                         />
@@ -62,7 +62,22 @@
                     active-text="是"
                     inactive-text="否"
                     :width="width"
+                    @change="changeSwitch"
                 />
+            </el-form-item>
+            <el-form-item label="结束时间" label-width="140px" prop="state" v-show="ruleForm2.testNumber">
+                <div>
+                    <div class="block">
+                        <el-date-picker
+                            v-model="ruleForm2.dataTime"
+                            type="datetime"
+                            placeholder=""
+                            @change="handleChangeDateTime"
+                            value-format="YYYY-MM-DD hh:mm:ss"
+                        />
+                    </div>
+                    <div class="text-xs text-gray-400">超过测试时间将被淘汰，空为无限制。</div>
+                </div>
             </el-form-item>
             <el-form-item label="状态" label-width="140px" prop="state">
                    <div>
@@ -98,6 +113,11 @@ export default {
         const width = ref(60)
         const addFormRef = ref(null)
         const loading = ref(props.loading)
+        const changeSwitch = (val) =>{
+            if(val === false){
+                ruleForm2.dataTime = ''
+            }
+        }
         const handleChangeSit = (value) => {
             ruleForm2.sit = value
         }
@@ -107,16 +127,21 @@ export default {
         const handleChangeRate = (value) => {
             ruleForm2.rate = value
         }
+        const handleChangeDateTime = (value) => {
+            console.log(value)
+            ruleForm2.dataTime = value
+        }
         const ruleForm2 = reactive({
             number: '',
             password: '',
             sit: 1,
             limitNumber: 0,
             minNumber: '',
-            rate: 0.5,
+            rate: 0.15,
             name: '',
             testNumber: false,
-            state: true
+            state: true,
+            dataTime: ''
         })
         const submitAdd = async () => {
             loading.value = true
@@ -133,7 +158,8 @@ export default {
                     rate,
                     name,
                     testNumber,
-                    state
+                    state,
+                    dataTime
                 } = ruleForm2
                 const params = {
                     number: number,
@@ -144,18 +170,20 @@ export default {
                     rate: rate,
                     name: name,
                     testNumber: testNumber,
-                    state: state
+                    state: state,
+                    dataTime: dataTime
                 }
                 console.log('参数2', params, loading.value)
-                context.emit('clickFu', params, loading.value)
+                context.emit('clickAdd', params, loading.value)
                 // todo
             } catch (error) {
             }
         }
         const cancelAdd = async () => {
-            context.emit('clickCancel', false)
+            context.emit('clickCancelAdd', false)
         }
         return{
+            changeSwitch,
             width,
             handleChangeSit,
             handleChangeLimitNumber,
@@ -164,7 +192,8 @@ export default {
             ruleForm2,
             loading,
             submitAdd,
-            cancelAdd
+            cancelAdd,
+            handleChangeDateTime
         }
     },
     props:['loading'],

@@ -5,7 +5,9 @@
                 :data="tableData"
                 style="width: 100%"
                 ref="multipleTableRef"
-                :default-sort="{ prop: 'money', order: 'descending' }"
+                :default-sort="{ prop: 'number', order: 'descending' }"
+                @selection-change="handleSelectionChange"
+                id="print"
             >
         <el-table-column type="selection" width="55" />
         <el-table-column
@@ -13,22 +15,35 @@
             :key="index"
             :prop="item.value"
             :label="item.label"
-            :sortable="item.value === 'money'"
+            :sortable="item.value === 'number'"
         />
+                <el-table-column label="测试账号">
+                    <template #default="scope">
+                        <el-switch
+                            v-model="scope.row.testNumber"
+                            inline-prompt
+                            active-text="是"
+                            inactive-text="否"
+                            active-color="#E6A23C"
+                            :width="width"
+                        />
+                    </template>
+                </el-table-column>
                 <el-table-column label="状态">
                     <template #default="scope">
                         <el-switch
-                            v-model="state"
+                            v-model="scope.row.state"
                             inline-prompt
-                            active-text="禁止"
-                            inactive-text="正常"
+                            active-text="正常"
+                            inactive-text="禁止"
+                            active-color="#E6A23C"
                             :width="width"
                         />
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
                     <template #default="scope">
-                        <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
+                        <el-button type="success" size="small" @click="handleEdit(scope.$index, scope.row)"
                         >编辑</el-button
                         >
                         <el-button
@@ -40,6 +55,14 @@
                     </template>
                 </el-table-column>
     </el-table>
+            <div class="py-4 pl-1">
+                <el-pagination
+                    background
+                    layout="prev, pager, next"
+                    :page-count="tableData.length"
+                    :page-size="pageSize"
+                />
+            </div>
         </el-col>
     </el-row>
 </template>
@@ -53,12 +76,13 @@ export default {
     components:{
         Phone
     },
-    props:[ 'tableTitle', 'tableData'],
-    setup(){
+    props:[ 'tableTitle', 'tableData' ],
+    setup(props, context){
+        const pageSize = ref(1)
         const width =ref(60)
-        const state = ref(false)
-        const handleEdit = (index, row) => {
+        const handleEdit = async(index, row) => {
             console.log(index, row)
+            context.emit('clickTableEdit', true, row)
         }
         const handleDelete = (index, row) => {
             console.log(index, row)
@@ -94,14 +118,31 @@ export default {
                 })
             })
         }
-        return{
-            handleEdit,
-            handleDelete,
-            state,
-            width
+        const multipleSelection = ref([])
+        const handleSelectionChange = async(val) => {
+            multipleSelection.value = val
+            console.log('88', multipleSelection.value)
+            // this.ids.va = val.map((item) => item.postId)
+            // this.single = val.length != 1
+            // this.multiple = !val.length
+        }
+        const handlePrints = (row) => {
 
         }
+        return{
+            pageSize,
+            handleEdit,
+            handleDelete,
+            width,
+            multipleSelection,
+            handleSelectionChange,
+            handlePrints
+        }
+    },
+    mounted() {
+        console.log('shuju',this.tableData)
     }
+
 
 }
 </script>

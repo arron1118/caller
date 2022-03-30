@@ -1,38 +1,70 @@
 <template>
     <admin-layout title="Dashboard">
-        <div class="mb-6 bg-white rounded shadow pt-4">
-            <el-form
-                ref="ruleFormRef"
-                :model="ruleForm"
-                :inline="true">
-                <el-form-item class="mx-4" prop="number">
-                    <el-input v-model.trim="ruleForm.number" placeholder="输入账号">
-                        <template #prepend>账号</template>
-                    </el-input>
-                </el-form-item>
-                <el-form-item class="mr-4" prop="name">
-                    <el-input v-model.trim="ruleForm.name" placeholder="输入公司名称">
-                        <template #prepend>公司名称</template>
-                    </el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm()">搜索</el-button>
-                    <el-button @click="resetForm()">重置</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
-        <div class="mb-6 bg-white rounded shadow p-4">
-           <div class="border rounded">
-               <div class="m-2">
-                   <el-button type="primary" @click="dialogFormVisible = true">开通账户</el-button>
+        <div v-loading="tableLoading">
+            <div class="mb-6 bg-white rounded shadow pt-4">
+                <el-form
+                    ref="ruleFormRef"
+                    :model="ruleForm"
+                    :inline="true">
+                    <el-form-item class="mx-4" prop="number">
+                        <el-input v-model.trim="ruleForm.number" placeholder="输入账号">
+                            <template #prepend>账号</template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item class="mr-4" prop="name">
+                        <el-input v-model.trim="ruleForm.name" placeholder="输入公司名称">
+                            <template #prepend>公司名称</template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitForm()">搜索</el-button>
+                        <el-button @click="resetForm()">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div class="mb-6 bg-white rounded shadow p-4">
+               <div class="border rounded">
+                   <div class="m-2 flex flex-row justify-between border-b pb-2">
+                       <el-button type="primary" @click="dialogFormVisible = true">开通账户</el-button>
+                      <div class="flex flex-column justify-center items-center">
+<!--                          <el-tooltip-->
+<!--                              class="box-item"-->
+<!--                              effect="dark"-->
+<!--                              content="选择导出"-->
+<!--                              placement="bottom"-->
+<!--                          >-->
+<!--                              <el-icon size="20px" class="mr-4"><bottom /></el-icon>-->
+<!--                          </el-tooltip>-->
+                          <el-tooltip
+                              class="box-item"
+                              effect="dark"
+                              content="全部导出"
+                              placement="bottom"
+                          >
+                              <el-icon size="20px" class="mr-4"><download /></el-icon>
+                          </el-tooltip>
+                          <el-tooltip
+                              class="box-item"
+                              effect="dark"
+                              content="打印"
+                              placement="bottom"
+                          >
+                              <el-icon size="20px" class="mr-4"><printer /></el-icon>
+                          </el-tooltip>
+                      </div>
+                   </div>
+                   <Table2 :tableTitle="tableTitle" :tableData="tableData" :tableLoading="tableLoading" @clickTableEdit="receiveEditData"/>
                </div>
-               <Table2 :tableTitle="tableTitle" :tableData="tableData" />
-           </div>
+            </div>
         </div>
     </admin-layout>
     <!--        弹框-->
     <el-dialog v-model="dialogFormVisible" title="开通账号">
-        <add-form @clickFu="receive" @clickCancel="receive2" :loading="loading"></add-form>
+        <add-form @clickAdd="receiveAddForm" @clickCancelAdd="cancelAddForm" :loading="loading"></add-form>
+    </el-dialog>
+    <!--        弹框-->
+    <el-dialog v-model="dialogFormVisible2" title="编辑">
+        <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading" :editData="editData"></edit-form>
     </el-dialog>
 </template>
 
@@ -43,13 +75,18 @@ import {reactive, unref, ref} from "vue"
 import { Link } from '@inertiajs/inertia-vue3'
 import { ElMessage, ElMessageBox } from "element-plus"
 import AddForm from './sub/Add.vue'
+import EditForm from './sub/Edit.vue'
+import { Printer,Download, Bottom } from "@element-plus/icons-vue"
+
 export default {
     name: "User",
     components: {
-        AdminLayout, Table2, Link, AddForm
+        AdminLayout, Table2, Link, AddForm, EditForm, Download, Bottom,Printer
     },
    setup(){
-        const loading = ref(false)
+       const editData = ref({})
+       const loading = ref(false)
+       const tableLoading = ref(false)
        const ruleFormRef = ref(null)
        const ruleForm =  reactive({
            name: '',
@@ -74,50 +111,127 @@ export default {
            form.resetFields()
        }
        const dialogFormVisible  = ref(false)
+       const dialogFormVisible2 = ref(false)
        const tableTitle = [
            {
-               label: '记事本',
+               label: '账号',
+               value: 'number'
+           },
+           {
+               label: '密码',
+               value: 'password'
+           },
+           {
+               label: '公司名称',
                value: 'name'
            },
            {
-               label: '已使用小号',
-               value: 'miniNumber'
+               label: '小号',
+               value: 'minNumber'
            },
            {
-               label: '余额',
-               value: 'money'
+               label: '坐席',
+               value: 'sit'
+           },
+           {
+               label: '限制用户',
+               value: 'limitNumber'
+           },
+           {
+               label: '费率（元）',
+               value: 'rate'
+           },
+           {
+               label: '结束时间',
+               value: 'dataTime'
            }
 
        ]
        const tableData = [
            {
                id: 1,
+               number: '100',
+               password: '123456',
                name: '湖北太初',
-               miniNumber: '123456',
-               money: '100'
+               minNumber: '124545656',
+               sit: 100,
+               limitNumber: 999,
+               rate: 2,
+               dataTime: '2022-03-30 12:00:00',
+               testNumber: true,
+               state: false
            },
            {
                id: 2,
-               name: '广州聚合',
-               miniNumber: '789654',
-               money: '200'
+               number: '1002222',
+               password: '1234526',
+               name: '湖北太初22',
+               minNumber: '124545622256',
+               sit: 1020,
+               limitNumber: 9299,
+               rate: 22,
+               dataTime: '2022-03-30 12:00:00',
+               testNumber: false,
+               state: true
            }
 
        ]
-        const receive = (e, r) =>{
+       const receiveAddForm = (e, r) =>{
            console.log('zhe',e)
             console.log('zhe',r)
             loading.value = r
             // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
-            setTimeout(function(){ loading.value = false }, 3000);
-            dialogFormVisible.value = false
+            setTimeout(function(){
+                loading.value = false
+                dialogFormVisible.value = false
+                ElMessage({
+                    type: 'success',
+                    // message: `action: ${action}`,
+                    message: '已提交'
+                })
+                // 重载表格数据
+                // tableLoading.value = true
+
+            }, 3000);
 
        }
-       const receive2 = (e) => {
+       const cancelAddForm = (e) => {
            dialogFormVisible.value = e
        }
+       const receiveEditForm = (e, r) =>{
+           console.log('zhe',e)
+           console.log('zhe',r)
+           loading.value = r
+           // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
+           setTimeout(function(){
+               loading.value = false
+               dialogFormVisible2.value = false
+               ElMessage({
+                   type: 'success',
+                   // message: `action: ${action}`,
+                   message: '已提交'
+               })
+               // 重载表格数据
+               // tableLoading.value = true
+
+           }, 3000);
+
+       }
+       const cancelEditForm = (e) => {
+           dialogFormVisible2.value = e
+       }
+       //
+       const receiveEditData = (e, r) => {
+           console.log(e)
+           console.log(r)
+           dialogFormVisible2.value = e
+           editData.value = r
+           console.log('ppp', editData.value)
+       }
        return {
+            editData,
            loading,
+           tableLoading,
            ruleForm,
            resetForm,
            submitForm,
@@ -125,8 +239,12 @@ export default {
            tableTitle,
            tableData,
            dialogFormVisible,
-           receive,
-           receive2
+           dialogFormVisible2,
+           receiveEditData,
+           receiveAddForm,
+           cancelAddForm,
+           receiveEditForm,
+           cancelEditForm
        }
    }
 }
