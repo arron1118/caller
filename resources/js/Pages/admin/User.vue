@@ -45,8 +45,8 @@
         <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading" :editData="editData"></edit-form>
     </el-dialog>
 <!--    打印-->
-    <div id="printId" style="height: 100%;">
-        <print-table :tableData="tableData" :tableTitle="tableTitle"></print-table>
+    <div id="printId" style="height: 100%;" class="hidden">
+        <print-table :tableData="tableData" :tableTitle="tableTitle"></print-table> 
     </div>
 </template>
 
