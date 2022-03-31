@@ -119,17 +119,17 @@ export default {
             })
         }
         const multipleSelection = ref([])
+        const selectExport = ref([])
         const handleSelectionChange = async(val) => {
             multipleSelection.value = val
-            console.log('88', multipleSelection.value)
-            // this.ids.va = val.map((item) => item.postId)
-            // this.single = val.length != 1
-            // this.multiple = !val.length
+            selectExport.value = multipleSelection.value
+            context.emit('selectExports', selectExport.value)
         }
         const handlePrints = (row) => {
 
         }
         return{
+            selectExport,
             pageSize,
             handleEdit,
             handleDelete,
@@ -140,7 +140,7 @@ export default {
         }
     },
     mounted() {
-        console.log('shuju',this.tableData)
+       // console.log('shuju',this.tableData)
     }
 
 

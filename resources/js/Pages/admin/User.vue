@@ -26,34 +26,12 @@
                <div class="border rounded">
                    <div class="m-2 flex flex-row justify-between border-b pb-2">
                        <el-button type="primary" @click="dialogFormVisible = true">开通账户</el-button>
-                      <div class="flex flex-column justify-center items-center">
-<!--                          <el-tooltip-->
-<!--                              class="box-item"-->
-<!--                              effect="dark"-->
-<!--                              content="选择导出"-->
-<!--                              placement="bottom"-->
-<!--                          >-->
-<!--                              <el-icon size="20px" class="mr-4"><bottom /></el-icon>-->
-<!--                          </el-tooltip>-->
-                          <el-tooltip
-                              class="box-item"
-                              effect="dark"
-                              content="全部导出"
-                              placement="bottom"
-                          >
-                              <el-icon size="20px" class="mr-4"><download /></el-icon>
-                          </el-tooltip>
-                          <el-tooltip
-                              class="box-item"
-                              effect="dark"
-                              content="打印"
-                              placement="bottom"
-                          >
-                              <el-icon size="20px" class="mr-4"><printer /></el-icon>
-                          </el-tooltip>
+                      <div class="flex flex-column justify-center items-center mx-4">
+                          <el-button type="text" @click="allExportExcel">导出</el-button>
+                          <el-button type="text" v-print="'#printId'">打印</el-button>
                       </div>
                    </div>
-                   <Table2 :tableTitle="tableTitle" :tableData="tableData" :tableLoading="tableLoading" @clickTableEdit="receiveEditData"/>
+                   <Table2 :tableTitle="tableTitle" :tableData="tableData" :tableLoading="tableLoading" @clickTableEdit="receiveEditData" @selectExports="selectExportData"/>
                </div>
             </div>
         </div>
@@ -66,22 +44,25 @@
     <el-dialog v-model="dialogFormVisible2" title="编辑">
         <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading" :editData="editData"></edit-form>
     </el-dialog>
+<!--    打印-->
+    <div id="printId" style="height: 100%;">
+        <print-table :tableData="tableData" :tableTitle="tableTitle"></print-table>
+    </div>
 </template>
 
 <script>
 import AdminLayout from "../../Layouts/AdminLayout"
 import Table2 from '../components/tables/Table2.vue'
+import PrintTable from '../components/tables/PrintTable.vue'
 import {reactive, unref, ref} from "vue"
 import { Link } from '@inertiajs/inertia-vue3'
 import { ElMessage, ElMessageBox } from "element-plus"
 import AddForm from './sub/Add.vue'
 import EditForm from './sub/Edit.vue'
-import { Printer,Download, Bottom } from "@element-plus/icons-vue"
-
 export default {
     name: "User",
     components: {
-        AdminLayout, Table2, Link, AddForm, EditForm, Download, Bottom,Printer
+        AdminLayout, Table2, Link, AddForm, EditForm, PrintTable
     },
    setup(){
        const editData = ref({})
@@ -94,13 +75,24 @@ export default {
        })
        const submitForm = async () => {
            const form = unref(ruleFormRef)
-           console.log('zhe', form)
            if (!form) return
            try {
                await form.validate()
                const { name, number } = ruleForm
-               const params = {name: name, number: number}
+               const params = {number: number,name: name }
                console.log('参数', params)
+               if(params.name ===''){
+                   ElMessage({
+                       type: 'warning',
+                       message: '请输入公司名称'
+                   })
+               }
+               if(params.number ===''){
+                   ElMessage({
+                       type: 'warning',
+                       message: '请输入账号'
+                   })
+               }
                // todo
            } catch (error) {
            }
@@ -150,7 +142,7 @@ export default {
        const tableData = [
            {
                id: 1,
-               number: '100',
+               number: '1509372600101482498',
                password: '123456',
                name: '湖北太初',
                minNumber: '124545656',
@@ -220,7 +212,6 @@ export default {
        const cancelEditForm = (e) => {
            dialogFormVisible2.value = e
        }
-       //
        const receiveEditData = (e, r) => {
            console.log(e)
            console.log(r)
@@ -228,7 +219,48 @@ export default {
            editData.value = r
            console.log('ppp', editData.value)
        }
+       // 全部导出
+       const excelData = ref([])
+       const excelDataSelect = ref([])
+       const allExportExcel = () => {
+           ElMessageBox.confirm('将导出为excel文件，确认导出?').then(() => {
+               if(excelDataSelect.value.length > 0){
+                   excelData.value = excelDataSelect.value
+               }else{
+                   excelData.value = tableData
+               }
+
+               console.log('excelData.value', excelData.value)
+               export2Excel()
+           }).catch(() => {
+
+           })
+       }
+       const export2Excel = () => {
+                  require.ensure([], () => {
+                      const { export_json_to_excel } = require('@/Pages/excel/export2Excel') // 这里必须使用绝对路径，使用@/+存放export2Excel的路径
+                      const tHeader = ['账号', '密码', '公司名称', '小号', '坐席', '限制用户', '费率（元）', '结束时间'] // 导出的excel的表头字段
+                      const filterVal = ['number','password','name', 'minNumber', 'sit', 'limitNumber', 'rate', 'dataTime'] // 对象属性，对应于tHeader
+                      const list = excelData.value //json数组对象，接口返回的数据
+                      const data = formatJson(filterVal, list)
+                       export_json_to_excel(tHeader, data, '检测单体数据')// 导出的表格名称
+                      })
+       }
+       const formatJson = (filterVal, jsonData) => {
+                  return jsonData.map(v => filterVal.map(j => v[j]))
+                }
+       // 选择导出
+       const selectExportData = (value) => {
+               console.log('拿到', value)
+           excelDataSelect.value = value
+       }
        return {
+           selectExportData,
+           excelData,
+           excelDataSelect,
+           allExportExcel,
+           export2Excel,
+           formatJson,
             editData,
            loading,
            tableLoading,
@@ -251,5 +283,10 @@ export default {
 </script>
 
 <style scoped>
-
+@media print {
+    html,
+    body {
+        height: inherit;
+    }
+}
 </style>

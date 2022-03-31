@@ -7,6 +7,7 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.min.css';
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import Print from 'vue3-print-nb'
 
 createInertiaApp({
     resolve: name => require(`./Pages/admin/${name}`),
@@ -15,6 +16,7 @@ createInertiaApp({
             .use(plugin)
             .use(Antd)
             .use(ElementPlus)
+            .use(Print)
             .mixin({ methods: { route } })
             .mount(el)
     },
