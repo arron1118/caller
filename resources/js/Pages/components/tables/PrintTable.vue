@@ -29,5 +29,10 @@ export default {
 </script>
 
 <style scoped>
-
+@media print {
+    html,
+    body {
+        height: inherit;
+    }
+}
 </style>

@@ -14,7 +14,7 @@
                             <el-menu-item>
                                 <div :class="{'text-blue-300': route().current('/admin/dashboard')}">
                                 <el-icon><odometer /></el-icon>
-                                <span>解析</span>
+                                <span>控制台</span>
                                 </div>
                             </el-menu-item>
                     </Link>
@@ -47,7 +47,7 @@
                     <el-menu-item>
                         <div :class="{'text-blue-300': route().current('/admin/callhistorylist')}">
                             <el-icon><data-analysis /></el-icon>
-                            <span class="">通话记录报告</span>
+                            <span class="">通话报表</span>
                         </div>
                     </el-menu-item>
                 </Link>
@@ -56,6 +56,22 @@
                         <div :class="{'text-blue-300': route().current('/admin/callhistorylist')}">
                             <el-icon><document /></el-icon>
                             <span class="">资讯</span>
+                        </div>
+                    </el-menu-item>
+                </Link>
+                <Link :href="route('/admin/callhistorylist')">
+                    <el-menu-item>
+                        <div :class="{'text-blue-300': route().current('/admin/callhistorylist')}">
+                            <el-icon><iphone /></el-icon>
+                            <span class="">号码管理</span>
+                        </div>
+                    </el-menu-item>
+                </Link>
+                <Link :href="route('/admin/callhistorylist')">
+                    <el-menu-item>
+                        <div :class="{'text-blue-300': route().current('/admin/callhistorylist')}">
+                            <el-icon><setting /></el-icon>
+                            <span class="">系统设置</span>
                         </div>
                     </el-menu-item>
                 </Link>
@@ -94,15 +110,17 @@
             <el-main class="bg-gray-50">
                 <slot></slot>
             </el-main>
+            .
         </el-container>
     </el-container>
 </template>
 <script>
-import { Money, Odometer, User, Headset, DataAnalysis, Document, ArrowRight, Setting } from '@element-plus/icons-vue'
+import { Money, Odometer, User, Headset, DataAnalysis, Document, ArrowRight, Setting, Iphone } from '@element-plus/icons-vue'
 import { defineComponent, ref } from 'vue';
 import { Link } from '@inertiajs/inertia-vue3'
 export default defineComponent({
     components: {
+        Iphone,
         Link,
         Money,
         Odometer,

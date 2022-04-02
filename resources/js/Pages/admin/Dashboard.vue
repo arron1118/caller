@@ -86,7 +86,7 @@
                       </div>
                       <div class="bg-white rounded shadow p-4">
                           <div class="text-lg font-semibold text-gray-600 mb-4">排行榜</div>
-                          <Table :tableData="tableData" />
+                          <basic-table :tableTitle="tableTitle" :tableData="tableData" />
                       </div>
               </div>
                 <div class="mb-6 bg-white rounded shadow p-4">
@@ -105,7 +105,7 @@
 import AdminLayout from "../../Layouts/AdminLayout"
 import { Money, Headset, Phone, CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import { ref, reactive } from "vue";
-import Table from '../components/tables/Table1.vue'
+import BasicTable from '../components/tables/BasicTable.vue'
 import lineEcharts from '../components/echarts/lineEcharts.vue'
 import barEcharts from '../components/echarts/barEcharts.vue'
 import pieEcharts from '../components/echarts/pieEcharts.vue'
@@ -114,30 +114,78 @@ import * as echarts from 'echarts'
 export default {
     name: "Dashboard",
     components: {
-        Table, AdminLayout, Money, Headset, Phone, CircleCheck, CircleClose, lineEcharts, barEcharts, pieEcharts
+        BasicTable, AdminLayout, Money, Headset, Phone, CircleCheck, CircleClose, lineEcharts, barEcharts, pieEcharts
     },
     setup(){
         const lineTitle = ref('近12小时拨号统计')
         const barTitle = ref('呼叫统计')
         const pieTitle = ref('呼叫统计')
-        const tableData = [
+        const tableTitle = [
             {
-                name: 'Tom',
-                answer: '10',
-                notAnswer: '12',
-                time: '100',
-                money: '100'
+                label: '账号',
+                value: 'number'
             },
             {
-                name: 'Tom',
-                answer: '10',
-                notAnswer: '12',
-                time: '100',
-                money: '100'
+                label: '密码',
+                value: 'password'
+            },
+            {
+                label: '公司名称',
+                value: 'name'
+            },
+            {
+                label: '小号',
+                value: 'minNumber'
+            },
+            {
+                label: '坐席',
+                value: 'sit'
+            },
+            {
+                label: '限制用户',
+                value: 'limitNumber'
+            },
+            {
+                label: '费率（元）',
+                value: 'rate'
+            },
+            {
+                label: '结束时间',
+                value: 'dataTime'
+            }
+
+        ]
+        const tableData = [
+            {
+                id: 1,
+                number: '1509372600101482498',
+                password: '123456',
+                name: '湖北太初',
+                minNumber: '124545656',
+                sit: 100,
+                limitNumber: 999,
+                rate: 2,
+                dataTime: '2022-03-30 12:00:00',
+                testNumber: true,
+                state: false
+            },
+            {
+                id: 2,
+                number: '1002222',
+                password: '1234526',
+                name: '湖北太初22',
+                minNumber: '124545622256',
+                sit: 1020,
+                limitNumber: 9299,
+                rate: 22,
+                dataTime: '2022-03-30 12:00:00',
+                testNumber: false,
+                state: true
             }
 
         ]
         return {
+            tableTitle,
             tableData,
             lineTitle,
             barTitle,

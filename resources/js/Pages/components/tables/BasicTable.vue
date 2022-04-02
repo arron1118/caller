@@ -5,64 +5,75 @@
                 :data="tableData"
                 style="width: 100%"
                 ref="multipleTableRef"
-                :default-sort="{ prop: 'number', order: 'descending' }"
                 @selection-change="handleSelectionChange"
                 id="print"
             >
-        <el-table-column type="selection" width="55" />
+<!--                :default-sort="{ prop: 'number', order: 'descending' }"-->
+<!--        <el-table-column type="selection" width="55" />-->
         <el-table-column
             v-for="(item, index) in tableTitle"
             :key="index"
             :prop="item.value"
             :label="item.label"
-            :sortable="item.value === 'number'"
+
         />
-                <el-table-column label="测试账号">
-                    <template #default="scope">
-                        <el-switch
-                            v-model="scope.row.testNumber"
-                            inline-prompt
-                            active-text="是"
-                            inactive-text="否"
-                            active-color="#E6A23C"
-                            :width="width"
-                        />
+                <el-table-column v-if="operates.operate"
+                :lable="operates.label"
+                >
+                    <template slot-scope="scope">
+                        <slot name="operates" :scope="scope"></slot>
                     </template>
                 </el-table-column>
-                <el-table-column label="状态">
-                    <template #default="scope">
-                        <el-switch
-                            v-model="scope.row.state"
-                            inline-prompt
-                            active-text="正常"
-                            inactive-text="禁止"
-                            active-color="#E6A23C"
-                            :width="width"
-                        />
-                    </template>
-                </el-table-column>
-                <el-table-column label="操作">
-                    <template #default="scope">
-                        <el-button type="success" size="small" @click="handleEdit(scope.$index, scope.row)"
-                        >编辑</el-button
-                        >
-                        <el-button
-                            size="small"
-                            type="danger"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button
-                        >
-                    </template>
-                </el-table-column>
+
+<!--                :sortable="item.value === 'number'"-->
+
+<!--                <el-table-column label="测试账号">-->
+<!--                    <template #default="scope">-->
+<!--                        <el-switch-->
+<!--                            v-model="scope.row.testNumber"-->
+<!--                            inline-prompt-->
+<!--                            active-text="是"-->
+<!--                            inactive-text="否"-->
+<!--                            active-color="#E6A23C"-->
+<!--                            :width="width"-->
+<!--                        />-->
+<!--                    </template>-->
+<!--                </el-table-column>-->
+
+<!--                <el-table-column label="状态">-->
+<!--                    <template #default="scope">-->
+<!--                        <el-switch-->
+<!--                            v-model="scope.row.state"-->
+<!--                            inline-prompt-->
+<!--                            active-text="正常"-->
+<!--                            inactive-text="禁止"-->
+<!--                            active-color="#E6A23C"-->
+<!--                            :width="width"-->
+<!--                        />-->
+<!--                    </template>-->
+<!--                </el-table-column>-->
+<!--                <el-table-column label="操作">-->
+<!--                    <template #default="scope">-->
+<!--                        <el-button type="success" size="small" @click="handleEdit(scope.$index, scope.row)"-->
+<!--                        >编辑</el-button-->
+<!--                        >-->
+<!--                        <el-button-->
+<!--                            size="small"-->
+<!--                            type="danger"-->
+<!--                            @click="handleDelete(scope.$index, scope.row)"-->
+<!--                        >删除</el-button-->
+<!--                        >-->
+<!--                    </template>-->
+<!--                </el-table-column>-->
     </el-table>
-            <div class="py-4 pl-1">
-                <el-pagination
-                    background
-                    layout="prev, pager, next"
-                    :page-count="tableData.length"
-                    :page-size="pageSize"
-                />
-            </div>
+<!--            <div class="py-4 pl-1">-->
+<!--                <el-pagination-->
+<!--                    background-->
+<!--                    layout="prev, pager, next"-->
+<!--                    :page-count="tableData.length"-->
+<!--                    :page-size="pageSize"-->
+<!--                />-->
+<!--            </div>-->
         </el-col>
     </el-row>
 </template>
@@ -72,11 +83,11 @@ import { Phone } from '@element-plus/icons-vue'
 import { h, ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 export default {
-    name: "Table2",
+    name: "BasicTable",
     components:{
         Phone
     },
-    props:[ 'tableTitle', 'tableData' ],
+    props:[ 'tableTitle', 'tableData','operates' ],
     setup(props, context){
         const pageSize = ref(1)
         const width =ref(60)
@@ -140,7 +151,7 @@ export default {
         }
     },
     mounted() {
-       // console.log('shuju',this.tableData)
+
     }
 
 

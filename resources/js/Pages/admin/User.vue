@@ -31,7 +31,7 @@
                           <el-button type="text" v-print="'#printId'">打印</el-button>
                       </div>
                    </div>
-                   <Table2 :tableTitle="tableTitle" :tableData="tableData" :tableLoading="tableLoading" @clickTableEdit="receiveEditData" @selectExports="selectExportData"/>
+                   <basic-table :tableTitle="tableTitle" :tableData="tableData" :tableLoading="tableLoading" @clickTableEdit="receiveEditData" @selectExports="selectExportData"/>
                </div>
             </div>
         </div>
@@ -45,14 +45,14 @@
         <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading" :editData="editData"></edit-form>
     </el-dialog>
 <!--    打印-->
-    <div id="printId" style="height: 100%;" class="hidden">
-        <print-table :tableData="tableData" :tableTitle="tableTitle"></print-table> 
+    <div id="printId" style="height: 100%;" >
+        <print-table :tableData="tableData" :tableTitle="tableTitle"></print-table>
     </div>
 </template>
 
 <script>
 import AdminLayout from "../../Layouts/AdminLayout"
-import Table2 from '../components/tables/Table2.vue'
+import BasicTable from '../components/tables/BasicTable.vue'
 import PrintTable from '../components/tables/PrintTable.vue'
 import {reactive, unref, ref} from "vue"
 import { Link } from '@inertiajs/inertia-vue3'
@@ -62,12 +62,9 @@ import EditForm from './sub/Edit.vue'
 export default {
     name: "User",
     components: {
-        AdminLayout, Table2, Link, AddForm, EditForm, PrintTable
+        AdminLayout, BasicTable, Link, AddForm, EditForm, PrintTable
     },
    setup(){
-       const editData = ref({})
-       const loading = ref(false)
-       const tableLoading = ref(false)
        const ruleFormRef = ref(null)
        const ruleForm =  reactive({
            name: '',
@@ -103,7 +100,9 @@ export default {
            form.resetFields()
        }
        const dialogFormVisible  = ref(false)
-       const dialogFormVisible2 = ref(false)
+       const loading = ref(false)
+       //
+       const tableLoading = ref(false)
        const tableTitle = [
            {
                label: '账号',
@@ -168,6 +167,16 @@ export default {
            }
 
        ]
+       const receiveEditData = (e, r) => {
+           console.log(e)
+           console.log(r)
+           dialogFormVisible2.value = e
+           editData.value = r
+           console.log('ppp', editData.value)
+       }
+       const dialogFormVisible2 = ref(false)
+       const editData = ref({})
+       //
        const receiveAddForm = (e, r) =>{
            console.log('zhe',e)
             console.log('zhe',r)
@@ -212,24 +221,17 @@ export default {
        const cancelEditForm = (e) => {
            dialogFormVisible2.value = e
        }
-       const receiveEditData = (e, r) => {
-           console.log(e)
-           console.log(r)
-           dialogFormVisible2.value = e
-           editData.value = r
-           console.log('ppp', editData.value)
-       }
        // 全部导出
        const excelData = ref([])
        const excelDataSelect = ref([])
        const allExportExcel = () => {
+           // 数据写入excel
            ElMessageBox.confirm('将导出为excel文件，确认导出?').then(() => {
                if(excelDataSelect.value.length > 0){
                    excelData.value = excelDataSelect.value
                }else{
                    excelData.value = tableData
                }
-
                console.log('excelData.value', excelData.value)
                export2Excel()
            }).catch(() => {
