@@ -160,9 +160,8 @@ export default {
                     state: state,
                     dataTime: dataTime
                 }
-                console.log('参数2', params, loading.value)
+                console.log('编辑参数', params, loading.value)
                 context.emit('clickEdit', params, loading.value)
-                // todo
             } catch (error) {
             }
         }

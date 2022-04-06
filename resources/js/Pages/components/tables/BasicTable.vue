@@ -8,37 +8,33 @@
                 @selection-change="handleSelectionChange"
                 id="print"
             >
-<!--                :default-sort="{ prop: 'number', order: 'descending' }"-->
-<!--        <el-table-column type="selection" width="55" />-->
-        <el-table-column
-            v-for="(item, index) in tableTitle"
-            :key="index"
-            :prop="item.value"
-            :label="item.label"
-
-        />
-                <el-table-column v-if="operates.operate"
-                :lable="operates.label"
-                >
-                    <template slot-scope="scope">
-                        <slot name="operates" :scope="scope"></slot>
+                <el-table-column type="selection" width="55" v-if="selectionType === true" />
+                <el-table-column
+                    v-for="(item, index) in tableTitle"
+                    :key="index"
+                    :prop="item.value"
+                    :label="item.label"
+                    :sortable="item.sortable === true"
+                />
+                <el-table-column label="测试账号">
+                    <template v-slot="scope">
+                        <el-switch
+                            v-model="scope.row.testNumber"
+                            inline-prompt
+                            active-text="是"
+                            inactive-text="否"
+                            active-color="#E6A23C"
+                            :width="width"
+                            @change="changeTestNumber($event, scope.row, scope.$index)"
+                        />
                     </template>
                 </el-table-column>
 
-<!--                :sortable="item.value === 'number'"-->
-
-<!--                <el-table-column label="测试账号">-->
-<!--                    <template #default="scope">-->
-<!--                        <el-switch-->
-<!--                            v-model="scope.row.testNumber"-->
-<!--                            inline-prompt-->
-<!--                            active-text="是"-->
-<!--                            inactive-text="否"-->
-<!--                            active-color="#E6A23C"-->
-<!--                            :width="width"-->
-<!--                        />-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
+                <el-table-column fixed="right" width="180" v-if="operates.operate" :label="operates.label">
+                 <template v-slot="scope">
+                     <slot name="operates" :scope="scope"></slot>
+                 </template>
+                </el-table-column>
 
 <!--                <el-table-column label="状态">-->
 <!--                    <template #default="scope">-->
@@ -50,19 +46,6 @@
 <!--                            active-color="#E6A23C"-->
 <!--                            :width="width"-->
 <!--                        />-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
-<!--                <el-table-column label="操作">-->
-<!--                    <template #default="scope">-->
-<!--                        <el-button type="success" size="small" @click="handleEdit(scope.$index, scope.row)"-->
-<!--                        >编辑</el-button-->
-<!--                        >-->
-<!--                        <el-button-->
-<!--                            size="small"-->
-<!--                            type="danger"-->
-<!--                            @click="handleDelete(scope.$index, scope.row)"-->
-<!--                        >删除</el-button-->
-<!--                        >-->
 <!--                    </template>-->
 <!--                </el-table-column>-->
     </el-table>
@@ -87,47 +70,13 @@ export default {
     components:{
         Phone
     },
-    props:[ 'tableTitle', 'tableData','operates' ],
+    props:[ 'tableTitle', 'tableData','operates', 'selectionType' ],
     setup(props, context){
         const pageSize = ref(1)
         const width =ref(60)
         const handleEdit = async(index, row) => {
             console.log(index, row)
             context.emit('clickTableEdit', true, row)
-        }
-        const handleDelete = (index, row) => {
-            console.log(index, row)
-            console.log(row.id)
-            ElMessageBox({
-                title: '确认删除此项数据吗？',
-                message: h('p', null, [
-                    h('span', null, '此数据将会被'),
-                    h('i', { style: 'color: #F56C6C' }, '删除'),
-                ]),
-                showCancelButton: true,
-                confirmButtonText: '删除',
-                cancelButtonText: '取消',
-                beforeClose: (action, instance, done) => {
-                    if (action === 'confirm') {
-                        instance.confirmButtonLoading = true
-                        instance.confirmButtonText = 'Loading...'
-                        setTimeout(() => {
-                            done()
-                            setTimeout(() => {
-                                instance.confirmButtonLoading = false
-                            }, 300)
-                        }, 3000)
-                    } else {
-                        done()
-                    }
-                },
-            }).then((action) => {
-                ElMessage({
-                    type: 'success',
-                    // message: `action: ${action}`,
-                    message: '已删除'
-                })
-            })
         }
         const multipleSelection = ref([])
         const selectExport = ref([])
@@ -139,11 +88,20 @@ export default {
         const handlePrints = (row) => {
 
         }
+        const changeTestNumber = (e,row,index) => {
+            // e返回状态，row当前行数据， index下标
+            console.log(e)
+            console.log(row)
+            console.log(index)
+            //
+
+
+        }
         return{
+            changeTestNumber,
             selectExport,
             pageSize,
             handleEdit,
-            handleDelete,
             width,
             multipleSelection,
             handleSelectionChange,

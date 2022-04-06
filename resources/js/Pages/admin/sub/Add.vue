@@ -173,7 +173,7 @@ export default {
                     state: state,
                     dataTime: dataTime
                 }
-                console.log('参数2', params, loading.value)
+                console.log('开通参数', params, loading.value)
                 context.emit('clickAdd', params, loading.value)
                 // todo
             } catch (error) {
