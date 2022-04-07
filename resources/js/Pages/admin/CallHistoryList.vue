@@ -1,7 +1,7 @@
 <template>
     <admin-layout title="Dashboard">
         <div class="mb-6 bg-white rounded shadow pt-4">
-           <search-form></search-form>
+            <search-form :role="role" @clickSearch="search"></search-form>
         </div>
         <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
@@ -99,6 +99,19 @@ import {ElMessage, ElMessageBox} from "element-plus";
     },
     setup(){
         // 搜索框
+        const role = ref('callHistory')
+        const search = (f) => {
+            console.log('父传子参数',f)
+            // 重新组装参数
+            let vParams = {
+                company: f.company,
+                staff: f.staff,
+                dataTime: f.dataTime,
+                operate: f.operate,
+                duration: f.duration,
+            }
+            console.log('vParams', vParams)
+        }
         // 表头
         const print = ref(false)
         const addFormDialog = ref(false)
@@ -135,17 +148,20 @@ import {ElMessage, ElMessageBox} from "element-plus";
                 }else{
                     excelData.value = tableData
                 }
-                console.log('excelData.value', excelData.value)
                 export2Excel()
             }).catch(() => {
-
             })
         }
         const export2Excel = () => {
             require.ensure([], () => {
                 const { export_json_to_excel } = require('@/Pages/excel/export2Excel') // 这里必须使用绝对路径，使用@/+存放export2Excel的路径
-                const tHeader = ['账号', '密码', '公司名称', '小号', '坐席', '限制用户', '费率（元）', '结束时间'] // 导出的excel的表头字段
-                const filterVal = ['number','password','name', 'minNumber', 'sit', 'limitNumber', 'rate', 'dataTime'] // 对象属性，对应于tHeader
+                const tHeader = [] // 导出的excel的表头字段名称
+                const filterVal = [] // 对象属性，对应于tHeader
+                tableTitle.forEach((item)=>{
+                    console.log(item.label)
+                    tHeader.push(item.label)
+                    filterVal.push(item.value)
+                })
                 const list = excelData.value //json数组对象，接口返回的数据
                 const data = formatJson(filterVal, list)
                 export_json_to_excel(tHeader, data, '检测单体数据')// 导出的表格名称
@@ -372,6 +388,8 @@ import {ElMessage, ElMessageBox} from "element-plus";
 
         }
         return {
+            search,
+            role,
             query,
             pageTotal,
             getData,

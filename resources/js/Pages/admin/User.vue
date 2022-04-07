@@ -1,7 +1,7 @@
 <template>
     <admin-layout title="Dashboard">
         <div class="mb-6 bg-white rounded shadow pt-4">
-            <search-form></search-form>
+            <search-form :role="role" @clickSearch="search"></search-form>
         </div>
         <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
@@ -100,6 +100,17 @@ export default {
     },
     setup(){
         // 搜索框
+        const role = ref('user')
+        const search = (f) => {
+            console.log('父传子参数',f)
+            // 重新组装参数
+            let vParams = {
+                number: f.company,
+                name: f.staff,
+
+            }
+            console.log('vParams', vParams)
+        }
         // 表头
         const print = ref(false)
         const addFormDialog = ref(false)
@@ -373,6 +384,8 @@ export default {
 
         }
         return {
+            search,
+            role,
             query,
             pageTotal,
             getData,
