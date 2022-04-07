@@ -1,3 +1,4 @@
+const colors =require('tailwindcss/colors')
 module.exports = {
     mode: 'jit',
     content: [
@@ -6,6 +7,10 @@ module.exports = {
         './storage/framework/views/*.php',
     ],
     theme: {
+        colors: {
+            brand: '#409EFF',
+            ...colors
+        },
         extend: {},
     },
     plugins: [],
