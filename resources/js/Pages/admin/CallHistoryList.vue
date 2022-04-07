@@ -17,9 +17,35 @@
                     :tableData="tableData"
                     :tableLoading="tableLoading"
                     :operates="operates"
+                    :testNumbers="testNumbers"
+                    :states="states"
                     :selectionType="true"
                     @selectExports="selectExportData"
                 >
+                    <template v-slot:testNumbers="scope">
+                        <el-switch
+                            v-model="scope.scope.row.testNumber"
+                            inline-prompt
+                            active-text="是"
+                            inactive-text="否"
+                            active-color="#E6A23C"
+                            :width="testNumbers.width"
+                            @change="changeTestNumber($event, scope.scope.row, scope.scope.$index)"
+                        />
+
+                    </template>
+                    <template v-slot:states="scope">
+                        <el-switch
+                            v-model="scope.scope.row.state"
+                            inline-prompt
+                            active-text="正常"
+                            inactive-text="禁用"
+                            active-color="#E6A23C"
+                            :width="states.width"
+                            @change="changeState($event, scope.scope.row, scope.scope.$index)"
+                        />
+
+                    </template>
                     <template v-slot:operates="scope">
                         <table-operation
                         :operations="operations"
@@ -28,6 +54,12 @@
                         ></table-operation>
                     </template>
                 </basic-table>
+                <v-pagination
+                    :pageSize="query.limit"
+                    :total="pageTotal"
+                    :options="query"
+                    :render="getData">
+                </v-pagination>
 
             </div>
         </div>
@@ -56,13 +88,14 @@ import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/admin/sub/Add.vue'
 import EditForm from '@/Pages/admin/sub/Edit.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
-import {h, reactive, ref} from "vue"
+import vPagination from '@/Pages/components/tables/Pagination.vue'
+import {h, reactive, ref, getCurrentInstance} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
  export default {
     name: "CallHistoryList",
     components: {
         ButtonGroup,
-        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable
+        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable, vPagination
     },
     setup(){
         // 搜索框
@@ -127,6 +160,27 @@ import {ElMessage, ElMessageBox} from "element-plus";
             excelDataSelect.value = value
         }
         // 表格
+       // const { proxy } = getCurrentInstance() //获取上下文实例
+        const pageTotal = ref(0)  //总条数
+        const query = reactive({//配置对应的查询参数
+            appTimeStart:'',
+            appTimeEnd:'',
+            page: 1,
+            limit:10,//page第几页,limit是一页几个
+        })
+        // 获取表格数据
+        const getData = () => {
+            console.log(query)
+            // proxy.axios({
+            //     url: 'api/getList',
+            //     method: 'POST',
+            //     data:query
+            // }).then(res => {
+            //     pageTotal.value = res.count;
+            //     tableData.value = res.data;
+            // })
+        }
+        getData()
         const loading = ref(false)
         const editFormDialog = ref(false)
         const tableLoading = ref(false)
@@ -211,6 +265,16 @@ import {ElMessage, ElMessageBox} from "element-plus";
             operate: true,
             label: '操作',
         })
+        const testNumbers = ref({
+            testNumber: true,
+            label: '测试账号',
+            width: 60
+        })
+        const states = ref({
+            state: true,
+            label: '状态',
+            width: 60
+        })
         const operations = ref([{
             types: 'edit',
             title: '编辑',
@@ -289,12 +353,37 @@ import {ElMessage, ElMessageBox} from "element-plus";
         const cancelEditForm = (e) => {
             editFormDialog.value = e
         }
+        const changeTestNumber = (e,row,index) => {
+            // e返回状态，row当前行数据， index下标
+            console.log('zhe',e)
+            console.log(row)
+            console.log(index)
+            //todo
+
+
+        }
+        const changeState = (e,row,index) => {
+            // e返回状态，row当前行数据， index下标
+            console.log('zhe2',e)
+            console.log(row)
+            console.log(index)
+            //todo
+
+
+        }
         return {
+            query,
+            pageTotal,
+            getData,
+            changeState,
+            changeTestNumber,
             addFormDialog,
             receiveAddForm,
             cancelAddForm,
             loading,
             operates,
+            testNumbers,
+            states,
             operations,
             handleOperation,
             tableTitle,
