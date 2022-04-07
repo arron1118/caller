@@ -1,19 +1,11 @@
 <template>
     <a-layout>
-        <a-layout-sider v-model:collapsed="collapsed" :trigger="null" :class="'h-screen'" theme="light" collapsible>
-            <div class="logo" />
+        <a-layout-sider v-model:collapsed="collapsed" :trigger="null" :class="'h-screen'" collapsible>
+            <div class="logo"/>
             <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-                <a-menu-item key="1">
-                    <user-outlined />
-                    <span>nav 1</span>
-                </a-menu-item>
-                <a-menu-item key="2">
-                    <video-camera-outlined />
-                    <span>nav 2</span>
-                </a-menu-item>
-                <a-menu-item key="3">
-                    <upload-outlined />
-                    <span>nav 3</span>
+                <a-menu-item v-for="item in menu" :key="item.id">
+                    <component :is="item.icon"></component>
+                    <span>{{ item.title }}</span>
                 </a-menu-item>
             </a-menu>
         </a-layout-sider>
@@ -24,19 +16,26 @@
                     class="trigger"
                     @click="() => (collapsed = !collapsed)"
                 />
-                <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+                <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)"/>
             </a-layout-header>
             <a-layout-content
                 :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
             >
-                Content
+                <slot name="content"></slot>
             </a-layout-content>
         </a-layout>
     </a-layout>
 </template>
 <script>
-import { UserOutlined, VideoCameraOutlined, UploadOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue';
+import {
+    UserOutlined,
+    VideoCameraOutlined,
+    UploadOutlined,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined
+} from '@ant-design/icons-vue';
+import {defineComponent, ref} from 'vue';
+
 export default defineComponent({
     components: {
         UserOutlined,
@@ -47,12 +46,51 @@ export default defineComponent({
     },
 
     setup() {
+        const menu = ref([
+            {
+                id: 1,
+                title: 'welcome',
+                comment: 'welcome to my website',
+                url: '/',
+                icon: 'AppleOutlined'
+            },
+            {
+                id: 2,
+                title: 'dashboard',
+                comment: 'dashboard',
+                url: '/dashboard',
+                icon: 'VideoCameraOutlined'
+            },
+            {
+                id: 3,
+                title: 'user',
+                comment: 'user command',
+                url: '/user',
+                icon: 'UserOutlined',
+            },
+            {
+                id: 4,
+                title: 'setting',
+                comment: 'setting',
+                url: '/setting',
+                icon: 'MenuUnfoldOutlined'
+            }
+        ])
+
         return {
             selectedKeys: ref(['1']),
-            collapsed: ref(false),
+            collapsed: ref(true),
+            menu,
         };
     },
 
+    created() {
+        console.log('this ', this)
+        this.menu.map(item => {
+            // import item.icon from '@ant-design/icons-vue'
+            // this.$options.components[item.icon] = item.icon
+        })
+    }
 });
 </script>
 <style>
