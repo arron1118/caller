@@ -1,6 +1,20 @@
 <template>
     <div>
         <el-form ref="searchFormRef" :model="searchRuleForm" :inline="true" class="m-2">
+
+                <el-form-item class="mx-4" prop="number">
+                    <el-input v-model.trim="searchRuleForm.number" placeholder="输入账号">
+                        <template #prepend>账号</template>
+                    </el-input>
+                </el-form-item>
+                <el-form-item class="mr-4" prop="name">
+                    <el-input v-model.trim="searchRuleForm.name" placeholder="输入公司名称">
+                        <template #prepend>公司名称</template>
+                    </el-input>
+                </el-form-item>
+
+
+
             <el-form-item label="公司" label-width="" prop="company">
                 <el-select v-model="searchRuleForm.company" placeholder="请选择公司">
                     <el-option label="Zone No.1" value="shanghai" />
@@ -80,6 +94,8 @@ export default {
             staff: '',
             dataTime: '',
             operate: '',
+            number: '',
+            name: '',
             duration: 0,
 
         })

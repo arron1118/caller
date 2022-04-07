@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import AdminLayout from "../../Layouts/AdminLayout";
+import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/components/tables/BasicTable.vue';
 import TableOperation from "@/Pages/components/tables/TableOperation";
@@ -408,6 +408,3 @@ import {ElMessage, ElMessageBox} from "element-plus";
 }
 </script>
 
-<style scoped>
-
-</style>

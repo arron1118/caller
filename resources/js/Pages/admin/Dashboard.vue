@@ -86,7 +86,7 @@
                       </div>
                       <div class="bg-white rounded shadow p-4">
                           <div class="text-lg font-semibold text-gray-600 mb-4">排行榜</div>
-                          <basic-table :tableTitle="tableTitle" :tableData="tableData" />
+                          <v-table :tableTitle="tableTitle" :tableData="tableData" />
                       </div>
               </div>
                 <div class="mb-6 bg-white rounded shadow p-4">
@@ -102,19 +102,20 @@
 </template>
 
 <script>
-import AdminLayout from "../../Layouts/AdminLayout"
+import AdminLayout from "@/Layouts/AdminLayout"
 import { Money, Headset, Phone, CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import { ref, reactive } from "vue";
 import BasicTable from '../components/tables/BasicTable.vue'
-import lineEcharts from '../components/echarts/lineEcharts.vue'
-import barEcharts from '../components/echarts/barEcharts.vue'
-import pieEcharts from '../components/echarts/pieEcharts.vue'
+import vTable from '@/Pages/components/tables/PrintTable.vue'
+import lineEcharts from '@/Pages/components/echarts/lineEcharts.vue'
+import barEcharts from '@/Pages/components/echarts/barEcharts.vue'
+import pieEcharts from '@/Pages/components/echarts/pieEcharts.vue'
 
 import * as echarts from 'echarts'
 export default {
     name: "Dashboard",
     components: {
-        BasicTable, AdminLayout, Money, Headset, Phone, CircleCheck, CircleClose, lineEcharts, barEcharts, pieEcharts
+        vTable, AdminLayout, Money, Headset, Phone, CircleCheck, CircleClose, lineEcharts, barEcharts, pieEcharts
     },
     setup(){
         const lineTitle = ref('近12小时拨号统计')
