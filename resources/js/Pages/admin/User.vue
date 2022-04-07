@@ -107,7 +107,6 @@ export default {
             let vParams = {
                 number: f.company,
                 name: f.staff,
-
             }
             console.log('vParams', vParams)
         }

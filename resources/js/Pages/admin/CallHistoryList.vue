@@ -101,16 +101,7 @@ import {ElMessage, ElMessageBox} from "element-plus";
         // 搜索框
         const role = ref('callHistory')
         const search = (f) => {
-            console.log('父传子参数',f)
-            // 重新组装参数
-            let vParams = {
-                company: f.company,
-                staff: f.staff,
-                dataTime: f.dataTime,
-                operate: f.operate,
-                duration: f.duration,
-            }
-            console.log('vParams', vParams)
+            console.log('父传子参数', f)
         }
         // 表头
         const print = ref(false)
