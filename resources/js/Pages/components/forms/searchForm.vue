@@ -38,9 +38,9 @@
             </el-form-item>
             <el-form-item label="通话时长" prop="operate" v-if="role==='callHistory'">
                 <el-select v-model="searchRuleForm.operate" placeholder="操作符" style="width: 85px">
-                    <el-option label="=" value="="/>
-                    <el-option label=">" value=">"/>
-                    <el-option label="<" value="<"/>
+                    <el-option label="=" value="eq"/>
+                    <el-option label=">" value="gt"/>
+                    <el-option label="<" value="lg"/>
                 </el-select>
             </el-form-item>
             <el-form-item v-if="role==='callHistory'">
