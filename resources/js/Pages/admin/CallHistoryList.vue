@@ -8,7 +8,7 @@
                 <div class="m-2 flex flex-row justify-between border-b pb-2">
                     <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
                     <div class="flex flex-column justify-center items-center mx-4">
-                        <el-button type="text" @click="allExportExcel">导出</el-button>
+                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'通话记录报表')">导出</el-button>
                         <el-button type="text" v-print="'#printId'" @click="print=true">打印</el-button>
                     </div>
                 </div>
@@ -90,7 +90,7 @@ import EditForm from '@/Pages/admin/sub/Edit.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
 import vPagination from '@/Pages/components/tables/Pagination.vue'
 import {h, reactive, ref, getCurrentInstance} from "vue"
-import {ElMessage, ElMessageBox} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus"
  export default {
     name: "CallHistoryList",
     components: {
@@ -101,9 +101,10 @@ import {ElMessage, ElMessageBox} from "element-plus";
         // 搜索框
         const role = ref('callHistory')
         const search = (f) => {
-            console.log('父传子参数', f)
+            console.log('子传父参数', f)
         }
         // 表头
+        const { allExportExcel } = require("@/lqp")
         const print = ref(false)
         const addFormDialog = ref(false)
         const receiveAddForm = (e, r) =>{
@@ -127,44 +128,6 @@ import {ElMessage, ElMessageBox} from "element-plus";
         }
         const cancelAddForm = (e) => {
             addFormDialog.value = e
-        }
-        const excelData = ref([])
-        const excelDataSelect = ref([])
-        const allExportExcel = () => {
-            //全部导出
-            // 数据写入excel
-            ElMessageBox.confirm('将导出为excel文件，确认导出?').then(() => {
-                if(excelDataSelect.value.length > 0){
-                    excelData.value = excelDataSelect.value
-                }else{
-                    excelData.value = tableData
-                }
-                export2Excel()
-            }).catch(() => {
-            })
-        }
-        const export2Excel = () => {
-            require.ensure([], () => {
-                const { export_json_to_excel } = require('@/Pages/excel/export2Excel') // 这里必须使用绝对路径，使用@/+存放export2Excel的路径
-                const tHeader = [] // 导出的excel的表头字段名称
-                const filterVal = [] // 对象属性，对应于tHeader
-                tableTitle.forEach((item)=>{
-                    console.log(item.label)
-                    tHeader.push(item.label)
-                    filterVal.push(item.value)
-                })
-                const list = excelData.value //json数组对象，接口返回的数据
-                const data = formatJson(filterVal, list)
-                export_json_to_excel(tHeader, data, '检测单体数据')// 导出的表格名称
-            })
-        }
-        const formatJson = (filterVal, jsonData) => {
-            return jsonData.map(v => filterVal.map(j => v[j]))
-        }
-        const selectExportData = (value) => {
-            // 选择导出
-            console.log('拿到复选框', value)
-            excelDataSelect.value = value
         }
         // 表格
        // const { proxy } = getCurrentInstance() //获取上下文实例
@@ -375,10 +338,9 @@ import {ElMessage, ElMessageBox} from "element-plus";
             console.log(row)
             console.log(index)
             //todo
-
-
         }
         return {
+            allExportExcel,
             search,
             role,
             query,
@@ -402,17 +364,21 @@ import {ElMessage, ElMessageBox} from "element-plus";
             editData,
             cancelEditForm,
             receiveEditForm,
-            excelData,
-            excelDataSelect,
-            allExportExcel,
-            selectExportData,
             print
-
-
-
         }
     },
+   watch:{
+       // selectExportData(newValue) {
+       //     this.tableData = newValue
+       // }
+   },
     methods: {
+         selectExportData (value) {
+            // 选择导出
+            console.log('拿到复选框', value)
+            this.tableData = value
+             console.log(this.tableData)
+        }
     }
 }
 </script>

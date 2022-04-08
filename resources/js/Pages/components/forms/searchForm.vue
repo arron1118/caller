@@ -1,16 +1,12 @@
 <template>
     <div>
-        <el-form ref="searchFormRef" :model="searchRuleForm" :inline="true" class="m-2">
+        <el-form ref="searchFormRef" :model="searchRuleForm" :inline="true" class="mx-4">
             <!--               用户管理-->
-            <el-form-item class="mx-4" prop="number" v-if="role==='user'">
-                <el-input v-model.trim="searchRuleForm.number" placeholder="输入账号">
-                    <template #prepend>账号</template>
-                </el-input>
+            <el-form-item label="账号" class="mx-4" prop="number" v-if="role==='user'">
+                <el-input v-model.trim="searchRuleForm.number" placeholder="输入账号" @blur="changeNumber(searchRuleForm.number)"/>
             </el-form-item>
-            <el-form-item class="mr-4" prop="name" v-if="role==='user'">
-                <el-input v-model.trim="searchRuleForm.name" placeholder="输入公司名称">
-                    <template #prepend>公司名称</template>
-                </el-input>
+            <el-form-item label="公司" class="mr-4" prop="name" v-if="role==='user'">
+                <el-input v-model.trim="searchRuleForm.name" placeholder="输入公司名称" @blur="changeName(searchRuleForm.name)"/>
             </el-form-item>
             <!--通话记录-->
             <el-form-item label="公司" label-width="" prop="company" v-if="role==='callHistory'">
@@ -32,12 +28,12 @@
                     range-separator="To"
                     start-placeholder="开始时间"
                     end-placeholder="结束时间"
-                    @change="handleChangeDateTime"
+                    @change="changeDateTime"
                     value-format="YYYY-MM-DD hh:mm:ss"
                 />
             </el-form-item>
             <el-form-item label="通话时长" prop="operate" v-if="role==='callHistory'">
-                <el-select v-model="searchRuleForm.operate" placeholder="操作符" style="width: 85px">
+                <el-select v-model="searchRuleForm.operate" placeholder="操作符" style="width: 85px" @change="changeOperate">
                     <el-option label="=" value="eq"/>
                     <el-option label=">" value="gt"/>
                     <el-option label="<" value="lg"/>
@@ -48,7 +44,7 @@
                     v-model="searchRuleForm.duration"
                     :min="0"
                     controls-position="right"
-                    @change="handleChangeDuration"
+                    @change="changeDuration"
                 />
             </el-form-item>
             <el-form-item class="mx-1">
@@ -63,7 +59,7 @@
 </template>
 
 <script>
-import {ref, reactive, unref} from "vue"
+import {ref, unref} from "vue"
 
 export default {
     name: "searchForm",
@@ -71,19 +67,6 @@ export default {
         const width = ref(60)
         const searchFormRef = ref(null)
         const loading = ref(props.loading)
-        const handleChangeSit = (value) => {
-            searchRuleForm.sit = value
-        }
-        const handleChangeLimitNumber = (value) => {
-            searchRuleForm.limitNumber = value
-        }
-        const handleChangeDuration = (value) => {
-            searchRuleForm.rate = value
-        }
-        const handleChangeDateTime = (value) => {
-            console.log(value)
-            searchRuleForm.dataTime = value
-        }
         const searchRuleForm = ref({
             company: '',
             staff: '',
@@ -100,7 +83,7 @@ export default {
             if (!form) return
             try {
                 await form.validate()
-                console.log('搜索参数', params, loading.value)
+                console.log('搜索参数', searchRuleForm, loading.value)
                 context.emit('clickSearch', searchRuleForm, loading.value)
             } catch (error) {
             }
@@ -112,15 +95,11 @@ export default {
         }
         return {
             width,
-            handleChangeSit,
-            handleChangeLimitNumber,
-            handleChangeDuration,
             searchFormRef,
             searchRuleForm,
             loading,
             submitSearch,
             cancelSearch,
-            handleChangeDateTime
         }
     },
     props: ['loading', 'role'],
@@ -130,16 +109,31 @@ export default {
         }
     },
     methods: {
+        changeNumber (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, { number: v })
+        },
+        changeName (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, { name: v })
+        },
+
         changeCompany (v) {
             this.searchRuleForm = Object.assign({}, this.searchRuleForm, { company: v })
         },
-
         changeStaff (val) {
             let temp = ''
             if (val) {
                 temp = val
             }
             this.searchRuleForm = Object.assign({}, this.searchRuleForm, { staff: temp })
+        },
+        changeDateTime (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, {dataTime: v})
+        },
+        changeOperate (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, {operate: v})
+        },
+        changeDuration (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, {duration: v})
         }
     }
 }

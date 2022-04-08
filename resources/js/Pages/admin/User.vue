@@ -8,8 +8,7 @@
                 <div class="m-2 flex flex-row justify-between border-b pb-2">
                     <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
                     <div class="flex flex-column justify-center items-center mx-4">
-                        <el-button type="text" @click="allExportExcel">导出</el-button>
-                        <el-button type="text" v-print="'#printId'" @click="print=true">打印</el-button>
+                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'用户管理报表')">导出</el-button>
                     </div>
                 </div>
                 <basic-table
@@ -71,12 +70,6 @@
     <el-dialog v-model="editFormDialog" title="编辑">
         <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading" :editData="editData"></edit-form>
     </el-dialog>
-    <!--    打印-->
-    <div v-if="print===true">
-        <div id="printId" style="height: 100%;" >
-            <print-table :tableData="tableData" :tableTitle="tableTitle"></print-table>
-        </div>
-    </div>
 </template>
 
 <script>
@@ -91,7 +84,6 @@ import PrintTable from '@/Pages/components/tables/PrintTable.vue'
 import vPagination from '@/Pages/components/tables/Pagination.vue'
 import {h, reactive, ref, getCurrentInstance} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
-import { aa, bb } from '@/lqp';
 export default {
     name: "CallHistoryList",
     components: {
@@ -102,16 +94,10 @@ export default {
         // 搜索框
         const role = ref('user')
         const search = (f) => {
-            console.log('父传子参数',f)
-            // 重新组装参数
-            let vParams = {
-                number: f.company,
-                name: f.staff,
-            }
-            console.log('vParams', vParams)
+            console.log('子传父参数', f)
         }
         // 表头
-        const print = ref(false)
+        const { allExportExcel } = require("@/lqp")
         const addFormDialog = ref(false)
         const receiveAddForm = (e, r) =>{
             console.log('zhe',e)
@@ -134,41 +120,6 @@ export default {
         }
         const cancelAddForm = (e) => {
             addFormDialog.value = e
-        }
-        const excelData = ref([])
-        const excelDataSelect = ref([])
-        const allExportExcel = () => {
-            //全部导出
-            // 数据写入excel
-            ElMessageBox.confirm('将导出为excel文件，确认导出?').then(() => {
-                if(excelDataSelect.value.length > 0){
-                    excelData.value = excelDataSelect.value
-                }else{
-                    excelData.value = tableData
-                }
-                console.log('excelData.value', excelData.value)
-                export2Excel()
-            }).catch(() => {
-
-            })
-        }
-        const export2Excel = () => {
-            require.ensure([], () => {
-                const { export_json_to_excel } = require('@/Pages/excel/export2Excel') // 这里必须使用绝对路径，使用@/+存放export2Excel的路径
-                const tHeader = ['账号', '密码', '公司名称', '小号', '坐席', '限制用户', '费率（元）', '结束时间'] // 导出的excel的表头字段
-                const filterVal = ['number','password','name', 'minNumber', 'sit', 'limitNumber', 'rate', 'dataTime'] // 对象属性，对应于tHeader
-                const list = excelData.value //json数组对象，接口返回的数据
-                const data = formatJson(filterVal, list)
-                export_json_to_excel(tHeader, data, '检测单体数据')// 导出的表格名称
-            })
-        }
-        const formatJson = (filterVal, jsonData) => {
-            return jsonData.map(v => filterVal.map(j => v[j]))
-        }
-        const selectExportData = (value) => {
-            // 选择导出
-            console.log('拿到复选框', value)
-            excelDataSelect.value = value
         }
         // 表格
         // const { proxy } = getCurrentInstance() //获取上下文实例
@@ -406,21 +357,19 @@ export default {
             editData,
             cancelEditForm,
             receiveEditForm,
-            excelData,
-            excelDataSelect,
-            allExportExcel,
-            selectExportData,
-            print
-
-
-
+            allExportExcel
         }
     },
     mounted() {
-        console.log(aa)
-        console.log(bb())
+
     },
     methods: {
+        selectExportData (value) {
+            // 选择导出
+            console.log('拿到复选框', value)
+            this.tableData = value
+            console.log(this.tableData)
+        }
     }
 }
 </script>
