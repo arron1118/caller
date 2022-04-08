@@ -88,7 +88,7 @@ import {ElMessage, ElMessageBox} from "element-plus"
     name: "CallHistoryList",
     components: {
         ButtonGroup,
-        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable, vPagination
+        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable
     },
     setup(){
         // 搜索框
