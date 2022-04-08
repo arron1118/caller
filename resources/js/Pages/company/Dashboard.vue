@@ -163,7 +163,7 @@
 import AdminLayout from "../../Layouts/AdminLayout"
 import { Money, Headset, Phone, CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import { ref, reactive } from "vue";
-import Table from '../components/Table.vue'
+import Table from '@/Pages/components/tables/PrintTable';
 export default {
     name: "Dashboard",
     components: {

@@ -1,11 +1,9 @@
 <template>
     <AdminLayout>
-        <template #content>
-            <div class="flex flex-wrap">
-                <font-awesome-icon :icon="['fab', 'apple']" class="text-gray-500" size="lg"></font-awesome-icon>
-                <h1>Welcome to my website.</h1>
-            </div>
-        </template>
+        <div class="flex flex-wrap">
+            <font-awesome-icon :icon="['fab', 'apple']" class="text-gray-500" size="lg"></font-awesome-icon>
+            <h1>Welcome to my website.</h1>
+        </div>
     </AdminLayout>
 </template>
 

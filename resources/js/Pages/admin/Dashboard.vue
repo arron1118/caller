@@ -15,80 +15,80 @@
                                 </div>
                             </div>
                         </el-col>
-                       <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
-                           <div class="grid grid-cols-2 border">
-                               <div class="bg-blue-500 flex flex-col justify-center items-center">
-                                   <el-icon :size="40" color="#fff"><money /></el-icon>
-                               </div>
-                               <div class="bg-white p-2">
-                                   <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
-                                   <div>总收入</div>
-                               </div>
-                           </div>
-                       </el-col>
-                       <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
-                           <div class="grid grid-cols-2 border">
-                               <div class="bg-gray-500 flex flex-col justify-center items-center">
-                                   <el-icon :size="40" color="#fff"><money /></el-icon>
-                               </div>
-                               <div class="bg-white p-2">
-                                   <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
-                                   <div>昨天收入</div>
-                               </div>
-                           </div>
-                       </el-col>
-                       <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
-                           <div class="grid grid-cols-2 border">
-                               <div class="bg-green-500 flex flex-col justify-center items-center">
-                                   <el-icon :size="40" color="#fff"><money /></el-icon>
-                               </div>
-                               <div class="bg-white p-2">
-                                   <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
-                                   <div>本月收入</div>
-                               </div>
-                           </div>
-                       </el-col>
-                       <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
-                           <div class="grid grid-cols-2 border">
-                               <div class="bg-red-500 flex flex-col justify-center items-center">
-                                   <el-icon :size="40" color="#fff"><money /></el-icon>
-                               </div>
-                               <div class="bg-white p-2">
-                                   <div class="mb-2"><span class="text-xl font-semibold">123456789</span></div>
-                                   <div>今年收入</div>
-                               </div>
-                           </div>
-                       </el-col>
+                        <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
+                            <div class="grid grid-cols-2 border">
+                                <div class="bg-blue-500 flex flex-col justify-center items-center">
+                                    <el-icon :size="40" color="#fff"><money /></el-icon>
+                                </div>
+                                <div class="bg-white p-2">
+                                    <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                    <div>总收入</div>
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
+                            <div class="grid grid-cols-2 border">
+                                <div class="bg-gray-500 flex flex-col justify-center items-center">
+                                    <el-icon :size="40" color="#fff"><money /></el-icon>
+                                </div>
+                                <div class="bg-white p-2">
+                                    <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                    <div>昨天收入</div>
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
+                            <div class="grid grid-cols-2 border">
+                                <div class="bg-green-500 flex flex-col justify-center items-center">
+                                    <el-icon :size="40" color="#fff"><money /></el-icon>
+                                </div>
+                                <div class="bg-white p-2">
+                                    <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                    <div>本月收入</div>
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
+                            <div class="grid grid-cols-2 border">
+                                <div class="bg-red-500 flex flex-col justify-center items-center">
+                                    <el-icon :size="40" color="#fff"><money /></el-icon>
+                                </div>
+                                <div class="bg-white p-2">
+                                    <div class="mb-2"><span class="text-xl font-semibold">123456789</span></div>
+                                    <div>今年收入</div>
+                                </div>
+                            </div>
+                        </el-col>
                     </el-row>
-               </div>
+                </div>
                 <div class="mb-6 grid grid-cols-2 gap-4">
-                      <div class="bg-white rounded shadow p-4 grid grid-cols-3">
-                          <div class="col-span-2"><pie-echarts :pieTitle="pieTitle"/></div>
-                         <div class="pl-4 border-l mt-12">
-                             <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
-                                 <div><el-icon :size="15" color="#409EFC" class="mx-2"><headset /></el-icon>总呼出</div>
-                                 <div class="mx-2">99999</div>
-                             </div>
-                             <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
-                                 <div><el-icon :size="15" color="#6b7280" class="mx-2"><phone /></el-icon>总时间(分)</div>
-                                 <div class="mx-2">99999</div>
-                             </div>
-                             <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
-                                 <div><el-icon :size="15" color="#22c55e" class="mx-2"><CircleCheck /></el-icon>已接听</div>
-                                 <div class="mx-2">99999</div>
-                             </div>
-                             <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
-                                 <div><el-icon :size="15" color="#ef4444" class="mx-2"><CircleClose /></el-icon>未接听</div>
-                                 <div class="mx-2">99999</div>
-                             </div>
-                         </div>
+                    <div class="bg-white rounded shadow p-4 grid grid-cols-3">
+                        <div class="col-span-2"><pie-echarts :pieTitle="pieTitle"/></div>
+                        <div class="pl-4 border-l mt-12">
+                            <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
+                                <div><el-icon :size="15" color="#409EFC" class="mx-2"><headset /></el-icon>总呼出</div>
+                                <div class="mx-2">99999</div>
+                            </div>
+                            <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
+                                <div><el-icon :size="15" color="#6b7280" class="mx-2"><phone /></el-icon>总时间(分)</div>
+                                <div class="mx-2">99999</div>
+                            </div>
+                            <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
+                                <div><el-icon :size="15" color="#22c55e" class="mx-2"><CircleCheck /></el-icon>已接听</div>
+                                <div class="mx-2">99999</div>
+                            </div>
+                            <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
+                                <div><el-icon :size="15" color="#ef4444" class="mx-2"><CircleClose /></el-icon>未接听</div>
+                                <div class="mx-2">99999</div>
+                            </div>
+                        </div>
 
-                      </div>
-                      <div class="bg-white rounded shadow p-4">
-                          <div class="text-lg font-semibold text-gray-600 mb-4">排行榜</div>
-                          <v-table :tableTitle="tableTitle" :tableData="tableData" />
-                      </div>
-              </div>
+                    </div>
+                    <div class="bg-white rounded shadow p-4">
+                        <div class="text-lg font-semibold text-gray-600 mb-4">排行榜</div>
+                        <v-table :tableTitle="tableTitle" :tableData="tableData" />
+                    </div>
+                </div>
                 <div class="mb-6 bg-white rounded shadow p-4">
                     <el-row>
                         <el-col>

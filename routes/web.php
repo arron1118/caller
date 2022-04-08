@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,30 +16,62 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 //    return view('welcome');
-    return \Inertia\Inertia::render('Welcome', [
+    return Inertia::render('Welcome', [
         'title' => 'Welcome'
     ]);
 });
 Route::get('/admin/login', function () {
-    return \Inertia\Inertia::render('Login', []);
-})->name('/admin/login');
+    return Inertia::render('admin/Login', []);
+})->name('admin.login');
 
 Route::get('/admin/dashboard', function () {
-    return \Inertia\Inertia::render('Dashboard', []);
-})->name('/admin/dashboard');
+    return Inertia::render('admin/Dashboard', []);
+})->name('admin.dashboard');
 
-Route::get('/admin/user', function () {
-    return \Inertia\Inertia::render('User', []);
-})->name('/admin/user');
+Route::get('/admin/user', [\App\Http\Controllers\Admin\User::class, 'show'])->name('admin.user');
 
 Route::get('/admin/sub/add', function () {
-    return \Inertia\Inertia::render('sub/Add', []);
-})->name('/admin/sub/add');
+    return Inertia::render('sub/Add', []);
+})->name('admin.sub.add');
 
 Route::get('/admin/sub/edit', function () {
-    return \Inertia\Inertia::render('sub/Edit', []);
-})->name('/admin/sub/edit');
+    return Inertia::render('sub/Edit', []);
+})->name('admin.sub.edit');
 
 Route::get('/admin/callhistorylist', function () {
-    return \Inertia\Inertia::render('CallHistoryList', []);
-})->name('/admin/callhistorylist');
+    return Inertia::render('admin/CallHistoryList', []);
+})->name('admin.callhistorylist');
+
+Route::get('/admin/payment', function () {
+    return Inertia::render('admin/Payment', []);
+})->name('admin.payment');
+
+Route::get('/admin/numbers', function () {
+    return Inertia::render('admin/Numbers', []);
+})->name('admin.numbers');
+
+Route::get('/admin/news', function () {
+    return Inertia::render('admin/News', []);
+})->name('admin.news');
+
+Route::get('/admin/report', function () {
+    return Inertia::render('admin/Report', []);
+})->name('admin.report');
+
+Route::get('/admin/profile', function () {
+    return Inertia::render('admin/Profile', []);
+})->name('admin.profile');
+
+Route::get('/admin/logout', function () {
+    return '退出登录';
+})->name('admin.logout');
+
+
+
+
+
+
+
+
+
+
