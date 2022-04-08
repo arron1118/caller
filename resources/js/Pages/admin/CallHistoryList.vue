@@ -20,6 +20,7 @@
                     :testNumbers="testNumbers"
                     :states="states"
                     :selectionType="true"
+                    :pagination="true"
                     @selectExports="selectExportData"
                 >
                     <template v-slot:testNumbers="scope">
@@ -54,13 +55,6 @@
                         ></table-operation>
                     </template>
                 </basic-table>
-                <v-pagination
-                    :pageSize="query.limit"
-                    :total="pageTotal"
-                    :options="query"
-                    :render="getData">
-                </v-pagination>
-
             </div>
         </div>
     </admin-layout>
@@ -73,7 +67,7 @@
     </el-dialog>
     <!--    打印-->
    <div v-if="print===true">
-       <div id="printId" style="height: 100%;" >
+       <div id="printId" style="height: 100%;">
            <print-table :tableData="tableData" :tableTitle="tableTitle"></print-table>
        </div>
    </div>
@@ -88,7 +82,6 @@ import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/admin/sub/Add.vue'
 import EditForm from '@/Pages/admin/sub/Edit.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
-import vPagination from '@/Pages/components/tables/Pagination.vue'
 import {h, reactive, ref, getCurrentInstance} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus"
  export default {
@@ -131,26 +124,7 @@ import {ElMessage, ElMessageBox} from "element-plus"
         }
         // 表格
        // const { proxy } = getCurrentInstance() //获取上下文实例
-        const pageTotal = ref(0)  //总条数
-        const query = reactive({//配置对应的查询参数
-            appTimeStart:'',
-            appTimeEnd:'',
-            page: 1,
-            limit:10,//page第几页,limit是一页几个
-        })
-        // 获取表格数据
-        const getData = () => {
-            console.log(query)
-            // proxy.axios({
-            //     url: 'api/getList',
-            //     method: 'POST',
-            //     data:query
-            // }).then(res => {
-            //     pageTotal.value = res.count;
-            //     tableData.value = res.data;
-            // })
-        }
-        getData()
+
         const loading = ref(false)
         const editFormDialog = ref(false)
         const tableLoading = ref(false)
@@ -343,9 +317,6 @@ import {ElMessage, ElMessageBox} from "element-plus"
             allExportExcel,
             search,
             role,
-            query,
-            pageTotal,
-            getData,
             changeState,
             changeTestNumber,
             addFormDialog,
