@@ -32,7 +32,7 @@
                  </template>
                 </el-table-column>
     </el-table>
-            <div class="table-bottom" v-if="pagination === true">
+            <div class="table-bottom m-4" v-if="pagination === true">
                 <v-pagination
                     :pageSize="query.limit"
                     :total="pageTotal"
