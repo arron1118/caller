@@ -15,7 +15,7 @@ export default {
     data() {
         return {
             params: {
-                page: 2,
+                page: 1,
                 limit: 15,
             }
         }
@@ -25,7 +25,7 @@ export default {
     },
     methods: {
         getData() {
-            axios.post(route('getHistoryList'), this.params, function (res) {
+            axios.post(route('getHistoryList'), this.params).then(res => {
                 console.log(res);
             })
         }

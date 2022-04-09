@@ -72,20 +72,8 @@ export default {
             appTimeStart:'',
             appTimeEnd:'',
             page: 1,
-            limit:10,//page第几页,limit是一页几个
+            limit:15,//page第几页,limit是一页几个
         })
-        const getData = () => {
-            console.log(query)
-            // proxy.axios({
-            //     url: 'api/getList',
-            //     method: 'POST',
-            //     data:query
-            // }).then(res => {
-            //     pageTotal.value = res.count;
-            //     tableData.value = res.data;
-            // })
-        }
-        getData()
         return{
             selectExport,
             pageSize,
@@ -93,8 +81,7 @@ export default {
             multipleSelection,
             handleSelectionChange,
             query,
-            pageTotal,
-            getData,
+            pageTotal
         }
     }
 }

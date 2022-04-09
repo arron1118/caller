@@ -82,7 +82,7 @@ import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/admin/sub/Add.vue'
 import EditForm from '@/Pages/admin/sub/Edit.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
-import {h, reactive, ref, getCurrentInstance} from "vue"
+import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus"
  export default {
     name: "CallHistoryList",
@@ -123,8 +123,18 @@ import {ElMessage, ElMessageBox} from "element-plus"
             addFormDialog.value = e
         }
         // 表格
-       // const { proxy } = getCurrentInstance() //获取上下文实例
-
+        const params = ref( {
+            page: 1,
+                limit: 15,
+        })
+        const getData = () => {
+            axios.post(route('getHistoryList'), params).then(res => {
+                console.log('记录', res)
+               // pageTotal.value = res.count;
+               // tableData.value = res.data;
+            })
+        }
+        getData()
         const loading = ref(false)
         const editFormDialog = ref(false)
         const tableLoading = ref(false)
@@ -317,6 +327,7 @@ import {ElMessage, ElMessageBox} from "element-plus"
             //todo
         }
         return {
+            params,
             allExportExcel,
             search,
             role,
