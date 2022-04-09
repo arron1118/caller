@@ -26,7 +26,7 @@
                         <slot name="states" :scope="scope"></slot>
                     </template>
                 </el-table-column>
-                <el-table-column width="160" v-if="operates.operate" :label="operates.label">
+                <el-table-column v-if="operates.operate" :label="operates.label">
                  <template v-slot="scope">
                      <slot name="operates" :scope="scope"></slot>
                  </template>

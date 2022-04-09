@@ -221,14 +221,17 @@ import {ElMessage, ElMessageBox} from "element-plus"
         })
         const operations = ref([{
             types: 'edit',
-            title: '编辑',
-            type: 'primary'
+            type: 'success',
+            icon: ['fas','pen-to-square'],
+            title: '编辑'
 
         },
         {
             types: 'del',
-            title: '删除',
-            type: 'danger'
+            type: 'danger',
+            // icon: 'Delete',
+            icon: ['far', 'trash-can'],
+            title: '删除'
 
         }
         ])
