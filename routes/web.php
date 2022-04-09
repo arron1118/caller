@@ -66,6 +66,9 @@ Route::get('/admin/logout', function () {
     return '退出登录';
 })->name('admin.logout');
 
+Route::get('/company/logout', function () {
+    return '退出登录';
+})->name('company.logout');
 
 
 
