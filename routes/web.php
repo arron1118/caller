@@ -70,6 +70,8 @@ Route::get('/company/logout', function () {
     return '退出登录';
 })->name('company.logout');
 
+Route::post('/getHistoryList', [\App\Http\Controllers\Api\CallHistory::class, 'getHistoryList'])->name('getHistoryList');
+
 
 
 
