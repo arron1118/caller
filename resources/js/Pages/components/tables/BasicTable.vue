@@ -16,12 +16,12 @@
                     :label="item.label"
                     :sortable="item.sortable === true"
                 />
-                <el-table-column :label="testNumbers.label" v-if="testNumbers.testNumber">
+                <el-table-column :label="testNumbers.label" v-if="testNumbers">
                     <template v-slot="scope">
                        <slot name="testNumbers" :scope="scope"></slot>
                     </template>
                 </el-table-column>
-                <el-table-column :label="states.label" v-if="states.state">
+                <el-table-column :label="states.label" v-if="states">
                     <template v-slot="scope">
                         <slot name="states" :scope="scope"></slot>
                     </template>
@@ -36,8 +36,7 @@
                 <v-pagination
                     :pageSize="query.limit"
                     :total="pageTotal"
-                    :options="query"
-                    :render="getData">
+                    :options="query">
                 </v-pagination>
             </div>
         </el-col>
