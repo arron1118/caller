@@ -5,7 +5,12 @@ const aa = 'aaa';
 function bb () {
     return 'bb';
 }
-// 弹框
+// 隐藏电话号码
+const replaceStr = (str, char) => {
+    let a = str.substring(4,6)
+    let b = a.replace(a,char)
+    return str.substring(0,3) + b + str.substring(7,10)
+}
 
 //全部导出
 const excelData = ref([])
@@ -80,4 +85,4 @@ const formatJson2 = (filterVal, jsonData) => {
     return jsonData.map(v => filterVal.map(j => v[j]))
 }
 // 其他方法
-export { aa, bb, allExportExcel, selectExportExcel };
+export { aa, bb, allExportExcel, selectExportExcel, replaceStr };

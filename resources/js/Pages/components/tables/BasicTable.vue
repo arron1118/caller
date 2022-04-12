@@ -6,6 +6,7 @@
                 style="width: 100%"
                 ref="multipleTableRef"
                 @selection-change="handleSelectionChange"
+                @cell-click="handleColumn"
                 id="print"
             >
                 <el-table-column type="selection" width="55" v-if="selectionType === true" />
@@ -15,7 +16,12 @@
                     :prop="item.value"
                     :label="item.label"
                     :sortable="item.sortable === true"
-                />
+                >
+                    <template v-slot="scope" v-if="item.value === 'called_number'">
+                        <slot name="specialNumber" :scope="scope"></slot>
+                    </template>
+                </el-table-column>
+
                 <el-table-column :label="testNumbers.label" v-if="testNumbers">
                     <template v-slot="scope">
                        <slot name="testNumbers" :scope="scope"></slot>
@@ -34,9 +40,11 @@
     </el-table>
             <div class="table-bottom m-4" v-if="pagination === true">
                 <v-pagination
-                    :pageSize="query.limit"
-                    :total="pageTotal"
-                    :options="query">
+                    :pageSize="params.limit"
+                    :total="total"
+                    :options="params"
+                    :render="getTableData"
+                >
                 </v-pagination>
             </div>
         </el-col>
@@ -51,13 +59,8 @@ export default {
     components:{
         vPagination
     },
-    props:[ 'tableTitle', 'tableData','operates','testNumbers','states', 'selectionType', 'pagination' ],
+    props:[ 'tableTitle', 'tableData','operates','specialNumber','testNumbers','states', 'selectionType', 'pagination','total','getTableData','params' ],
     setup(props, context){
-        const pageSize = ref(1)
-        const handleEdit = async(index, row) => {
-            console.log(index, row)
-            context.emit('clickTableEdit', true, row)
-        }
         const multipleSelection = ref([])
         const selectExport = ref([])
         const handleSelectionChange = async(val) => {
@@ -65,22 +68,17 @@ export default {
             selectExport.value = multipleSelection.value
             context.emit('selectExports', selectExport.value)
         }
-        // 分页
-        const pageTotal = ref(0)  //总条数
-        const query = reactive({//配置对应的查询参数
-            appTimeStart:'',
-            appTimeEnd:'',
-            page: 1,
-            limit:15,//page第几页,limit是一页几个
-        })
+        const handleColumn = (row, column, cell, event) =>{
+            console.log(row)
+            console.log(column)
+            console.log(event)
+            console.log(cell)
+        }
         return{
             selectExport,
-            pageSize,
-            handleEdit,
             multipleSelection,
             handleSelectionChange,
-            query,
-            pageTotal
+            handleColumn
         }
     }
 }

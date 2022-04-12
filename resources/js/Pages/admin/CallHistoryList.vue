@@ -21,6 +21,9 @@
                     :operates="operates"
                     :selectionType="true"
                     :pagination="true"
+                    :total="total"
+                    :params="params"
+                    :getTableData="getTableData"
                     @selectExports="selectExportData"
                 >
                     <template v-slot:operates="scope">
@@ -74,7 +77,7 @@ export default {
             console.log('子传父参数', f)
         }
         // 表头
-        const { allExportExcel, selectExportExcel } = require("@/lqp")
+        const { allExportExcel, selectExportExcel, replaceStr } = require("@/lqp")
         const print = ref(false)
         const addFormDialog = ref(false)
         const receiveAddForm = (e, r) =>{
@@ -100,6 +103,11 @@ export default {
             addFormDialog.value = e
         }
         // 表格
+        const params = ref({
+            page: 1,
+            limit: 15,
+        })
+        const total = ref(0)
         const loading = ref(false)
         const editFormDialog = ref(false)
         const tableLoading = ref(false)
@@ -235,6 +243,7 @@ export default {
             //todo
         }
         return {
+            replaceStr,
             selectTableData,
             allExportExcel,
             selectExportExcel,
@@ -255,7 +264,9 @@ export default {
             editData,
             cancelEditForm,
             receiveEditForm,
-            print
+            print,
+            total,
+            params,
         }
     },
    mounted(){
@@ -263,9 +274,10 @@ export default {
    },
     methods: {
         getTableData(){
-            post('getHistoryList').then((res)=>{
+            post('getHistoryList', this.params).then((res)=>{
                 console.log(res)
                 this.tableData = res.data
+                this.total = res.total
             })
         },
          selectExportData (value) {

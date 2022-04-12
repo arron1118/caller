@@ -19,9 +19,18 @@
                     :operates="operates"
                     :testNumbers="testNumbers"
                     :states="states"
+                    :specialNumber="specialNumber"
                     :selectionType="true"
+                    :pagination="true"
+                    :total="total"
+                    :params="params"
+                    :getTableData="getTableData"
                     @selectExports="selectExportData"
                 >
+                    <template v-slot:specialNumber="scope">
+                        <el-icon><phone color="#409EFC"/></el-icon>
+                        <span>{{ scope.scope.row.called_number }}</span>
+                    </template>
                     <template v-slot:testNumbers="scope">
                         <el-switch
                             v-model="scope.scope.row.testNumber"
@@ -79,10 +88,11 @@ import vPagination from '@/Pages/components/tables/Pagination.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {post} from "@/http/request";
+import {Timer, Phone} from '@element-plus/icons-vue'
 export default {
     name: "CallHistoryList",
     components: {
-        ButtonGroup,
+        ButtonGroup,Timer,Phone,
         AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable, vPagination
     },
     setup(){
@@ -92,7 +102,7 @@ export default {
             console.log('子传父参数', f)
         }
         // 表头
-        const { allExportExcel, selectExportExcel } = require("@/lqp")
+        const { allExportExcel, selectExportExcel, replaceStr } = require("@/lqp")
         const addFormDialog = ref(false)
         const receiveAddForm = (e, r) =>{
             console.log('zhe',e)
@@ -117,6 +127,11 @@ export default {
             addFormDialog.value = e
         }
         // 表格
+        const params = ref({
+            page: 1,
+            limit: 15,
+        })
+        const total = ref(0)
         const loading = ref(false)
         const editFormDialog = ref(false)
         const tableLoading = ref(false)
@@ -169,6 +184,7 @@ export default {
             operate: true,
             label: '操作',
         })
+        const specialNumber = ref('')
         const testNumbers = ref({
             testNumber: true,
             label: '测试账号',
@@ -277,13 +293,10 @@ export default {
 
 
         }
-        const replaceStr = (str, char) => {
-            console.log('8888888888')
-            console.log(str)
-            console.log(char)
-        }
-            // return str.indexOf(4,7).replace(char)}
+
         return {
+            total,
+            params,
             replaceStr,
             selectExportExcel,
             selectTableData,
@@ -298,6 +311,7 @@ export default {
             operates,
             testNumbers,
             states,
+            specialNumber,
             operations,
             handleOperation,
             tableTitle,
@@ -315,14 +329,15 @@ export default {
     },
     methods: {
         getTableData(){
-            post('getHistoryList').then((res)=>{
+            post('getHistoryList', this.params).then((res)=>{
                 console.log(res)
-                // 加密电话号码
-
+                // 隐藏电话号码
                 res.data.forEach((item)=>{
-                    this.replaceStr(item.called_number, '*')
+                    item.called_number = this.replaceStr(item.called_number, '****')
                 })
                 this.tableData = res.data
+
+                this.total = res.total
             })
         },
         selectExportData (value) {
