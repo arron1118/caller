@@ -154,7 +154,7 @@ export default {
             {
                 label: '被叫号码',
                 value: 'called_number',
-                sortable: false
+                sortable: false,
             },
             {
                 label: '呼叫时间',
@@ -293,8 +293,22 @@ export default {
 
 
         }
+        const getTableData = async () => {
+            post('getHistoryList', params.value).then((res)=>{
+                console.log(res)
 
+                // 隐藏电话号码
+               res.data.forEach((item)=>{
+                    item.called_number_copy = item.called_number
+                    item.called_number = replaceStr(item.called_number, '****')
+                })
+
+                tableData.value = res.data
+                total.value = res.total
+            })
+        }
         return {
+            getTableData,
             total,
             params,
             replaceStr,
@@ -328,18 +342,6 @@ export default {
         this.getTableData()
     },
     methods: {
-        getTableData(){
-            post('getHistoryList', this.params).then((res)=>{
-                console.log(res)
-                // 隐藏电话号码
-                res.data.forEach((item)=>{
-                    item.called_number = this.replaceStr(item.called_number, '****')
-                })
-                this.tableData = res.data
-
-                this.total = res.total
-            })
-        },
         selectExportData (value) {
             this.selectTableData = value
         }

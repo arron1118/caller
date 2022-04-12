@@ -6,6 +6,8 @@
                 style="width: 100%"
                 ref="multipleTableRef"
                 @selection-change="handleSelectionChange"
+                @cell-mouse-enter="handleMouseEnter"
+                @cell-mouse-leave="handleMouseLeave"
                 @cell-click="handleColumn"
                 id="print"
             >
@@ -73,12 +75,27 @@ export default {
             console.log(column)
             console.log(event)
             console.log(cell)
+           // row.called_number = row.called_number_copy
+
+
+        }
+        const handleMouseEnter = (row, column, cell, event) => {
+            if(column.rawColumnKey === 3){
+                return cell.children[0].children[1].style.color="#409eff"
+            }
+        }
+        const handleMouseLeave = (row, column, cell, event) => {
+            if(column.rawColumnKey === 3){
+                return cell.children[0].children[1].style.color=""
+            }
         }
         return{
             selectExport,
             multipleSelection,
             handleSelectionChange,
-            handleColumn
+            handleColumn,
+            handleMouseEnter,
+            handleMouseLeave
         }
     }
 }
