@@ -13,9 +13,6 @@
 <script>
 export default {
     name: "Pagination",
-    components:{
-
-    },
     props: {
         pageSize: [Number, String],//一页多少条
         currentPage: [Number, String],//当前页
@@ -29,7 +26,7 @@ export default {
     },
     setup(props,context) {
         // 分页导航
-        const handlePageChange = (val)=>{
+        const handlePageChange = (val) => {
             props.options.page = val;
             props.render();
         }

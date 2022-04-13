@@ -47,6 +47,22 @@
                     @change="changeDuration"
                 />
             </el-form-item>
+<!--            充值管理-->
+            <el-form-item label="充值方" class="mx-4" prop="payer" v-if="role==='payment'">
+                <el-input v-model.trim="searchRuleForm.payer" placeholder="输入充值方" @blur="changePayer(searchRuleForm.payer)"/>
+            </el-form-item>
+            <el-form-item label="充值时间" prop="payTime" v-if="role==='payment'">
+                <el-date-picker
+                    v-model="searchRuleForm.payTime"
+                    type="datetimerange"
+                    range-separator="To"
+                    start-placeholder="开始时间"
+                    end-placeholder="结束时间"
+                    @change="changePayTime"
+                    value-format="YYYY-MM-DD hh:mm:ss"
+                />
+            </el-form-item>
+<!--            提交-->
             <el-form-item class="mx-1">
                 <el-button type="primary" :loading="loading" @click="submitSearch()"
                 >搜索
@@ -75,6 +91,8 @@ export default {
             number: '',
             name: '',
             duration: 0,
+            payer: '',
+            payTime: ''
 
         })
         const submitSearch = async () => {
@@ -134,6 +152,12 @@ export default {
         },
         changeDuration (v) {
             this.searchRuleForm = Object.assign({}, this.searchRuleForm, {duration: v})
+        },
+        changePayer (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, {payer: v})
+        },
+        changePayTime (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, {payTime: v})
         }
     }
 }

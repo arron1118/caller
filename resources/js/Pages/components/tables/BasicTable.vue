@@ -6,6 +6,9 @@
                 style="width: 100%"
                 ref="multipleTableRef"
                 @selection-change="handleSelectionChange"
+                @cell-mouse-enter="handleMouseEnter"
+                @cell-mouse-leave="handleMouseLeave"
+                @cell-click="handleColumn"
                 id="print"
             >
                 <el-table-column type="selection" width="55" v-if="selectionType === true" />
@@ -15,29 +18,35 @@
                     :prop="item.value"
                     :label="item.label"
                     :sortable="item.sortable === true"
-                />
-                <el-table-column :label="testNumbers.label" v-if="testNumbers.testNumber">
+                >
+                    <template v-slot="scope" v-if="item.value === 'called_number'">
+                        <slot name="specialNumber" :scope="scope"></slot>
+                    </template>
+                </el-table-column>
+
+                <el-table-column :label="testNumbers.label" v-if="testNumbers">
                     <template v-slot="scope">
                        <slot name="testNumbers" :scope="scope"></slot>
                     </template>
                 </el-table-column>
-                <el-table-column :label="states.label" v-if="states.state">
+                <el-table-column :label="states.label" v-if="states">
                     <template v-slot="scope">
                         <slot name="states" :scope="scope"></slot>
                     </template>
                 </el-table-column>
-                <el-table-column width="160" v-if="operates.operate" :label="operates.label">
+                <el-table-column v-if="operates.operate" :label="operates.label">
                  <template v-slot="scope">
                      <slot name="operates" :scope="scope"></slot>
                  </template>
                 </el-table-column>
     </el-table>
-            <div class="table-bottom" v-if="pagination === true">
+            <div class="table-bottom m-4" v-if="pagination === true">
                 <v-pagination
-                    :pageSize="query.limit"
-                    :total="pageTotal"
-                    :options="query"
-                    :render="getData">
+                    :pageSize="params.limit"
+                    :total="total"
+                    :options="params"
+                    :render="getTableData"
+                >
                 </v-pagination>
             </div>
         </el-col>
@@ -45,20 +54,16 @@
 </template>
 
 <script>
-import {reactive, ref} from 'vue'
+import {ref} from 'vue'
 import vPagination from '@/Pages/components/tables/Pagination.vue'
 export default {
     name: "BasicTable",
     components:{
         vPagination
     },
-    props:[ 'tableTitle', 'tableData','operates','testNumbers','states', 'selectionType', 'pagination' ],
+    props:[ 'tableTitle', 'tableData','operates','specialNumber','testNumbers','states', 'selectionType', 'pagination','total','getTableData','params' ],
     setup(props, context){
-        const pageSize = ref(1)
-        const handleEdit = async(index, row) => {
-            console.log(index, row)
-            context.emit('clickTableEdit', true, row)
-        }
+        const { replaceStr } = require("@/lqp")
         const multipleSelection = ref([])
         const selectExport = ref([])
         const handleSelectionChange = async(val) => {
@@ -66,35 +71,32 @@ export default {
             selectExport.value = multipleSelection.value
             context.emit('selectExports', selectExport.value)
         }
-        // 分页
-        const pageTotal = ref(0)  //总条数
-        const query = reactive({//配置对应的查询参数
-            appTimeStart:'',
-            appTimeEnd:'',
-            page: 1,
-            limit:10,//page第几页,limit是一页几个
-        })
-        const getData = () => {
-            console.log(query)
-            // proxy.axios({
-            //     url: 'api/getList',
-            //     method: 'POST',
-            //     data:query
-            // }).then(res => {
-            //     pageTotal.value = res.count;
-            //     tableData.value = res.data;
-            // })
+        const handleColumn = (row, column, cell, event) =>{
+            row.isCalled = !row.isCalled
+            if(row.isCalled === true){
+                row.called_number = row.called_number_copy
+            }else if(row.isCalled === false){
+                row.called_number = replaceStr(row.called_number, '****')
+            }
         }
-        getData()
+        const handleMouseEnter = (row, column, cell, event) => {
+            if(column.rawColumnKey === 3){
+                return cell.children[0].children[1].style.color="#409eff"
+            }
+        }
+        const handleMouseLeave = (row, column, cell, event) => {
+            if(column.rawColumnKey === 3){
+                return cell.children[0].children[1].style.color=""
+            }
+        }
         return{
             selectExport,
-            pageSize,
-            handleEdit,
             multipleSelection,
             handleSelectionChange,
-            query,
-            pageTotal,
-            getData,
+            handleColumn,
+            handleMouseEnter,
+            handleMouseLeave,
+            replaceStr
         }
     }
 }

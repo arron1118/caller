@@ -8,7 +8,8 @@
                 <div class="m-2 flex flex-row justify-between border-b pb-2">
                     <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
                     <div class="flex flex-column justify-center items-center mx-4">
-                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'用户管理报表')">导出</el-button>
+                        <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'用户管理报表')">选择导出</el-button>
+                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'用户管理报表')">全部导出</el-button>
                     </div>
                 </div>
                 <basic-table
@@ -18,9 +19,18 @@
                     :operates="operates"
                     :testNumbers="testNumbers"
                     :states="states"
+                    :specialNumber="specialNumber"
                     :selectionType="true"
+                    :pagination="true"
+                    :total="total"
+                    :params="params"
+                    :getTableData="getTableData"
                     @selectExports="selectExportData"
                 >
+                    <template v-slot:specialNumber="scope">
+                        <el-icon><phone color="#409EFC"/></el-icon>
+                        <span>{{ scope.scope.row.called_number }}</span>
+                    </template>
                     <template v-slot:testNumbers="scope">
                         <el-switch
                             v-model="scope.scope.row.testNumber"
@@ -53,13 +63,6 @@
                         ></table-operation>
                     </template>
                 </basic-table>
-                <v-pagination
-                    :pageSize="query.limit"
-                    :total="pageTotal"
-                    :options="query"
-                    :render="getData">
-                </v-pagination>
-
             </div>
         </div>
     </admin-layout>
@@ -82,12 +85,14 @@ import AddForm from '@/Pages/admin/sub/Add.vue'
 import EditForm from '@/Pages/admin/sub/Edit.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
 import vPagination from '@/Pages/components/tables/Pagination.vue'
-import {h, reactive, ref, getCurrentInstance} from "vue"
+import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
+import {post} from "@/http/request";
+import {Timer, Phone} from '@element-plus/icons-vue'
 export default {
     name: "CallHistoryList",
     components: {
-        ButtonGroup,
+        ButtonGroup,Timer,Phone,
         AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable, vPagination
     },
     setup(){
@@ -97,7 +102,7 @@ export default {
             console.log('子传父参数', f)
         }
         // 表头
-        const { allExportExcel } = require("@/lqp")
+        const { allExportExcel, selectExportExcel, replaceStr } = require("@/lqp")
         const addFormDialog = ref(false)
         const receiveAddForm = (e, r) =>{
             console.log('zhe',e)
@@ -122,111 +127,64 @@ export default {
             addFormDialog.value = e
         }
         // 表格
-        // const { proxy } = getCurrentInstance() //获取上下文实例
-        const pageTotal = ref(0)  //总条数
-        const query = reactive({//配置对应的查询参数
-            appTimeStart:'',
-            appTimeEnd:'',
+        const params = ref({
             page: 1,
-            limit:10,//page第几页,limit是一页几个
+            limit: 15,
         })
-        // 获取表格数据
-        const getData = () => {
-            console.log(query)
-            // proxy.axios({
-            //     url: 'api/getList',
-            //     method: 'POST',
-            //     data:query
-            // }).then(res => {
-            //     pageTotal.value = res.count;
-            //     tableData.value = res.data;
-            // })
-        }
-        getData()
+        const total = ref(0)
         const loading = ref(false)
         const editFormDialog = ref(false)
         const tableLoading = ref(false)
         const tableTitle = [
             {
-                label: '账号',
-                value: 'number',
-                sortable: false
-            },
-            {
-                label: '密码',
-                value: 'password',
+                label: '编号',
+                value: 'axb_number',
                 sortable: false
             },
             {
                 label: '公司名称',
-                value: 'name',
+                value: 'company',
                 sortable: false
             },
             {
-                label: '小号',
-                value: 'minNumber',
+                label: '客户名称',
+                value: 'customer',
                 sortable: false
             },
             {
-                label: '坐席',
-                value: 'sit',
-                sortable: false
+                label: '被叫号码',
+                value: 'called_number',
+                sortable: false,
             },
             {
-                label: '限制用户',
-                value: 'limitNumber',
+                label: '呼叫时间',
+                value: 'createtime',
                 sortable: true
             },
             {
-                label: '费率（元）',
-                value: 'rate',
+                label: '呼叫时长',
+                value: 'call_duration',
+                sortable: true
+            },
+            {
+                label: '消费金额（￥/元）',
+                value: 'call_duration',
                 sortable: false
             },
             {
-                label: '结束时间',
-                value: 'dataTime',
-                sortable: false
-            },
-            {
-                label: '结束时间',
-                value: 'testNumber',
+                label: '录音',
+                value: 'platform',
                 sortable: false
             }
 
         ]
-        const tableData = [
-            {
-                id: 1,
-                number: '1509372600101482498',
-                password: '123456',
-                name: '湖北太初',
-                minNumber: '124545656',
-                sit: 100,
-                limitNumber: 999,
-                rate: 2,
-                dataTime: '2022-03-30 12:00:00',
-                testNumber: true,
-                state: false
-            },
-            {
-                id: 2,
-                number: '1002222',
-                password: '1234526',
-                name: '湖北太初22',
-                minNumber: '124545622256',
-                sit: 1020,
-                limitNumber: 9299,
-                rate: 22,
-                dataTime: '2022-03-30 12:00:00',
-                testNumber: false,
-                state: true
-            }
-
-        ]
+        const tableData = ref([])
+        const selectTableData = ref([])
         const operates = ref({
             operate: true,
             label: '操作',
         })
+        const specialNumber = ref('')
         const testNumbers = ref({
             testNumber: true,
             label: '测试账号',
@@ -240,13 +198,15 @@ export default {
         const operations = ref([{
             types: 'edit',
             title: '编辑',
-            type: 'primary'
+            type: 'success',
+            icon: ['fas', 'pen-to-square'],
 
         },
             {
                 types: 'del',
                 title: '删除',
-                type: 'danger'
+                type: 'danger',
+                icon: ['far', 'trash-can'],
 
             }
         ])
@@ -333,12 +293,30 @@ export default {
 
 
         }
+        const getTableData = async () => {
+            post('getHistoryList', params.value).then((res)=>{
+                console.log(res)
+
+                // 隐藏电话号码
+               res.data.forEach((item)=>{
+                    item.called_number_copy = item.called_number
+                    item.called_number = replaceStr(item.called_number, '****')
+                    item.isCalled = false
+                })
+
+                tableData.value = res.data
+                total.value = res.total
+            })
+        }
         return {
+            getTableData,
+            total,
+            params,
+            replaceStr,
+            selectExportExcel,
+            selectTableData,
             search,
             role,
-            query,
-            pageTotal,
-            getData,
             changeState,
             changeTestNumber,
             addFormDialog,
@@ -348,6 +326,7 @@ export default {
             operates,
             testNumbers,
             states,
+            specialNumber,
             operations,
             handleOperation,
             tableTitle,
@@ -361,14 +340,11 @@ export default {
         }
     },
     mounted() {
-
+        this.getTableData()
     },
     methods: {
         selectExportData (value) {
-            // 选择导出
-            console.log('拿到复选框', value)
-            this.tableData = value
-            console.log(this.tableData)
+            this.selectTableData = value
         }
     }
 }

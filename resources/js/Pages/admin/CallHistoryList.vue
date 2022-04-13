@@ -5,11 +5,13 @@
         </div>
         <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
-                <div class="m-2 flex flex-row justify-between border-b pb-2">
-                    <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
+                <div class="m-2 text-right border-b pb-2 flex flex-row justify-between">
+                    <div></div>
                     <div class="flex flex-column justify-center items-center mx-4">
-                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'通话记录报表')">导出</el-button>
-                        <el-button type="text" v-print="'#printId'" @click="print=true">打印</el-button>
+<!--                        <el-button type="text" @click="">筛选列</el-button>-->
+                        <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'通话记录报表')">选择导出</el-button>
+                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'通话记录报表')">全部导出</el-button>
+<!--                        <el-button type="text" v-print="'#printId'" @click="print=true">打印</el-button>-->
                     </div>
                 </div>
                 <basic-table
@@ -17,36 +19,13 @@
                     :tableData="tableData"
                     :tableLoading="tableLoading"
                     :operates="operates"
-                    :testNumbers="testNumbers"
-                    :states="states"
                     :selectionType="true"
                     :pagination="true"
+                    :total="total"
+                    :params="params"
+                    :getTableData="getTableData"
                     @selectExports="selectExportData"
                 >
-                    <template v-slot:testNumbers="scope">
-                        <el-switch
-                            v-model="scope.scope.row.testNumber"
-                            inline-prompt
-                            active-text="是"
-                            inactive-text="否"
-                            active-color="#E6A23C"
-                            :width="testNumbers.width"
-                            @change="changeTestNumber($event, scope.scope.row, scope.scope.$index)"
-                        />
-
-                    </template>
-                    <template v-slot:states="scope">
-                        <el-switch
-                            v-model="scope.scope.row.state"
-                            inline-prompt
-                            active-text="正常"
-                            inactive-text="禁用"
-                            active-color="#E6A23C"
-                            :width="states.width"
-                            @change="changeState($event, scope.scope.row, scope.scope.$index)"
-                        />
-
-                    </template>
                     <template v-slot:operates="scope">
                         <table-operation
                         :operations="operations"
@@ -82,9 +61,10 @@ import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/admin/sub/Add.vue'
 import EditForm from '@/Pages/admin/sub/Edit.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
-import {h, reactive, ref, getCurrentInstance} from "vue"
+import {h, reactive, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus"
- export default {
+import {post} from "@/http/request";
+export default {
     name: "CallHistoryList",
     components: {
         ButtonGroup,
@@ -97,7 +77,7 @@ import {ElMessage, ElMessageBox} from "element-plus"
             console.log('子传父参数', f)
         }
         // 表头
-        const { allExportExcel } = require("@/lqp")
+        const { allExportExcel, selectExportExcel, replaceStr } = require("@/lqp")
         const print = ref(false)
         const addFormDialog = ref(false)
         const receiveAddForm = (e, r) =>{
@@ -123,112 +103,70 @@ import {ElMessage, ElMessageBox} from "element-plus"
             addFormDialog.value = e
         }
         // 表格
-       // const { proxy } = getCurrentInstance() //获取上下文实例
-
+        const params = ref({
+            page: 1,
+            limit: 15,
+        })
+        const total = ref(0)
         const loading = ref(false)
         const editFormDialog = ref(false)
         const tableLoading = ref(false)
         const tableTitle = [
             {
-                label: '账号',
-                value: 'number',
-                sortable: false
-            },
-            {
-                label: '密码',
-                value: 'password',
+                label: '编号',
+                value: 'axb_number',
                 sortable: false
             },
             {
                 label: '公司名称',
-                value: 'name',
+                value: 'company',
                 sortable: false
             },
             {
-                label: '小号',
-                value: 'minNumber',
+                label: '客户名称',
+                value: 'customer',
                 sortable: false
             },
             {
-                label: '坐席',
-                value: 'sit',
+                label: '被叫号码',
+                value: 'called_number',
                 sortable: false
             },
             {
-                label: '限制用户',
-                value: 'limitNumber',
+                label: '呼叫时间',
+                value: 'createtime',
                 sortable: true
             },
             {
-                label: '费率（元）',
-                value: 'rate',
+                label: '呼叫时长',
+                value: 'call_duration',
+                sortable: true
+            },
+            {
+                label: '消费金额（￥/元）',
+                value: 'call_duration',
                 sortable: false
             },
             {
-                label: '结束时间',
-                value: 'dataTime',
-                sortable: false
-            },
-            {
-                label: '结束时间',
-                value: 'testNumber',
+                label: '录音',
+                value: 'platform',
                 sortable: false
             }
 
         ]
-        const tableData = [
-            {
-                id: 1,
-                number: '1509372600101482498',
-                password: '123456',
-                name: '湖北太初',
-                minNumber: '124545656',
-                sit: 100,
-                limitNumber: 999,
-                rate: 2,
-                dataTime: '2022-03-30 12:00:00',
-                testNumber: true,
-                state: false
-            },
-            {
-                id: 2,
-                number: '1002222',
-                password: '1234526',
-                name: '湖北太初22',
-                minNumber: '124545622256',
-                sit: 1020,
-                limitNumber: 9299,
-                rate: 22,
-                dataTime: '2022-03-30 12:00:00',
-                testNumber: false,
-                state: true
-            }
-
-        ]
+        const tableData = ref([])
+        const selectTableData = ref([])
         const operates = ref({
             operate: true,
             label: '操作',
         })
-        const testNumbers = ref({
-            testNumber: true,
-            label: '测试账号',
-            width: 60
-        })
-        const states = ref({
-            state: true,
-            label: '状态',
-            width: 60
-        })
-        const operations = ref([{
-            types: 'edit',
-            title: '编辑',
-            type: 'primary'
-
-        },
+        const operations = ref([
         {
             types: 'del',
-            title: '删除',
-            type: 'danger'
+            type: 'danger',
+            // icon: 'Delete',
+            icon: ['far', 'trash-can'],
+            title: '删除'
 
         }
         ])
@@ -297,15 +235,6 @@ import {ElMessage, ElMessageBox} from "element-plus"
         const cancelEditForm = (e) => {
             editFormDialog.value = e
         }
-        const changeTestNumber = (e,row,index) => {
-            // e返回状态，row当前行数据， index下标
-            console.log('zhe',e)
-            console.log(row)
-            console.log(index)
-            //todo
-
-
-        }
         const changeState = (e,row,index) => {
             // e返回状态，row当前行数据， index下标
             console.log('zhe2',e)
@@ -314,18 +243,18 @@ import {ElMessage, ElMessageBox} from "element-plus"
             //todo
         }
         return {
+            replaceStr,
+            selectTableData,
             allExportExcel,
+            selectExportExcel,
             search,
             role,
             changeState,
-            changeTestNumber,
             addFormDialog,
             receiveAddForm,
             cancelAddForm,
             loading,
             operates,
-            testNumbers,
-            states,
             operations,
             handleOperation,
             tableTitle,
@@ -335,20 +264,24 @@ import {ElMessage, ElMessageBox} from "element-plus"
             editData,
             cancelEditForm,
             receiveEditForm,
-            print
+            print,
+            total,
+            params,
         }
     },
-   watch:{
-       // selectExportData(newValue) {
-       //     this.tableData = newValue
-       // }
+   mounted(){
+     this.getTableData()
    },
     methods: {
+        getTableData(){
+            post('getHistoryList', this.params).then((res)=>{
+                console.log(res)
+                this.tableData = res.data
+                this.total = res.total
+            })
+        },
          selectExportData (value) {
-            // 选择导出
-            console.log('拿到复选框', value)
-            this.tableData = value
-             console.log(this.tableData)
+            this.selectTableData = value
         }
     }
 }
