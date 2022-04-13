@@ -25,7 +25,7 @@
                     <el-checkbox label="记住密码" name="remember" v-model="checked"/>
                 </el-form-item>
             </el-form>
-            <div class="text-center mb-4">
+            <div class="text-center mb-4 flex flex-row">
                 <el-button type="primary" @click="submitForm()">登入</el-button>
                 <el-button @click="resetForm()">重置</el-button>
             </div>
