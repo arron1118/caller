@@ -301,6 +301,7 @@ export default {
                res.data.forEach((item)=>{
                     item.called_number_copy = item.called_number
                     item.called_number = replaceStr(item.called_number, '****')
+                    item.isCalled = false
                 })
 
                 tableData.value = res.data

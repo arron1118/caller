@@ -9,7 +9,7 @@ function bb () {
 const replaceStr = (str, char) => {
     let a = str.substring(4,6)
     let b = a.replace(a,char)
-    return str.substring(0,3) + b + str.substring(7,10)
+    return str.substring(0,3) + b + str.substring(7,11)
 }
 
 //全部导出

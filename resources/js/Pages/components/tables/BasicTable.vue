@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import {reactive, ref} from 'vue'
+import {ref} from 'vue'
 import vPagination from '@/Pages/components/tables/Pagination.vue'
 export default {
     name: "BasicTable",
@@ -63,6 +63,7 @@ export default {
     },
     props:[ 'tableTitle', 'tableData','operates','specialNumber','testNumbers','states', 'selectionType', 'pagination','total','getTableData','params' ],
     setup(props, context){
+        const { replaceStr } = require("@/lqp")
         const multipleSelection = ref([])
         const selectExport = ref([])
         const handleSelectionChange = async(val) => {
@@ -71,13 +72,12 @@ export default {
             context.emit('selectExports', selectExport.value)
         }
         const handleColumn = (row, column, cell, event) =>{
-            console.log(row)
-            console.log(column)
-            console.log(event)
-            console.log(cell)
-           // row.called_number = row.called_number_copy
-
-
+            row.isCalled = !row.isCalled
+            if(row.isCalled === true){
+                row.called_number = row.called_number_copy
+            }else if(row.isCalled === false){
+                row.called_number = replaceStr(row.called_number, '****')
+            }
         }
         const handleMouseEnter = (row, column, cell, event) => {
             if(column.rawColumnKey === 3){
@@ -95,7 +95,8 @@ export default {
             handleSelectionChange,
             handleColumn,
             handleMouseEnter,
-            handleMouseLeave
+            handleMouseLeave,
+            replaceStr
         }
     }
 }
