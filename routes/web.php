@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use \App\Http\Controllers\Admin\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +17,13 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
 //    return view('welcome');
-    return Inertia::render('Welcome', [
-        'title' => 'Welcome'
-    ]);
+//    return Inertia::render('Welcome', [
+//        'title' => 'Welcome'
+//    ]);
+    return redirect('/admin/login')->with(['msg' => '请先登录']);
+});
+Route::get('/admin', function () {
+    return redirect('/admin/login')->with(['msg' => '请先登录']);
 });
 Route::get('/admin/login', function () {
     return Inertia::render('admin/Login', []);
@@ -28,7 +33,7 @@ Route::get('/admin/dashboard', function () {
     return Inertia::render('admin/Dashboard', []);
 })->name('admin.dashboard');
 
-Route::get('/admin/user', [\App\Http\Controllers\Admin\User::class, 'show'])->name('admin.user');
+Route::get('/admin/user', [User::class, 'show'])->name('admin.user');
 
 Route::get('/admin/sub/add', function () {
     return Inertia::render('sub/Add', []);
@@ -63,7 +68,7 @@ Route::get('/admin/profile', function () {
 })->name('admin.profile');
 
 Route::get('/admin/logout', function () {
-    return '退出登录';
+    return redirect()->route('admin.login')->with(['msg' => '退出成功']);
 })->name('admin.logout');
 
 Route::get('/company/logout', function () {
