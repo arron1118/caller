@@ -84,7 +84,6 @@ import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/admin/sub/Add.vue'
 import EditForm from '@/Pages/admin/sub/Edit.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
-import vPagination from '@/Pages/components/tables/Pagination.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {post} from "@/http/request";
@@ -93,7 +92,7 @@ export default {
     name: "CallHistoryList",
     components: {
         ButtonGroup,Timer,Phone,
-        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable, vPagination
+        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable
     },
     setup(){
         // 搜索框
@@ -133,7 +132,6 @@ export default {
         })
         const total = ref(0)
         const loading = ref(false)
-        const editFormDialog = ref(false)
         const tableLoading = ref(false)
         const tableTitle = [
             {
@@ -180,6 +178,22 @@ export default {
         ]
         const tableData = ref([])
         const selectTableData = ref([])
+        const getTableData = async () => {
+            post('getHistoryList', params.value).then((res)=>{
+                console.log(res)
+
+                // 隐藏电话号码
+                res.data.forEach((item)=>{
+                    item.called_number_copy = item.called_number
+                    item.called_number = replaceStr(item.called_number, '****')
+                    item.isCalled = false
+                })
+
+                tableData.value = res.data
+                total.value = res.total
+            })
+        }
+        const editFormDialog = ref(false)
         const operates = ref({
             operate: true,
             label: '操作',
@@ -292,21 +306,6 @@ export default {
             //todo
 
 
-        }
-        const getTableData = async () => {
-            post('getHistoryList', params.value).then((res)=>{
-                console.log(res)
-
-                // 隐藏电话号码
-               res.data.forEach((item)=>{
-                    item.called_number_copy = item.called_number
-                    item.called_number = replaceStr(item.called_number, '****')
-                    item.isCalled = false
-                })
-
-                tableData.value = res.data
-                total.value = res.total
-            })
         }
         return {
             getTableData,
