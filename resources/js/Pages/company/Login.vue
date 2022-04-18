@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-content-center min-h-screen bg-gray-50">
+    <div class="flex justify-content-center min-h-screen bg-gray-50 bg-auto bg-no-repeat bg-center" style="background-image: url('/img/bg0.png')">
         <div class="flex flex-row m-auto" style="width: 1080px; height: 500px; ">
             <div class="mr-5 p-4 shadow-2xl bg-gradient-to-br from-cyan-500 to-sky-600" style="width: 660px; ">
                 <div class="text-base p-20 text-white">
@@ -13,7 +13,10 @@
                 </div>
             </div>
             <div class="order-last bg-white py-4 px-6 shadow-2xl" style="width: 400px ">
-                <div class="text-2xl text-center mb-8 mt-4 font-semibold text-brand">登录</div>
+                <div class="text-2xl text-center mb-8 mt-4 font-semibold text-brand">
+                    登录
+                    <span class="text-gray-400 text-sm">管理员</span>
+                </div>
                 <el-form
                     ref="ruleFormRef"
                     :model="ruleForm"
@@ -58,7 +61,7 @@ export default {
         const ruleFormRef = ref(null)
         const formSize = ref('large')
         const ruleForm = reactive({
-            name: 'admin',
+            name: 'test',
             password: '123456',
             img: '1234'
         })

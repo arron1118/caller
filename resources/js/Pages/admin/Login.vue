@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-content-center min-h-screen bg-gray-50">
+    <div class="flex justify-content-center min-h-screen bg-gray-50 bg-auto bg-no-repeat bg-center" style="background-image: url('/img/bg0.png')">
         <div class="flex flex-row m-auto" style="width: 1080px; height: 500px; ">
             <div class="mr-5 p-4 shadow-2xl bg-gradient-to-br from-cyan-500 to-sky-600" style="width: 660px; ">
                 <div class="text-base p-20 text-white">

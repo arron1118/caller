@@ -16,60 +16,60 @@ use \App\Http\Controllers\Admin\User;
 */
 
 Route::get('/', function () {
-//    return view('welcome');
-//    return Inertia::render('Welcome', [
-//        'title' => 'Welcome'
-//    ]);
-    return redirect('/admin/login')->with(['msg' => '请先登录']);
+    return redirect('/portal');
 });
-Route::get('/admin', function () {
-    return redirect('/admin/login')->with(['msg' => '请先登录']);
+
+Route::prefix('admin')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('admin.login')->with(['msg' => '请先登录']);
+    });
+    Route::get('/login', function () {
+        return Inertia::render('admin/Login', []);
+    })->name('admin.login');
+
+    Route::get('/dashboard', function () {
+        return Inertia::render('admin/Dashboard', []);
+    })->name('admin.dashboard');
+
+    Route::get('/user', [User::class, 'show'])->name('admin.user');
+
+    Route::get('/sub/add', function () {
+        return Inertia::render('sub/Add', []);
+    })->name('admin.sub.add');
+
+    Route::get('/sub/edit', function () {
+        return Inertia::render('sub/Edit', []);
+    })->name('admin.sub.edit');
+
+    Route::get('/callhistorylist', function () {
+        return Inertia::render('admin/CallHistoryList', []);
+    })->name('admin.callhistorylist');
+
+    Route::get('/payment', function () {
+        return Inertia::render('admin/Payment', []);
+    })->name('admin.payment');
+
+    Route::get('/numbers', function () {
+        return Inertia::render('admin/Numbers', []);
+    })->name('admin.numbers');
+
+    Route::get('/news', function () {
+        return Inertia::render('admin/News', []);
+    })->name('admin.news');
+
+    Route::get('/report', function () {
+        return Inertia::render('admin/Report', []);
+    })->name('admin.report');
+
+    Route::get('/profile', function () {
+        return Inertia::render('admin/Profile', []);
+    })->name('admin.profile');
+
+    Route::get('/logout', function () {
+        return redirect()->route('admin.login')->with(['msg' => '退出成功']);
+    })->name('admin.logout');
 });
-Route::get('/admin/login', function () {
-    return Inertia::render('admin/Login', []);
-})->name('admin.login');
 
-Route::get('/admin/dashboard', function () {
-    return Inertia::render('admin/Dashboard', []);
-})->name('admin.dashboard');
-
-Route::get('/admin/user', [User::class, 'show'])->name('admin.user');
-
-Route::get('/admin/sub/add', function () {
-    return Inertia::render('sub/Add', []);
-})->name('admin.sub.add');
-
-Route::get('/admin/sub/edit', function () {
-    return Inertia::render('sub/Edit', []);
-})->name('admin.sub.edit');
-
-Route::get('/admin/callhistorylist', function () {
-    return Inertia::render('admin/CallHistoryList', []);
-})->name('admin.callhistorylist');
-
-Route::get('/admin/payment', function () {
-    return Inertia::render('admin/Payment', []);
-})->name('admin.payment');
-
-Route::get('/admin/numbers', function () {
-    return Inertia::render('admin/Numbers', []);
-})->name('admin.numbers');
-
-Route::get('/admin/news', function () {
-    return Inertia::render('admin/News', []);
-})->name('admin.news');
-
-Route::get('/admin/report', function () {
-    return Inertia::render('admin/Report', []);
-})->name('admin.report');
-
-Route::get('/admin/profile', function () {
-    return Inertia::render('admin/Profile', []);
-})->name('admin.profile');
-
-Route::get('/admin/logout', function () {
-    return redirect()->route('admin.login')->with(['msg' => '退出成功']);
-})->name('admin.logout');
 
 Route::post('/getHistoryList', [\App\Http\Controllers\Api\CallHistory::class, 'getHistoryList'])->name('getHistoryList');
 
@@ -77,13 +77,42 @@ Route::prefix('company')->group(function () {
     Route::get('/', function () {
         return Inertia::render('company/Dashboard');
     })->name('company.dashboard');
+
+    Route::get('/user', [User::class, 'show'])->name('company.user');
+
+    Route::get('/sub/add', function () {
+        return Inertia::render('sub/Add', []);
+    })->name('company.sub.add');
+
+    Route::get('/sub/edit', function () {
+        return Inertia::render('sub/Edit', []);
+    })->name('company.sub.edit');
+
+    Route::get('/callhistorylist', function () {
+        return Inertia::render('company/CallHistoryList', []);
+    })->name('company.callhistorylist');
+
+    Route::get('/payment', function () {
+        return Inertia::render('company/Payment', []);
+    })->name('company.payment');
+
+    Route::get('/report', function () {
+        return Inertia::render('company/Report', []);
+    })->name('company.report');
+
     Route::get('/login', function () {
         return Inertia::render('company/Login');
     })->name('company.login');
 
     Route::get('/logout', function () {
-        return '退出登录';
+        return redirect()->route('company.login')->with(['msg' => '退出成功']);
     })->name('company.logout');
+});
+
+Route::prefix('portal')->group(function () {
+    Route::get('/', function () {
+        return '喵头鹰呼叫中心首页';
+    });
 });
 
 

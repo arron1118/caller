@@ -199,8 +199,7 @@
 </template>
 
 <script>
-import CompanyLayout from "../../Layouts/CompanyLayout";
-import AdminLayout from '@/layouts/AdminLayout';
+import CompanyLayout from "@/Layouts/CompanyLayout";
 import {Money, Headset, Phone, CircleCheck, CircleClose} from '@element-plus/icons-vue';
 import {ref, reactive} from "vue";
 import Table from '@/Pages/components/tables/PrintTable';
@@ -210,7 +209,6 @@ export default {
     components: {
         Table,
         CompanyLayout,
-        AdminLayout,
         Money,
         Headset,
         Phone,
