@@ -8,7 +8,9 @@
                 <div class="m-2 flex flex-row justify-between border-b pb-2">
                     <el-button type="primary" @click="addFormDialog = true">发布</el-button>
                     <div class="flex flex-column justify-center items-center mx-4">
-                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'资讯报表')">批量导入</el-button>
+                        <el-upload action="" :auto-upload="false" :multiple="false" :show-file-list="true" :on-change="uploadXlsx" :file-list="xlsxList">
+                            <el-button type="text" @click="allExportExcel(tableData,tableTitle,'资讯报表')">批量导入</el-button>
+                        </el-upload>
                         <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'资讯报表')">选择导出</el-button>
                         <el-button type="text" @click="allExportExcel(tableData,tableTitle,'资讯报表')">全部导出</el-button>
                     </div>
@@ -68,7 +70,7 @@
         </div>
     </admin-layout>
     <!--        弹框-->
-    <el-dialog v-model="addFormDialog" title="开通账号">
+    <el-dialog v-model="addFormDialog" title="发布资讯">
         <add-form @clickAdd="receiveAddForm" @clickCancelAdd="cancelAddForm" :loading="loading"></add-form>
     </el-dialog>
     <el-dialog v-model="editFormDialog" title="编辑">
@@ -95,21 +97,21 @@ export default {
         ButtonGroup,Timer,Phone,
         AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable
     },
-    setup(){
+    setup: function () {
         // 搜索框
         const role = ref('news')
         const search = (f) => {
             console.log('子传父参数', f)
         }
         // 表头
-        const { allExportExcel, selectExportExcel, replaceStr } = require("@/lqp")
+        const {allExportExcel, selectExportExcel, replaceStr} = require("@/lqp")
         const addFormDialog = ref(false)
-        const receiveAddForm = (e, r) =>{
-            console.log('zhe',e)
-            console.log('zhe',r)
+        const receiveAddForm = (e, r) => {
+            console.log('zhe', e)
+            console.log('zhe', r)
             loading.value = r
             // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
-            setTimeout(function(){
+            setTimeout(function () {
                 loading.value = false
                 addFormDialog.value = false
                 ElMessage({
@@ -180,11 +182,11 @@ export default {
         const tableData = ref([])
         const selectTableData = ref([])
         const getTableData = async () => {
-            post('getHistoryList', params.value).then((res)=>{
+            post('getHistoryList', params.value).then((res) => {
                 console.log(res)
 
                 // 隐藏电话号码
-                res.data.forEach((item)=>{
+                res.data.forEach((item) => {
                     item.called_number_copy = item.called_number
                     item.called_number = replaceStr(item.called_number, '****')
                     item.isCalled = false
@@ -226,18 +228,18 @@ export default {
             }
         ])
         const editData = ref({})
-        const handleOperation = (op, row) =>{
-            if(op.types === 'edit'){
+        const handleOperation = (op, row) => {
+            if (op.types === 'edit') {
                 editFormDialog.value = true
                 editData.value = row.value
 
-            }else if(op.types === 'del'){
+            } else if (op.types === 'del') {
                 console.log(row.value.id)
                 ElMessageBox({
-                    title: '确认删除此id='+row.value.id+'数据吗？',
+                    title: '确认删除此id=' + row.value.id + '数据吗？',
                     message: h('p', null, [
                         h('span', null, '此数据将会被'),
-                        h('i', { style: 'color: #F56C6C' }, '删除'),
+                        h('i', {style: 'color: #F56C6C'}, '删除'),
                     ]),
                     showCancelButton: true,
                     confirmButtonText: '删除',
@@ -267,13 +269,13 @@ export default {
                 })
             }
         }
-        const receiveEditForm = (e, r) =>{
-            console.log('参数',e)
-            console.log('zhe',r)
+        const receiveEditForm = (e, r) => {
+            console.log('参数', e)
+            console.log('zhe', r)
             loading.value = r
             // todo
             // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
-            setTimeout(function(){
+            setTimeout(function () {
                 loading.value = false
                 editFormDialog.value = false
                 ElMessage({
@@ -290,64 +292,88 @@ export default {
         const cancelEditForm = (e) => {
             editFormDialog.value = e
         }
-        const changeTestNumber = (e,row,index) => {
+        const changeTestNumber = (e, row, index) => {
             // e返回状态，row当前行数据， index下标
-            console.log('zhe',e)
+            console.log('zhe', e)
             console.log(row)
             console.log(index)
             //todo
 
 
         }
-        const changeState = (e,row,index) => {
+        const changeState = (e, row, index) => {
             // e返回状态，row当前行数据， index下标
-            console.log('zhe2',e)
+            console.log('zhe2', e)
             console.log(row)
             console.log(index)
             //todo
 
 
         }
-
-        return {
-            getTableData,
-            total,
-            params,
-            replaceStr,
-            selectExportExcel,
-            selectTableData,
-            search,
-            role,
-            changeState,
-            changeTestNumber,
-            addFormDialog,
-            receiveAddForm,
-            cancelAddForm,
-            loading,
-            operates,
-            testNumbers,
-            states,
-            specialNumber,
-            operations,
-            handleOperation,
-            tableTitle,
-            tableData,
-            tableLoading,
-            editFormDialog,
-            editData,
-            cancelEditForm,
-            receiveEditForm,
-            allExportExcel
+        const xlsxList = ref([])
+        const beforeAvatarUpload = async (file) => {
+            let fileArr = file.name.split('.')
+            let suffix = fileArr[fileArr.length - 1]
+            if (suffix !== 'xls' && suffix !== 'xlsx') {
+                ElMessage.error('文件格式不正确！')
+                return false
+            } else if (suffix.size / 1024 / 1024 > 2) {
+                ElMessage.error('上传图片不能超过2MB！')
+                return false
+            }
+            return true
         }
-    },
-    mounted() {
-        this.getTableData()
-    },
-    methods: {
-        selectExportData (value) {
-            this.selectTableData = value
+            const handleAvatarSuccess = async (response, upload) => {
+                console.log(response)
+                console.log(upload)
+                // imageUrl.value = URL.createObjectURL(uploadFilled.row)
+            }
+            return {
+                xlsxList,
+                beforeAvatarUpload,
+                handleAvatarSuccess,
+                getTableData,
+                total,
+                params,
+                replaceStr,
+                selectExportExcel,
+                selectTableData,
+                search,
+                role,
+                changeState,
+                changeTestNumber,
+                addFormDialog,
+                receiveAddForm,
+                cancelAddForm,
+                loading,
+                operates,
+                testNumbers,
+                states,
+                specialNumber,
+                operations,
+                handleOperation,
+                tableTitle,
+                tableData,
+                tableLoading,
+                editFormDialog,
+                editData,
+                cancelEditForm,
+                receiveEditForm,
+                allExportExcel
+            }
+        };
+        const mounted;
+        ()
+        {
+            this.getTableData()
+        }
+    ,
+        methods: {
+            selectExportData(value)
+            {
+                this.selectTableData = value
+            }
         }
     }
-}
 </script>
 

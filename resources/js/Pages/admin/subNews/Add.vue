@@ -20,21 +20,17 @@
                     @change="changeSwitch"
                 />
             </el-form-item>
-            <el-form-item label="封面" prop="cover">
-                <el-upload
-                    class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :show-file-list="false"
-                >
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-                    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-                </el-upload>
+            <el-form-item label="封面" label-width="140px" prop="cover">
+              <image-upload></image-upload>
+            </el-form-item>
+            <el-form-item label="内容" label-width="140px" prop="cover">
+                <tiny-mce></tiny-mce>
             </el-form-item>
 <!--          提交-->
             <div class="flex flex-row justify-center mt-8">
                 <el-button @click="cancelAdd()">取消</el-button>
                 <el-button type="primary" :loading="loading" @click="submitAdd()"
-                >开通</el-button
+                >发布</el-button
                 >
             </div>
         </el-form>
@@ -43,9 +39,13 @@
 
 <script>
 import {ref, reactive, unref} from "vue"
+import ImageUpload from '@/Pages/components/others/ImageUpload.vue'
+import TinyMce from '@/Pages/components/others/TinyMce.vue'
 export default {
     name: "Add",
     components: {
+        TinyMce,
+        ImageUpload
     },
     setup(props, context){
         const width = ref(60)
@@ -87,6 +87,7 @@ export default {
         const cancelAdd = async () => {
             context.emit('clickCancelAdd', false)
         }
+
         return{
             changeSwitch,
             width,
@@ -101,7 +102,6 @@ export default {
     methods: {}
 }
 </script>
-
 <style scoped>
 
 </style>
