@@ -121,7 +121,7 @@ export default {
                 }
                 console.log('参数', params)
                 // todo
-                this.$inertia.get('/admin/dashboard')
+                this.$inertia.get('/company')
             } catch (error) {
 
             }

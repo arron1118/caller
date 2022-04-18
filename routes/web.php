@@ -71,13 +71,20 @@ Route::get('/admin/logout', function () {
     return redirect()->route('admin.login')->with(['msg' => '退出成功']);
 })->name('admin.logout');
 
-Route::get('/company/logout', function () {
-    return '退出登录';
-})->name('company.logout');
-
 Route::post('/getHistoryList', [\App\Http\Controllers\Api\CallHistory::class, 'getHistoryList'])->name('getHistoryList');
 
+Route::prefix('company')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('company/Dashboard');
+    })->name('company.dashboard');
+    Route::get('/login', function () {
+        return Inertia::render('company/Login');
+    })->name('company.login');
 
+    Route::get('/logout', function () {
+        return '退出登录';
+    })->name('company.logout');
+});
 
 
 
