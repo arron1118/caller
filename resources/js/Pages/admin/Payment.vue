@@ -31,7 +31,7 @@
                         <el-tag
                             :type="scope.scope.row.status === 0 ? '' : 'success'"
                             disable-transitions
-                        ><font-awesome-icon :icon="scope.scope.row.status === 0 ? ['fas', 'pen-to-square'] : ['fas', 'pen-to-square']"></font-awesome-icon></el-tag>
+                        ><font-awesome-icon :icon="scope.scope.row.status === 0 ? ['fas', 'pen-to-square'] : ['fas', 'trash-can']"></font-awesome-icon></el-tag>
                     </template>
                     <template v-slot:payStatus="scope">
                         <el-tag

@@ -307,6 +307,7 @@ export default {
 
 
         }
+
         return {
             getTableData,
             total,

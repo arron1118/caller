@@ -10,6 +10,8 @@
                 @cell-mouse-leave="handleMouseLeave"
                 @cell-click="handleColumn"
                 id="print"
+                :show-summary="showSummary"
+                :sum-text="'合计'"
             >
                 <el-table-column type="selection" width="55" v-if="selectionType === true" />
                 <el-table-column
@@ -43,7 +45,7 @@
                     :label="payWays.label"
                     v-if="payWays"
                     prop="status"
-                    :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' },{ text: '2', value: '2' }]"
+                    :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' }]"
                     :filter-method="filterWays"
                     filter-placement="bottom-end"
                 >
@@ -55,7 +57,7 @@
                     :label="payStatus.label"
                     v-if="payStatus"
                     prop="status"
-                    :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' }]"
+                    :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' },{ text: '2', value: '2' }]"
                     :filter-method="filterStatus"
                     filter-placement="bottom-end"
                 >
@@ -85,7 +87,8 @@ export default {
     components:{
         vPagination
     },
-    props:[ 'tableTitle', 'tableData','operates','specialNumber','testNumbers','states', 'selectionType', 'pagination','total','getTableData','params','payWays','payStatus' ],
+    props:[ 'tableTitle', 'tableData','operates','specialNumber','testNumbers','states',
+        'selectionType', 'pagination','total','getTableData','params','payWays','payStatus','showSummary' ],
     setup(props, context){
         const { replaceStr } = require("@/lqp")
         const multipleSelection = ref([])
@@ -104,18 +107,16 @@ export default {
             }
         }
         const handleMouseEnter = (row, column, cell, event) => {
-            // if(props.specialNumber){
                 if(column.rawColumnKey === 3){
                     return cell.children[0].children[1].style.color="#409eff"
+                }else{
+                    return ''
                 }
-            // }
         }
         const handleMouseLeave = (row, column, cell, event) => {
-            if(props.specialNumber){
                 if(column.rawColumnKey === 3){
                     return cell.children[0].children[1].style.color=""
                 }
-            }
         }
         const filterWays = (value, row) => {
             console.log(value)
