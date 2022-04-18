@@ -11,6 +11,7 @@ const replaceStr = (str, char) => {
     let b = a.replace(a,char)
     return str.substring(0,3) + b + str.substring(7,11)
 }
+//导出
 
 //全部导出
 const excelData = ref([])

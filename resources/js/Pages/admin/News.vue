@@ -1,20 +1,375 @@
 <template>
-    <AdminLayout>
-        News page
-    </AdminLayout>
+    <admin-layout title="Dashboard">
+        <div class="mb-6 bg-white rounded shadow pt-4">
+            <search-form :role="role" @clickSearch="search"></search-form>
+        </div>
+        <div class="mb-6 bg-white rounded shadow p-4">
+            <div class="border rounded">
+                <div class="m-2 flex flex-row justify-between border-b pb-2">
+                    <el-button type="primary" @click="addFormDialog = true">发布</el-button>
+                    <div class="flex flex-column justify-center items-center mx-4">
+                        <el-upload action="" :auto-upload="false" :multiple="false" :show-file-list="true" :on-change="uploadXlsx" :file-list="xlsxList">
+                            <el-button type="text" @click="allExportExcel(tableData,tableTitle,'资讯报表')">批量导入</el-button>
+                        </el-upload>
+                        <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'资讯报表')">选择导出</el-button>
+                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'资讯报表')">全部导出</el-button>
+                    </div>
+                </div>
+                <basic-table
+                    :tableTitle="tableTitle"
+                    :tableData="tableData"
+                    :tableLoading="tableLoading"
+                    :operates="operates"
+                    :testNumbers="testNumbers"
+                    :states="states"
+                    :specialNumber="specialNumber"
+                    :selectionType="true"
+                    :pagination="true"
+                    :total="total"
+                    :params="params"
+                    :getTableData="getTableData"
+                    @selectExports="selectExportData"
+                >
+                    <template v-slot:specialNumber="scope">
+                        <el-icon><phone color="#409EFC"/></el-icon>
+                        <span>{{ scope.scope.row.called_number }}</span>
+                    </template>
+                    <template v-slot:testNumbers="scope">
+                        <el-switch
+                            v-model="scope.scope.row.testNumber"
+                            inline-prompt
+                            active-text="是"
+                            inactive-text="否"
+                            active-color="#E6A23C"
+                            :width="testNumbers.width"
+                            @change="changeTestNumber($event, scope.scope.row, scope.scope.$index)"
+                        />
+
+                    </template>
+                    <template v-slot:states="scope">
+                        <el-switch
+                            v-model="scope.scope.row.state"
+                            inline-prompt
+                            active-text="正常"
+                            inactive-text="禁用"
+                            active-color="#E6A23C"
+                            :width="states.width"
+                            @change="changeState($event, scope.scope.row, scope.scope.$index)"
+                        />
+
+                    </template>
+                    <template v-slot:operates="scope">
+                        <table-operation
+                            :operations="operations"
+                            :rawData="scope.scope.row"
+                            @handleOperation="handleOperation"
+                        ></table-operation>
+                    </template>
+                </basic-table>
+            </div>
+        </div>
+    </admin-layout>
+    <!--        弹框-->
+    <el-dialog v-model="addFormDialog" title="发布资讯">
+        <add-form @clickAdd="receiveAddForm" @clickCancelAdd="cancelAddForm" :loading="loading"></add-form>
+    </el-dialog>
+    <el-dialog v-model="editFormDialog" title="编辑">
+        <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading" :editData="editData"></edit-form>
+    </el-dialog>
 </template>
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
-
+import SearchForm from "@/Pages/components/forms/searchForm.vue";
+import BasicTable from '@/Pages/components/tables/BasicTable.vue';
+import TableOperation from "@/Pages/components/tables/TableOperation";
+import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
+import AddForm from '@/Pages/admin/subNews/Add.vue'
+import EditForm from '@/Pages/admin/subNews/Edit.vue'
+import PrintTable from '@/Pages/components/tables/PrintTable.vue'
+import {h, ref} from "vue"
+import {ElMessage, ElMessageBox} from "element-plus";
+import {post} from "@/http/request";
+import {Timer, Phone} from '@element-plus/icons-vue'
 export default {
     name: "News",
     components: {
-        AdminLayout,
+        ButtonGroup,Timer,Phone,
+        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable
+    },
+    setup: function () {
+        // 搜索框
+        const role = ref('news')
+        const search = (f) => {
+            console.log('子传父参数', f)
+        }
+        // 表头
+        const {allExportExcel, selectExportExcel, replaceStr} = require("@/lqp")
+        const addFormDialog = ref(false)
+        const receiveAddForm = (e, r) => {
+            console.log('zhe', e)
+            console.log('zhe', r)
+            loading.value = r
+            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
+            setTimeout(function () {
+                loading.value = false
+                addFormDialog.value = false
+                ElMessage({
+                    type: 'success',
+                    // message: `action: ${action}`,
+                    message: '已提交'
+                })
+                // 重载表格数据
+                // tableLoading.value = true
+
+            }, 3000);
+
+        }
+        const cancelAddForm = (e) => {
+            addFormDialog.value = e
+        }
+        // 表格
+        const params = ref({
+            page: 1,
+            limit: 15,
+        })
+        const total = ref(0)
+        const loading = ref(false)
+        const tableLoading = ref(false)
+        const tableTitle = [
+            {
+                label: '编号',
+                value: 'axb_number',
+                sortable: false
+            },
+            {
+                label: '公司名称',
+                value: 'company',
+                sortable: false
+            },
+            {
+                label: '客户名称',
+                value: 'customer',
+                sortable: false
+            },
+            {
+                label: '被叫号码',
+                value: 'called_number',
+                sortable: false,
+            },
+            {
+                label: '呼叫时间',
+                value: 'createtime',
+                sortable: true
+            },
+            {
+                label: '呼叫时长',
+                value: 'call_duration',
+                sortable: true
+            },
+            {
+                label: '消费金额（￥/元）',
+                value: 'call_duration',
+                sortable: false
+            },
+            {
+                label: '录音',
+                value: 'platform',
+                sortable: false
+            }
+
+        ]
+        const tableData = ref([])
+        const selectTableData = ref([])
+        const getTableData = async () => {
+            post('getHistoryList', params.value).then((res) => {
+                console.log(res)
+
+                // 隐藏电话号码
+                res.data.forEach((item) => {
+                    item.called_number_copy = item.called_number
+                    item.called_number = replaceStr(item.called_number, '****')
+                    item.isCalled = false
+                })
+
+                tableData.value = res.data
+                total.value = res.total
+            })
+        }
+        const editFormDialog = ref(false)
+        const operates = ref({
+            operate: true,
+            label: '操作',
+        })
+        const specialNumber = ref('')
+        const testNumbers = ref({
+            testNumber: true,
+            label: '测试账号',
+            width: 60
+        })
+        const states = ref({
+            state: true,
+            label: '状态',
+            width: 60
+        })
+        const operations = ref([{
+            types: 'edit',
+            title: '编辑',
+            type: 'success',
+            icon: ['fas', 'pen-to-square'],
+
+        },
+            {
+                types: 'del',
+                title: '删除',
+                type: 'danger',
+                icon: ['far', 'trash-can'],
+
+            }
+        ])
+        const editData = ref({})
+        const handleOperation = (op, row) => {
+            if (op.types === 'edit') {
+                editFormDialog.value = true
+                editData.value = row.value
+
+            } else if (op.types === 'del') {
+                console.log(row.value.id)
+                ElMessageBox({
+                    title: '确认删除此id=' + row.value.id + '数据吗？',
+                    message: h('p', null, [
+                        h('span', null, '此数据将会被'),
+                        h('i', {style: 'color: #F56C6C'}, '删除'),
+                    ]),
+                    showCancelButton: true,
+                    confirmButtonText: '删除',
+                    cancelButtonText: '取消',
+                    beforeClose: (action, instance, done) => {
+                        if (action === 'confirm') {
+                            let params = row.value.id
+                            console.log('删除项id', params)
+                            instance.confirmButtonLoading = true
+                            instance.confirmButtonText = 'Loading...'
+                            setTimeout(() => {
+                                done()
+                                setTimeout(() => {
+                                    instance.confirmButtonLoading = false
+                                }, 300)
+                            }, 3000)
+                            // todo
+                        } else {
+                            done()
+                        }
+                    },
+                }).then(() => {
+                    ElMessage({
+                        type: 'success',
+                        message: '已删除'
+                    })
+                })
+            }
+        }
+        const receiveEditForm = (e, r) => {
+            console.log('参数', e)
+            console.log('zhe', r)
+            loading.value = r
+            // todo
+            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
+            setTimeout(function () {
+                loading.value = false
+                editFormDialog.value = false
+                ElMessage({
+                    type: 'success',
+                    // message: `action: ${action}`,
+                    message: '已提交'
+                })
+                // 重载表格数据
+                // tableLoading.value = true
+
+            }, 3000);
+
+        }
+        const cancelEditForm = (e) => {
+            editFormDialog.value = e
+        }
+        const changeTestNumber = (e, row, index) => {
+            // e返回状态，row当前行数据， index下标
+            console.log('zhe', e)
+            console.log(row)
+            console.log(index)
+            //todo
+
+
+        }
+        const changeState = (e, row, index) => {
+            // e返回状态，row当前行数据， index下标
+            console.log('zhe2', e)
+            console.log(row)
+            console.log(index)
+            //todo
+
+
+        }
+        const xlsxList = ref([])
+        const beforeAvatarUpload = async (file) => {
+            let fileArr = file.name.split('.')
+            let suffix = fileArr[fileArr.length - 1]
+            if (suffix !== 'xls' && suffix !== 'xlsx') {
+                ElMessage.error('文件格式不正确！')
+                return false
+            } else if (suffix.size / 1024 / 1024 > 2) {
+                ElMessage.error('上传图片不能超过2MB！')
+                return false
+            }
+            return true
+        }
+            const handleAvatarSuccess = async (response, upload) => {
+                console.log(response)
+                console.log(upload)
+                // imageUrl.value = URL.createObjectURL(uploadFilled.row)
+            }
+            return {
+                xlsxList,
+                beforeAvatarUpload,
+                handleAvatarSuccess,
+                getTableData,
+                total,
+                params,
+                replaceStr,
+                selectExportExcel,
+                selectTableData,
+                search,
+                role,
+                changeState,
+                changeTestNumber,
+                addFormDialog,
+                receiveAddForm,
+                cancelAddForm,
+                loading,
+                operates,
+                testNumbers,
+                states,
+                specialNumber,
+                operations,
+                handleOperation,
+                tableTitle,
+                tableData,
+                tableLoading,
+                editFormDialog,
+                editData,
+                cancelEditForm,
+                receiveEditForm,
+                allExportExcel
+            }
+        },
+        mounted(){
+            this.getTableData()
+        },
+        methods: {
+            selectExportData(value){
+                this.selectTableData = value
+            }
+        }
     }
-}
 </script>
 
-<style scoped>
-
-</style>

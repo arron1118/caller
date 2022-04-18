@@ -62,6 +62,38 @@
                     value-format="YYYY-MM-DD hh:mm:ss"
                 />
             </el-form-item>
+<!--            通话报表-->
+            <el-form-item label="所有公司" prop="reportCompany" v-if="role==='report'">
+                <el-select v-model="searchRuleForm.reportCompany" placeholder="选择公司" @change="changeReportCompany">
+                    <el-option label="=" value="eq"/>
+                    <el-option label=">" value="gt"/>
+                    <el-option label="<" value="lg"/>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="时间" prop="reportTime" v-if="role==='report'">
+                <el-date-picker
+                    v-model="searchRuleForm.reportTime"
+                    type="datetimerange"
+                    range-separator="To"
+                    start-placeholder="开始时间"
+                    end-placeholder="结束时间"
+                    @change="changeReportTime"
+                    value-format="YYYY-MM-DD hh:mm:ss"
+                />
+            </el-form-item>
+<!--            资讯-->
+            <el-form-item label="标题" class="mx-4" prop="newsTitle" v-if="role==='news'">
+                <el-input v-model.trim="searchRuleForm.newsTitle" placeholder="输入标题" @blur="changeNewsTitle(searchRuleForm.newsTitle)"/>
+            </el-form-item>
+            <el-form-item label="发布时间" prop="publishTime" v-if="role==='news'">
+                <el-date-picker
+                    v-model="searchRuleForm.publishTime"
+                    type="date"
+                    placeholder=""
+                    @change="changePublishTime"
+                    value-format="YYYY-MM-DD"
+                />
+            </el-form-item>
 <!--            提交-->
             <el-form-item class="mx-1">
                 <el-button type="primary" :loading="loading" @click="submitSearch()"
@@ -92,7 +124,11 @@ export default {
             name: '',
             duration: 0,
             payer: '',
-            payTime: ''
+            payTime: '',
+            reportCompany: '',
+            reportTime: '',
+            newsTitle: '',
+            publishTime: ''
 
         })
         const submitSearch = async () => {
@@ -158,6 +194,18 @@ export default {
         },
         changePayTime (v) {
             this.searchRuleForm = Object.assign({}, this.searchRuleForm, {payTime: v})
+        },
+        changeReportCompany (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, {reportCompany: v})
+        },
+        changeReportTime (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, {reportTime: v})
+        },
+        changeNewsTitle (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, {newsTitle: v})
+        },
+        changePublishTime (Value) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, {publishTime: Value})
         }
     }
 }
