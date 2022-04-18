@@ -361,16 +361,12 @@ export default {
                 receiveEditForm,
                 allExportExcel
             }
-        };
-        const mounted;
-        ()
-        {
+        },
+        mounted(){
             this.getTableData()
-        }
-    ,
+        },
         methods: {
-            selectExportData(value)
-            {
+            selectExportData(value){
                 this.selectTableData = value
             }
         }
