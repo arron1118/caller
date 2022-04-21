@@ -94,8 +94,8 @@
                 </div>
             </el-form-item>
             <div class="flex flex-row justify-center mt-8">
-                <el-button @click="cancelAdd()">取消</el-button>
-                <el-button type="primary" :loading="loading" @click="submitAdd()"
+                <el-button @click="cancelEdit()">取消</el-button>
+                <el-button type="primary" :loading="loading" @click="submitEdit()"
                 >开通</el-button
                 >
             </div>
@@ -130,7 +130,7 @@ export default {
             ruleForm2.rate = value
         }
         const ruleForm2 = reactive(props.editData)
-        const submitAdd = async () => {
+        const submitEdit = async () => {
             loading.value = true
             const form = unref(editFormRef)
             if (!form) return
@@ -165,7 +165,7 @@ export default {
             } catch (error) {
             }
         }
-        const cancelAdd = async () => {
+        const cancelEdit = async () => {
             context.emit('clickCancelEdit', false)
         }
         return{
@@ -177,8 +177,8 @@ export default {
             editFormRef,
             ruleForm2,
             loading,
-            submitAdd,
-            cancelAdd,
+            submitEdit,
+            cancelEdit,
             handleChangeDateTime
         }
     },

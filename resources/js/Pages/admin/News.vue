@@ -8,8 +8,8 @@
                 <div class="m-2 flex flex-row justify-between border-b pb-2">
                     <el-button type="primary" @click="addFormDialog = true">发布</el-button>
                     <div class="flex flex-column justify-center items-center mx-4">
-                        <el-upload action="" :auto-upload="false" :multiple="false" :show-file-list="true" :on-change="uploadXlsx" :file-list="xlsxList">
-                            <el-button type="text" @click="allExportExcel(tableData,tableTitle,'资讯报表')">批量导入</el-button>
+                        <el-upload action="" :auto-upload="false" :multiple="false" :show-file-list="false" :on-change="uploadXlsx" :file-list="xlsxList">
+                            <el-button type="text">批量导入</el-button>
                         </el-upload>
                         <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'资讯报表')">选择导出</el-button>
                         <el-button type="text" @click="allExportExcel(tableData,tableTitle,'资讯报表')">全部导出</el-button>
