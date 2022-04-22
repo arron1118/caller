@@ -40,6 +40,18 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admin',
+        ],
+        'company' => [
+            'driver' => 'session',
+            'provider' => 'company',
+        ],
+        'home' => [
+            'driver' => 'session',
+            'provider' => 'home'
+        ]
     ],
 
     /*
@@ -63,6 +75,18 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => '',
+        ],
+        'company' => [
+            'driver' => 'eloquent',
+            'model' => '',
+        ],
+        'home' => [
+            'driver' => 'eloquent',
+            'model' => ''
         ],
 
         // 'users' => [
