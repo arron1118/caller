@@ -5,14 +5,19 @@ const aa = 'aaa';
 function bb () {
     return 'bb';
 }
+// 验证为11位数的手机
+const code = (phone) => {
+    let telVerify = /^1[3456789]{1}\d{9}$/;
+   //验证是验证手机号码为11位，且以1开头。
+   // /^1[3456789]{1}\d{9}$/;
+    return telVerify.test(phone)
+}
 // 隐藏电话号码
 const replaceStr = (str, char) => {
     let a = str.substring(4,6)
     let b = a.replace(a,char)
     return str.substring(0,3) + b + str.substring(7,11)
 }
-//导出
-
 //全部导出
 const excelData = ref([])
 const allExportExcel = (tData, tTitle, tName) => {
@@ -86,4 +91,4 @@ const formatJson2 = (filterVal, jsonData) => {
     return jsonData.map(v => filterVal.map(j => v[j]))
 }
 // 其他方法
-export { aa, bb, allExportExcel, selectExportExcel, replaceStr };
+export { aa, bb, allExportExcel, selectExportExcel, replaceStr, code };
