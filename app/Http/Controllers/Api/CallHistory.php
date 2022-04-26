@@ -16,6 +16,6 @@ class CallHistory extends \App\Http\Controllers\Controller
         $total = CallHistoryModel::count();
         $list = CallHistoryModel::orderBy('createtime', 'desc')->offset(($page - 1) * $limit)->limit($limit)->get();
 
-        return response()->json(['code' => 5003, 'msg' => 'success', 'total' => $total, 'data' => $list]);
+        return response()->json(['code' => 1, 'msg' => 'success', 'total' => $total, 'data' => $list]);
     }
 }

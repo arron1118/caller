@@ -6,63 +6,77 @@
         <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
                 <div class="m-2 flex flex-row justify-between border-b pb-2">
-                    <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
+                    <div>
+                        <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
+                    </div>
                     <div class="flex flex-column justify-center items-center mx-4">
                         <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'用户管理报表')">选择导出</el-button>
                         <el-button type="text" @click="allExportExcel(tableData,tableTitle,'用户管理报表')">全部导出</el-button>
                     </div>
                 </div>
-                <basic-table
-                    :tableTitle="tableTitle"
-                    :tableData="tableData"
-                    :tableLoading="tableLoading"
-                    :operates="operates"
-                    :testNumbers="testNumbers"
-                    :states="states"
-                    :specialNumber="specialNumber"
-                    :selectionType="true"
-                    :pagination="true"
-                    :total="total"
-                    :params="params"
-                    :getTableData="getTableData"
-                    @selectExports="selectExportData"
-                >
-                    <template v-slot:specialNumber="scope">
-                        <el-icon><phone color="#409EFC"/></el-icon>
-                        <span>{{ scope.scope.row.called_number }}</span>
-                    </template>
-                    <template v-slot:testNumbers="scope">
-                        <el-switch
-                            v-model="scope.scope.row.testNumber"
-                            inline-prompt
-                            active-text="是"
-                            inactive-text="否"
-                            active-color="#E6A23C"
-                            :width="testNumbers.width"
-                            @change="changeTestNumber($event, scope.scope.row, scope.scope.$index)"
-                        />
+                <el-row>
+                    <el-col :span="2" class="border-r">
+                        <v-asides @getTreeId="getTreeId"></v-asides>
+                    </el-col>
+                    <el-col :span="22">
+                        <basic-table
+                            :tableTitle="tableTitle"
+                            :tableData="tableData"
+                            :loading="loading"
+                            :operates="operates"
+                            :testNumbers="testNumbers"
+                            :states="states"
+                            :specialNumber="specialNumber"
+                            :specialUser="specialUser"
+                            :selectionType="true"
+                            :pagination="true"
+                            :total="total"
+                            :params="params"
+                            :getTableData="getTableData"
+                            @selectExports="selectExportData"
+                            @dialogUserList="dialogUserList"
+                        >
+                            <template v-slot:specialNumber="scope">
+                                <el-icon><phone color="#409EFC"/></el-icon>
+                                <span class="">{{ scope.scope.row.called_number }}</span>
+                            </template>
+                            <template v-slot:specialUser="scope">
+                                <span class="text-brand">{{ scope.scope.row.user_id }}</span>
+                            </template>
+                            <template v-slot:testNumbers="scope">
+                                <el-switch
+                                    v-model="scope.scope.row.testNumber"
+                                    inline-prompt
+                                    active-text="是"
+                                    inactive-text="否"
+                                    active-color="#E6A23C"
+                                    :width="testNumbers.width"
+                                    @change="changeTestNumber($event, scope.scope.row, scope.scope.$index)"
+                                />
 
-                    </template>
-                    <template v-slot:states="scope">
-                        <el-switch
-                            v-model="scope.scope.row.state"
-                            inline-prompt
-                            active-text="正常"
-                            inactive-text="禁用"
-                            active-color="#E6A23C"
-                            :width="states.width"
-                            @change="changeState($event, scope.scope.row, scope.scope.$index)"
-                        />
+                            </template>
+                            <template v-slot:states="scope">
+                                <el-switch
+                                    v-model="scope.scope.row.state"
+                                    inline-prompt
+                                    active-text="正常"
+                                    inactive-text="禁用"
+                                    active-color="#E6A23C"
+                                    :width="states.width"
+                                    @change="changeState($event, scope.scope.row, scope.scope.$index)"
+                                />
 
-                    </template>
-                    <template v-slot:operates="scope">
-                        <table-operation
-                            :operations="operations"
-                            :rawData="scope.scope.row"
-                            @handleOperation="handleOperation"
-                        ></table-operation>
-                    </template>
-                </basic-table>
+                            </template>
+                            <template v-slot:operates="scope">
+                                <table-operation
+                                    :operations="operations"
+                                    :rawData="scope.scope.row"
+                                    @handleOperation="handleOperation"
+                                ></table-operation>
+                            </template>
+                        </basic-table>
+                    </el-col>
+                </el-row>
             </div>
         </div>
     </admin-layout>
@@ -73,6 +87,9 @@
     <el-dialog v-model="editFormDialog" title="编辑">
         <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading" :editData="editData"></edit-form>
     </el-dialog>
+    <el-dialog v-model="userLists" title="已开通用户" :fullscreen="true">
+       <user-table></user-table>
+    </el-dialog>
 </template>
 
 <script>
@@ -81,18 +98,20 @@ import SearchForm from "@/Pages/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/components/tables/BasicTable.vue';
 import TableOperation from "@/Pages/components/tables/TableOperation";
 import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
-import AddForm from '@/Pages/admin/sub/Add.vue'
-import EditForm from '@/Pages/admin/sub/Edit.vue'
+import AddForm from '@/Pages/admin/subUser/Add.vue'
+import EditForm from '@/Pages/admin/subUser/Edit.vue'
+import UserTable from '@/Pages/admin/subUser/List.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {post} from "@/http/request";
 import {Timer, Phone} from '@element-plus/icons-vue'
+import VAsides from '@/Pages/admin/vAsides/VAsides.vue'
 export default {
     name: "CallHistoryList",
     components: {
         ButtonGroup,Timer,Phone,
-        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable
+        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable,UserTable,VAsides
     },
     setup(){
         // 搜索框
@@ -117,13 +136,16 @@ export default {
                     message: '已提交'
                 })
                 // 重载表格数据
-                // tableLoading.value = true
 
             }, 3000);
 
         }
         const cancelAddForm = (e) => {
             addFormDialog.value = e
+        }
+        // 表侧边栏
+        const getTreeId = (v) => {
+            console.log('id', v)
         }
         // 表格
         const params = ref({
@@ -132,7 +154,6 @@ export default {
         })
         const total = ref(0)
         const loading = ref(false)
-        const tableLoading = ref(false)
         const tableTitle = [
             {
                 label: '编号',
@@ -140,37 +161,57 @@ export default {
                 sortable: false
             },
             {
-                label: '公司名称',
+                label: '账号',
                 value: 'company',
                 sortable: false
             },
             {
-                label: '客户名称',
+                label: '已使用小号',
+                value: 'company',
+                sortable: false
+            },
+            {
+                label: '坐席',
                 value: 'customer',
                 sortable: false
             },
             {
-                label: '被叫号码',
-                value: 'called_number',
+                label: '限制用户数量',
+                value: 'user_id',
                 sortable: false,
             },
             {
-                label: '呼叫时间',
+                label: '已开通用户',
                 value: 'createtime',
                 sortable: true
             },
             {
-                label: '呼叫时长',
-                value: 'call_duration',
-                sortable: true
-            },
-            {
-                label: '消费金额（￥/元）',
+                label: '费率（￥/元）',
                 value: 'call_duration',
                 sortable: false
             },
             {
-                label: '录音',
+                label: '余额（￥/元）',
+                value: 'call_duration',
+                sortable: false
+            },
+            {
+                label: '充值',
+                value: 'platform',
+                sortable: false
+            },
+            {
+                label: '总消费',
+                value: 'platform',
+                sortable: false
+            },
+            {
+                label: '最后登录',
+                value: 'platform',
+                sortable: false
+            },
+            {
+                label: '到期日期',
                 value: 'platform',
                 sortable: false
             }
@@ -179,18 +220,21 @@ export default {
         const tableData = ref([])
         const selectTableData = ref([])
         const getTableData = async () => {
+            loading.value = true
             post('getHistoryList', params.value).then((res)=>{
                 console.log(res)
+                if(res.code === 1){
+                    loading.value = false
+                    // 星号隐藏号码
+                    res.data.forEach((item)=>{
+                        item.called_number_copy = item.called_number
+                        item.called_number = replaceStr(item.called_number, '****')
+                        item.isCalled = false
+                    })
 
-                // 隐藏电话号码
-                res.data.forEach((item)=>{
-                    item.called_number_copy = item.called_number
-                    item.called_number = replaceStr(item.called_number, '****')
-                    item.isCalled = false
-                })
-
-                tableData.value = res.data
-                total.value = res.total
+                    tableData.value = res.data
+                    total.value = res.total
+                }
             })
         }
         const editFormDialog = ref(false)
@@ -199,6 +243,7 @@ export default {
             label: '操作',
         })
         const specialNumber = ref('')
+        const specialUser = ref('')
         const testNumbers = ref({
             testNumber: true,
             label: '测试账号',
@@ -281,7 +326,6 @@ export default {
                     message: '已提交'
                 })
                 // 重载表格数据
-                // tableLoading.value = true
 
             }, 3000);
 
@@ -295,8 +339,6 @@ export default {
             console.log(row)
             console.log(index)
             //todo
-
-
         }
         const changeState = (e,row,index) => {
             // e返回状态，row当前行数据， index下标
@@ -304,11 +346,16 @@ export default {
             console.log(row)
             console.log(index)
             //todo
-
-
         }
-
+        const userLists = ref(false)
+        const dialogUserList = (v, id) => {
+            console.log(v)
+            console.log(id)
+            userLists.value = v
+        }
         return {
+            userLists,
+            dialogUserList,
             getTableData,
             total,
             params,
@@ -327,16 +374,17 @@ export default {
             testNumbers,
             states,
             specialNumber,
+            specialUser,
             operations,
             handleOperation,
             tableTitle,
             tableData,
-            tableLoading,
             editFormDialog,
             editData,
             cancelEditForm,
             receiveEditForm,
-            allExportExcel
+            allExportExcel,
+            getTreeId
         }
     },
     mounted() {

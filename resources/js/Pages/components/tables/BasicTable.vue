@@ -3,69 +3,73 @@
         <el-col>
             <el-table
                 :data="tableData"
+                v-loading="loading"
                 style="width: 100%"
                 ref="multipleTableRef"
                 @selection-change="handleSelectionChange"
-                @cell-mouse-enter="handleMouseEnter"
-                @cell-mouse-leave="handleMouseLeave"
-                @cell-click="handleColumn"
                 id="print"
-                :show-summary="showSummary"
                 :sum-text="'合计'"
+                row-key="id"
+                @cell-click="handleColumn"
             >
-                <el-table-column type="selection" width="55" v-if="selectionType === true" />
-                <el-table-column
-                    v-for="(item, index) in tableTitle"
-                    :key="index"
-                    :prop="item.value"
-                    :label="item.label"
-                    :sortable="item.sortable === true"
-                >
-                    <template v-slot="scope" v-if="item.value === 'called_number'">
-                        <slot name="specialNumber" :scope="scope"></slot>
-                    </template>
-                </el-table-column>
-
-                <el-table-column :label="testNumbers.label" v-if="testNumbers">
-                    <template v-slot="scope">
-                       <slot name="testNumbers" :scope="scope"></slot>
-                    </template>
-                </el-table-column>
-                <el-table-column :label="states.label" v-if="states">
-                    <template v-slot="scope">
-                        <slot name="states" :scope="scope"></slot>
-                    </template>
-                </el-table-column>
-                <el-table-column v-if="operates" :label="operates.label">
-                 <template v-slot="scope">
-                     <slot name="operates" :scope="scope"></slot>
-                 </template>
-                </el-table-column>
-                <el-table-column
-                    :label="payWays.label"
-                    v-if="payWays"
-                    prop="status"
-                    :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' }]"
-                    :filter-method="filterWays"
-                    filter-placement="bottom-end"
-                >
-                    <template v-slot="scope">
-                        <slot name="payWays" :scope="scope"></slot>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    :label="payStatus.label"
-                    v-if="payStatus"
-                    prop="status"
-                    :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' },{ text: '2', value: '2' }]"
-                    :filter-method="filterStatus"
-                    filter-placement="bottom-end"
-                >
-                    <template v-slot="scope">
-                        <slot name="payStatus" :scope="scope"></slot>
-                    </template>
-                </el-table-column>
-    </el-table>
+<!--                @cell-click="handleColumn"-->
+<!--                @cell-mouse-enter="handleMouseEnter"-->
+<!--                @cell-mouse-leave="handleMouseLeave"-->
+                    <el-table-column type="selection" width="55" v-if="selectionType === true" />
+                    <el-table-column
+                        v-for="(item, index) in tableTitle"
+                        :key="index"
+                        :prop="item.value"
+                        :label="item.label"
+                        :sortable="item.sortable === true"
+                    >
+                        <template v-slot="scope" v-if="item.value === 'called_number'">
+                            <slot name="specialNumber" :scope="scope"></slot>
+                        </template>
+                        <template v-slot="scope" v-if="item.value === 'user_id'">
+                            <slot name="specialUser" :scope="scope"></slot>
+                        </template>
+                    </el-table-column>
+                    <el-table-column :label="testNumbers.label" v-if="testNumbers">
+                        <template v-slot="scope">
+                           <slot name="testNumbers" :scope="scope"></slot>
+                        </template>
+                    </el-table-column>
+                    <el-table-column :label="states.label" v-if="states">
+                        <template v-slot="scope">
+                            <slot name="states" :scope="scope"></slot>
+                        </template>
+                    </el-table-column>
+                    <el-table-column v-if="operates" :label="operates.label" fixed="right" width="120">
+                     <template v-slot="scope">
+                         <slot name="operates" :scope="scope"></slot>
+                     </template>
+                    </el-table-column>
+                    <el-table-column
+                        :label="payWays.label"
+                        v-if="payWays"
+                        prop="status"
+                        :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' }]"
+                        :filter-method="filterWays"
+                        filter-placement="bottom-end"
+                    >
+                        <template v-slot="scope">
+                            <slot name="payWays" :scope="scope"></slot>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        :label="payStatus.label"
+                        v-if="payStatus"
+                        prop="status"
+                        :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' },{ text: '2', value: '2' }]"
+                        :filter-method="filterStatus"
+                        filter-placement="bottom-end"
+                    >
+                        <template v-slot="scope">
+                            <slot name="payStatus" :scope="scope"></slot>
+                        </template>
+                    </el-table-column>
+            </el-table>
             <div class="table-bottom m-4" v-if="pagination === true">
                 <v-pagination
                     :pageSize="params.limit"
@@ -87,7 +91,7 @@ export default {
     components:{
         vPagination
     },
-    props:[ 'tableTitle', 'tableData','operates','specialNumber','testNumbers','states',
+    props:[ 'tableTitle', 'tableData','operates','specialNumber','specialUser','testNumbers','states','loading',
         'selectionType', 'pagination','total','getTableData','params','payWays','payStatus','showSummary' ],
     setup(props, context){
         const { replaceStr } = require("@/lqp")
@@ -98,25 +102,22 @@ export default {
             selectExport.value = multipleSelection.value
             context.emit('selectExports', selectExport.value)
         }
-        const handleColumn = (row, column, cell, event) =>{
+        const handleColumn = (row, column, event, cell) =>{
+            // console.log(row)
+            // console.log('column', column)
+            // console.log('event', event)
+            // console.log('cell', cell)
+            // 隐藏电话号码
             row.isCalled = !row.isCalled
             if(row.isCalled === true){
                 row.called_number = row.called_number_copy
             }else if(row.isCalled === false){
                 row.called_number = replaceStr(row.called_number, '****')
             }
-        }
-        const handleMouseEnter = (row, column, cell, event) => {
-                if(column.rawColumnKey === 3){
-                    return cell.children[0].children[1].style.color="#409eff"
-                }else{
-                    return ''
-                }
-        }
-        const handleMouseLeave = (row, column, cell, event) => {
-                if(column.rawColumnKey === 3){
-                    return cell.children[0].children[1].style.color=""
-                }
+            // 点击获取用户列表
+            if(column.property === 'user_id'){
+                context.emit('dialogUserList', true, row.id)
+            }
         }
         const filterWays = (value, row) => {
             console.log(value)
@@ -139,8 +140,6 @@ export default {
             multipleSelection,
             handleSelectionChange,
             handleColumn,
-            handleMouseEnter,
-            handleMouseLeave,
             replaceStr,
             filterWays,
             filterStatus,

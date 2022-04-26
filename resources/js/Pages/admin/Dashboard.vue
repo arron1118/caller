@@ -1,62 +1,52 @@
 <template>
     <admin-layout title="Dashboard">
-        <el-row class="mb-4">
-            <el-col :span="24">
                 <div class="mb-6 bg-white rounded shadow py-4">
-                    <el-row justify="space-around">
-                        <el-col :span="6" class="p-1 hover:text-yellow-600 text-center rounded">
-                            <div class="grid grid-cols-3 border">
-                                <div class="bg-yellow-500 flex flex-col justify-center items-center">
-                                    <el-icon :size="40" color="#fff"><money /></el-icon>
-                                </div>
-                                <div class="col-span-2 bg-white p-2">
-                                    <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
-                                    <div>今日收入<span class="text-yellow-500">[ -96.70% ]</span></div>
-                                </div>
+                    <el-row justify="space-around" :gutter="4">
+<!--                        <el-col :span="6" class="p-1 hover:text-yellow-600 text-center rounded">-->
+<!--                            <div class="grid grid-cols-3 border">-->
+<!--                                <div class="bg-yellow-500 flex flex-col justify-center items-center">-->
+<!--                                    <el-icon :size="40" color="#fff"><money /></el-icon>-->
+<!--                                </div>-->
+<!--                                <div class="col-span-2 bg-white p-2">-->
+<!--                                    <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>-->
+<!--                                    <div>总收入</div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </el-col>-->
+                        <el-col :span="8" class="p-1 border hover:text-yellow-600 text-center rounded">
+                            <div class="bg-white p-2">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>总收入</div>
                             </div>
                         </el-col>
-                        <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
-                            <div class="grid grid-cols-2 border">
-                                <div class="bg-blue-500 flex flex-col justify-center items-center">
-                                    <el-icon :size="40" color="#fff"><money /></el-icon>
-                                </div>
-                                <div class="bg-white p-2">
-                                    <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
-                                    <div>总收入</div>
-                                </div>
+                        <el-col :span="3" class="p-1 border hover:text-yellow-600 text-center rounded">
+                            <div class="bg-white p-2">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>总消费</div>
                             </div>
                         </el-col>
-                        <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
-                            <div class="grid grid-cols-2 border">
-                                <div class="bg-gray-500 flex flex-col justify-center items-center">
-                                    <el-icon :size="40" color="#fff"><money /></el-icon>
-                                </div>
-                                <div class="bg-white p-2">
-                                    <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
-                                    <div>昨天收入</div>
-                                </div>
+                        <el-col :span="3" class="p-1 border hover:text-yellow-600 text-center rounded">
+                            <div class="bg-white p-2">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>今日收入<span class="text-yellow-500">[ -96.70% ]</span></div>
                             </div>
                         </el-col>
-                        <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
-                            <div class="grid grid-cols-2 border">
-                                <div class="bg-green-500 flex flex-col justify-center items-center">
-                                    <el-icon :size="40" color="#fff"><money /></el-icon>
-                                </div>
-                                <div class="bg-white p-2">
-                                    <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
-                                    <div>本月收入</div>
-                                </div>
+                        <el-col :span="3" class="p-1 border hover:text-yellow-600 text-center rounded">
+                            <div class="bg-white p-2">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>昨日收入</div>
                             </div>
                         </el-col>
-                        <el-col :span="4" class="p-1 hover:text-yellow-600 text-center rounded">
-                            <div class="grid grid-cols-2 border">
-                                <div class="bg-red-500 flex flex-col justify-center items-center">
-                                    <el-icon :size="40" color="#fff"><money /></el-icon>
-                                </div>
-                                <div class="bg-white p-2">
-                                    <div class="mb-2"><span class="text-xl font-semibold">123456789</span></div>
-                                    <div>今年收入</div>
-                                </div>
+                        <el-col :span="3" class="p-1 border hover:text-yellow-600 text-center rounded">
+                            <div class="bg-white p-2">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>本月收入</div>
+                            </div>
+                        </el-col>
+                        <el-col :span="3" class="p-1 border hover:text-yellow-600 text-center rounded">
+                            <div class="bg-white p-2">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>今年收入</div>
                             </div>
                         </el-col>
                     </el-row>
@@ -86,7 +76,7 @@
                     </div>
                     <div class="bg-white rounded shadow p-4">
                         <div class="text-lg font-semibold text-gray-600 mb-4">排行榜</div>
-                        <v-table :tableTitle="tableTitle" :tableData="tableData" />
+                        <basic-table :tableTitle="tableTitle" :tableData="tableData" />
                     </div>
                 </div>
                 <div class="mb-6 bg-white rounded shadow p-4">
@@ -96,8 +86,6 @@
                         </el-col>
                     </el-row>
                 </div>
-            </el-col>
-        </el-row>
     </admin-layout>
 </template>
 
@@ -106,7 +94,6 @@ import AdminLayout from "@/Layouts/AdminLayout"
 import { Money, Headset, Phone, CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import { ref, reactive } from "vue";
 import BasicTable from '../components/tables/BasicTable.vue'
-import vTable from '@/Pages/components/tables/PrintTable.vue'
 import lineEcharts from '@/Pages/components/echarts/lineEcharts.vue'
 import barEcharts from '@/Pages/components/echarts/barEcharts.vue'
 import pieEcharts from '@/Pages/components/echarts/pieEcharts.vue'
@@ -115,7 +102,7 @@ import * as echarts from 'echarts'
 export default {
     name: "Dashboard",
     components: {
-        vTable, AdminLayout, Money, Headset, Phone, CircleCheck, CircleClose, lineEcharts, barEcharts, pieEcharts
+        AdminLayout, Money, Headset, Phone, CircleCheck, CircleClose, lineEcharts, barEcharts, pieEcharts, BasicTable
     },
     setup(){
         const lineTitle = ref('近12小时拨号统计')
@@ -123,38 +110,25 @@ export default {
         const pieTitle = ref('呼叫统计')
         const tableTitle = [
             {
-                label: '账号',
-                value: 'number'
-            },
-            {
-                label: '密码',
-                value: 'password'
-            },
-            {
                 label: '公司名称',
                 value: 'name'
             },
             {
-                label: '小号',
+                label: '未接听',
                 value: 'minNumber'
             },
             {
-                label: '坐席',
+                label: '已接听',
                 value: 'sit'
             },
             {
-                label: '限制用户',
+                label: '时间（分）',
                 value: 'limitNumber'
             },
             {
-                label: '费率（元）',
+                label: '消费金额',
                 value: 'rate'
-            },
-            {
-                label: '结束时间',
-                value: 'dataTime'
             }
-
         ]
         const tableData = [
             {

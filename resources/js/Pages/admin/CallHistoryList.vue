@@ -58,8 +58,8 @@ import SearchForm from "@/Pages/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/components/tables/BasicTable.vue';
 import TableOperation from "@/Pages/components/tables/TableOperation";
 import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
-import AddForm from '@/Pages/admin/sub/Add.vue'
-import EditForm from '@/Pages/admin/sub/Edit.vue'
+import AddForm from '@/Pages/admin/subUser/Add.vue'
+import EditForm from '@/Pages/admin/subUser/Edit.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
 import {h, reactive, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus"
@@ -118,7 +118,7 @@ export default {
                 sortable: false
             },
             {
-                label: '公司名称',
+                label: '操作人',
                 value: 'company',
                 sortable: false
             },
