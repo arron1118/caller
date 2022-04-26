@@ -15,7 +15,7 @@
                 <basic-table
                     :tableTitle="tableTitle"
                     :tableData="tableData"
-                    :tableLoading="tableLoading"
+                    :loading="loading"
                     :selectionType="true"
                     :pagination="true"
                     :total="total"
@@ -96,11 +96,15 @@ export default {
         ]
         const tableData = ref([])
         const selectTableData = ref([])
-        const getTableData = async () => {
+        const getTableData = () => {
+            loading.value = true
             post('getHistoryList', params.value).then((res)=>{
                 console.log('表格数据',res)
-                tableData.value = res.data
-                total.value = res.total
+               if(res.code === 1){
+                   loading.value = false
+                   tableData.value = res.data
+                   total.value = res.total
+               }
             })
         }
         return{

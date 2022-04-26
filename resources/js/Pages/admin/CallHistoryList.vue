@@ -17,7 +17,7 @@
                 <basic-table
                     :tableTitle="tableTitle"
                     :tableData="tableData"
-                    :tableLoading="tableLoading"
+                    :loading="loading"
                     :operates="operates"
                     :selectionType="true"
                     :pagination="true"
@@ -94,7 +94,6 @@ export default {
                     message: '已提交'
                 })
                 // 重载表格数据
-                // tableLoading.value = true
 
             }, 3000);
 
@@ -108,9 +107,8 @@ export default {
             limit: 15,
         })
         const total = ref(0)
-        const loading = ref(false)
         const editFormDialog = ref(false)
-        const tableLoading = ref(false)
+        const loading = ref(false)
         const tableTitle = [
             {
                 label: '编号',
@@ -227,7 +225,6 @@ export default {
                     message: '已提交'
                 })
                 // 重载表格数据
-                // tableLoading.value = true
 
             }, 3000);
 
@@ -242,7 +239,19 @@ export default {
             console.log(index)
             //todo
         }
+        const getTableData = () => {
+            loading.value = true
+            post('getHistoryList', params.value).then((res)=>{
+                console.log(res)
+                if(res.code === 1){
+                    loading.value=false
+                    tableData.value = res.data
+                    total.value = res.total
+                }
+            })
+        }
         return {
+            getTableData,
             replaceStr,
             selectTableData,
             allExportExcel,
@@ -253,13 +262,11 @@ export default {
             addFormDialog,
             receiveAddForm,
             cancelAddForm,
-            loading,
             operates,
             operations,
             handleOperation,
             tableTitle,
             tableData,
-            tableLoading,
             editFormDialog,
             editData,
             cancelEditForm,
@@ -267,20 +274,14 @@ export default {
             print,
             total,
             params,
+            loading
         }
     },
-   mounted(){
-     this.getTableData()
-   },
+    mounted() {
+        this.getTableData()
+    },
     methods: {
-        getTableData(){
-            post('getHistoryList', this.params).then((res)=>{
-                console.log(res)
-                this.tableData = res.data
-                this.total = res.total
-            })
-        },
-         selectExportData (value) {
+        selectExportData (value) {
             this.selectTableData = value
         }
     }
