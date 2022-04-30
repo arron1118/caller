@@ -18,7 +18,7 @@
                             :options="tableTitle"
                             :props="multiple"
                             @change="handleChange"
-                            placeholder="筛选列"
+                            placeholder="筛选列2"
                             clearable
                             collapse-tags
                         />
