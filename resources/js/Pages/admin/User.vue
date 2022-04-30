@@ -8,13 +8,23 @@
                 <div class="m-2 flex flex-row justify-between border-b pb-2">
                     <div>
                         <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
+                        <span class="pl-2 text-gray-400">注：点击'已开通用户'列可查看用户列表内容</span>
                     </div>
-                    <div class="flex flex-column justify-center items-center mx-4">
-                        <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'用户管理报表')">选择导出</el-button>
-                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'用户管理报表')">全部导出</el-button>
+                    <div class="flex flex-column justify-center items-center">
+                        <el-button type="" plain @click="selectExportExcel(selectTableData,tableTitle,'用户管理报表')">选择导出</el-button>
+                        <el-button type="" plain @click="allExportExcel(tableData,tableTitle,'用户管理报表')">全部导出</el-button>
+                        <el-button type="" plain class="mr-2"><el-icon><refresh /></el-icon></el-button>
+                        <el-cascader
+                            :options="tableTitle"
+                            :props="multiple"
+                            @change="handleChange"
+                            placeholder="筛选列"
+                            clearable
+                            collapse-tags
+                        />
                     </div>
                 </div>
-                <el-row>
+                <el-row class="relative">
                     <el-col :span="2" class="border-r">
                         <v-asides @getTreeId="getTreeId"></v-asides>
                     </el-col>
@@ -26,6 +36,8 @@
                             :operates="operates"
                             :testNumbers="testNumbers"
                             :states="states"
+                            @getTestNumbers="getTestNumbers"
+                            @getStates="getStates"
                             :specialNumber="specialNumber"
                             :specialUser="specialUser"
                             :selectionType="true"
@@ -44,16 +56,9 @@
                                 <span class="text-brand">{{ scope.scope.row.user_id }}</span>
                             </template>
                             <template v-slot:testNumbers="scope">
-                                <el-switch
-                                    v-model="scope.scope.row.testNumber"
-                                    inline-prompt
-                                    active-text="是"
-                                    inactive-text="否"
-                                    active-color="#E6A23C"
-                                    :width="testNumbers.width"
-                                    @change="changeTestNumber($event, scope.scope.row, scope.scope.$index)"
-                                />
-
+                                <span
+                                    :class="scope.scope.row.testNumbers === 0 ? '' : ''"
+                                >{{ scope.scope.row.testNumbers === 0 ? "是" : "否" }}</span>
                             </template>
                             <template v-slot:states="scope">
                                 <el-switch
@@ -105,12 +110,12 @@ import PrintTable from '@/Pages/components/tables/PrintTable.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {post} from "@/http/request";
-import {Timer, Phone} from '@element-plus/icons-vue'
+import {Timer, Phone, Menu, Loading, Refresh, TurnOff} from '@element-plus/icons-vue'
 import VAsides from '@/Pages/admin/vAsides/VAsides.vue'
 export default {
     name: "CallHistoryList",
     components: {
-        ButtonGroup,Timer,Phone,
+        ButtonGroup,Timer,Phone,Menu,Loading,Refresh,TurnOff,
         AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable,UserTable,VAsides
     },
     setup(){
@@ -120,6 +125,18 @@ export default {
             console.log('子传父参数', f)
         }
         // 表头
+        const arr = ref([])
+        const multiple = { multiple: true }
+        const handleChange = (value) => {
+            arr.value=value
+            console.log(arr.value)
+            // tableTitle.value.forEach((item)=>{
+            //     console.log(item)
+            //     // if(item.value.indexOf(arr.value) > -1){
+            //     //     return item.value.show = false
+            //     // }
+            // })
+        }
         const { allExportExcel, selectExportExcel, replaceStr } = require("@/lqp")
         const addFormDialog = ref(false)
         const receiveAddForm = (e, r) =>{
@@ -143,6 +160,16 @@ export default {
         const cancelAddForm = (e) => {
             addFormDialog.value = e
         }
+        const getTestNumbers = (v) => {
+            console.log('支付方式',v)
+            // todo
+
+        }
+        const getStates = (v) => {
+            console.log('支付方式',v)
+            // todo
+
+        }
         // 表侧边栏
         const getTreeId = (v) => {
             console.log('id', v)
@@ -158,62 +185,74 @@ export default {
             {
                 label: '编号',
                 value: 'axb_number',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '账号',
                 value: 'company',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '已使用小号',
                 value: 'company',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '坐席',
                 value: 'customer',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '限制用户数量',
-                value: 'user_id',
+                value: 'createtime',
                 sortable: false,
+                show: true
             },
             {
                 label: '已开通用户',
-                value: 'createtime',
-                sortable: true
+                value: 'user_id',
+                sortable: true,
+                show: true
             },
             {
                 label: '费率（￥/元）',
                 value: 'call_duration',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '余额（￥/元）',
                 value: 'call_duration',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '充值',
                 value: 'platform',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '总消费',
                 value: 'platform',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '最后登录',
                 value: 'platform',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '到期日期',
                 value: 'platform',
-                sortable: false
+                sortable: false,
+                show: true
             }
 
         ]
@@ -333,13 +372,6 @@ export default {
         const cancelEditForm = (e) => {
             editFormDialog.value = e
         }
-        const changeTestNumber = (e,row,index) => {
-            // e返回状态，row当前行数据， index下标
-            console.log('zhe',e)
-            console.log(row)
-            console.log(index)
-            //todo
-        }
         const changeState = (e,row,index) => {
             // e返回状态，row当前行数据， index下标
             console.log('zhe2',e)
@@ -354,6 +386,9 @@ export default {
             userLists.value = v
         }
         return {
+            arr,
+            multiple,
+            handleChange,
             userLists,
             dialogUserList,
             getTableData,
@@ -365,7 +400,6 @@ export default {
             search,
             role,
             changeState,
-            changeTestNumber,
             addFormDialog,
             receiveAddForm,
             cancelAddForm,
@@ -384,7 +418,16 @@ export default {
             cancelEditForm,
             receiveEditForm,
             allExportExcel,
-            getTreeId
+            getTreeId,
+            getStates,
+            getTestNumbers
+
+        }
+    },
+    computed: {
+        tableTitle() {
+            // 筛选是否可见
+            return this.tableTitle.filter(item => item.show)
         }
     },
     mounted() {

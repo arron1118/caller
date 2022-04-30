@@ -20,9 +20,9 @@
                     :pagination="true"
                     :total="total"
                     :params="params"
+                    :showSummary="true"
                     :getTableData="getTableData"
                     @selectExports="selectExportData"
-                    :showSummary="true"
                 >
                 </basic-table>
             </div>

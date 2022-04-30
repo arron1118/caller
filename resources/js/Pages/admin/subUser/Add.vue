@@ -98,12 +98,6 @@
                             <div class="text-xs text-gray-400">禁止后，该账号下的所有拨号账号将无法正常使用。</div>
                         </div>
                     </el-form-item>
-                    <div class="flex flex-row justify-center mt-8">
-                        <el-button @click="cancelAdd()">取消</el-button>
-                        <el-button type="primary" :loading="loading" @click="submitAdd()"
-                        >开通</el-button
-                        >
-                    </div>
                 </el-form>
             </div>
             <div class="mt-4" v-show="activeName === 'second'">
@@ -134,13 +128,13 @@
                         <image-upload></image-upload>
 <!--                        <el-input v-model.trim="ruleForm2.contractImage" autocomplete="off" />-->
                     </el-form-item>
-                    <div class="flex flex-row justify-center mt-8">
-                        <el-button @click="cancelAdd()">取消</el-button>
-                        <el-button type="primary" :loading="loading" @click="submitAdd()"
-                        >开通</el-button
-                        >
-                    </div>
                 </el-form>
+            </div>
+            <div class="flex flex-row justify-center mt-8">
+                <el-button @click="cancelAdd()">取消</el-button>
+                <el-button type="primary" :loading="loading" @click="submitAdd()"
+                >开通</el-button
+                >
             </div>
         </basic-tabs>
     </div>

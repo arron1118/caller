@@ -20,9 +20,6 @@
                     :tableData="tableData"
                     :loading="loading"
                     :operates="operates"
-                    :testNumbers="testNumbers"
-                    :states="states"
-                    :specialNumber="specialNumber"
                     :selectionType="true"
                     :pagination="true"
                     :total="total"
@@ -30,34 +27,6 @@
                     :getTableData="getTableData"
                     @selectExports="selectExportData"
                 >
-                    <template v-slot:specialNumber="scope">
-                        <el-icon><phone color="#409EFC"/></el-icon>
-                        <span>{{ scope.scope.row.called_number }}</span>
-                    </template>
-                    <template v-slot:testNumbers="scope">
-                        <el-switch
-                            v-model="scope.scope.row.testNumber"
-                            inline-prompt
-                            active-text="是"
-                            inactive-text="否"
-                            active-color="#E6A23C"
-                            :width="testNumbers.width"
-                            @change="changeTestNumber($event, scope.scope.row, scope.scope.$index)"
-                        />
-
-                    </template>
-                    <template v-slot:states="scope">
-                        <el-switch
-                            v-model="scope.scope.row.state"
-                            inline-prompt
-                            active-text="正常"
-                            inactive-text="禁用"
-                            active-color="#E6A23C"
-                            :width="states.width"
-                            @change="changeState($event, scope.scope.row, scope.scope.$index)"
-                        />
-
-                    </template>
                     <template v-slot:operates="scope">
                         <table-operation
                             :operations="operations"
@@ -138,46 +107,25 @@ export default {
         const tableLoading = ref(false)
         const tableTitle = [
             {
-                label: '编号',
+                label: '标题',
                 value: 'axb_number',
                 sortable: false
             },
             {
-                label: '公司名称',
+                label: '置顶',
                 value: 'company',
                 sortable: false
             },
             {
-                label: '客户名称',
+                label: '查看',
                 value: 'customer',
                 sortable: false
             },
             {
-                label: '被叫号码',
+                label: '更新时间',
                 value: 'called_number',
                 sortable: false,
-            },
-            {
-                label: '呼叫时间',
-                value: 'createtime',
-                sortable: true
-            },
-            {
-                label: '呼叫时长',
-                value: 'call_duration',
-                sortable: true
-            },
-            {
-                label: '消费金额（￥/元）',
-                value: 'call_duration',
-                sortable: false
-            },
-            {
-                label: '录音',
-                value: 'platform',
-                sortable: false
             }
-
         ]
         const tableData = ref([])
         const selectTableData = ref([])
@@ -203,17 +151,6 @@ export default {
         const operates = ref({
             operate: true,
             label: '操作',
-        })
-        const specialNumber = ref('')
-        const testNumbers = ref({
-            testNumber: true,
-            label: '测试账号',
-            width: 60
-        })
-        const states = ref({
-            state: true,
-            label: '状态',
-            width: 60
         })
         const operations = ref([{
             types: 'edit',
@@ -350,9 +287,6 @@ export default {
                 cancelAddForm,
                 loading,
                 operates,
-                testNumbers,
-                states,
-                specialNumber,
                 operations,
                 handleOperation,
                 tableTitle,

@@ -112,6 +112,11 @@ export default {
                 sortable: false
             },
             {
+                label: '类型',
+                value: 'company',
+                sortable: false
+            },
+            {
                 label: '充值方',
                 value: 'company',
                 sortable: false
@@ -123,6 +128,11 @@ export default {
             },
             {
                 label: '充值时间',
+                value: 'createtime',
+                sortable: true
+            },
+            {
+                label: '支付时间',
                 value: 'createtime',
                 sortable: true
             },

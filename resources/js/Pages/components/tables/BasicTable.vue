@@ -9,6 +9,7 @@
                 @selection-change="handleSelectionChange"
                 id="print"
                 :sum-text="'合计'"
+                :show-summary="showSummary"
                 row-key="id"
                 @cell-click="handleColumn"
             >
@@ -30,16 +31,32 @@
                             <slot name="specialUser" :scope="scope"></slot>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="testNumbers.label" v-if="testNumbers">
+                    <el-table-column
+                        :label="testNumbers.label"
+                        v-if="testNumbers"
+                        prop="testNumbers"
+                        :filters="[{ text: '是', value: '0' },{ text: '否', value: '1' }]"
+                        :filter-method="filterTestNumbers"
+                        filter-placement="bottom-end"
+                        column-key="testNumbers"
+                    >
                         <template v-slot="scope">
-                           <slot name="testNumbers" :scope="scope"></slot>
+                            <slot name="testNumbers" :scope="scope"></slot>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="states.label" v-if="states">
-                        <template v-slot="scope">
-                            <slot name="states" :scope="scope"></slot>
-                        </template>
-                    </el-table-column>
+                    <el-table-column
+                    :label="states.label"
+                    v-if="states"
+                    prop="states"
+                    :filters="[{ text: '禁用', value: '0' },{ text: '正常', value: '1' }]"
+                    :filter-method="filterStates"
+                    filter-placement="bottom-end"
+                    column-key="states"
+                >
+                    <template v-slot="scope">
+                        <slot name="states" :scope="scope"></slot>
+                    </template>
+                </el-table-column>
                     <el-table-column v-if="operates" :label="operates.label" fixed="right" width="120">
                      <template v-slot="scope">
                          <slot name="operates" :scope="scope"></slot>
@@ -48,10 +65,12 @@
                     <el-table-column
                         :label="payWays.label"
                         v-if="payWays"
-                        prop="status"
+                        prop="payWays"
                         :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' }]"
                         :filter-method="filterWays"
                         filter-placement="bottom-end"
+                        column-key="payWays"
+
                     >
                         <template v-slot="scope">
                             <slot name="payWays" :scope="scope"></slot>
@@ -60,10 +79,11 @@
                     <el-table-column
                         :label="payStatus.label"
                         v-if="payStatus"
-                        prop="status"
+                        prop="payStatus"
                         :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' },{ text: '2', value: '2' }]"
                         :filter-method="filterStatus"
                         filter-placement="bottom-end"
+                        column-key="payStatus"
                     >
                         <template v-slot="scope">
                             <slot name="payStatus" :scope="scope"></slot>
@@ -119,6 +139,20 @@ export default {
                 context.emit('dialogUserList', true, row.id)
             }
         }
+        const filterTestNumbers = (value, row) => {
+            console.log(value)
+            console.log(row)
+            row.testNumbers = value
+            console.log(row.testNumbers)
+            context.emit('getTestNumbers', row.testNumbers)
+        }
+        const filterStates = (value, row) => {
+            console.log(value)
+            console.log(row)
+            row.states = value
+            console.log(row.states)
+            context.emit('getStates', row.states)
+        }
         const filterWays = (value, row) => {
             console.log(value)
             console.log(row)
@@ -143,6 +177,8 @@ export default {
             replaceStr,
             filterWays,
             filterStatus,
+            filterTestNumbers,
+            filterStates
         }
     }
 }
