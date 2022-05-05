@@ -43,6 +43,7 @@
                 <el-input-number
                     v-model="searchRuleForm.duration"
                     :min="0"
+                    placeholder="秒"
                     controls-position="right"
                     @change="changeDuration"
                 />

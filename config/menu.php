@@ -43,6 +43,12 @@ return [
             'title' => '号码管理',
             'url' => 'admin.numbers',
             'icon' => ['fas', 'address-book']
+        ],
+        [
+            'id' => 8,
+            'title' => '测试代码',
+            'url' => 'admin.code',
+            'icon' => ['fas', 'address-book']
         ]
     ],
     'company' => [

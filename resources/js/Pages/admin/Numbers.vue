@@ -10,7 +10,7 @@
                 <basic-table
                     :tableTitle="tableTitle"
                     :tableData="tableData"
-                    :tableLoading="tableLoading"
+                    :loading="loading"
                     :operates="operates"
                     :selectionType="false"
                     :pagination="true"
@@ -93,7 +93,6 @@ export default {
         })
         const total = ref(0)
         const loading = ref(false)
-        const tableLoading = ref(false)
         const tableTitle = [
             {
                 label: '号码',
@@ -113,19 +112,21 @@ export default {
         ]
         const tableData = ref([])
         const selectTableData = ref([])
-        const getTableData = async () => {
+        const getTableData = () => {
+            loading.value = true
             post('getHistoryList', params.value).then((res)=>{
                 console.log(res)
-
-                // 隐藏电话号码
-                res.data.forEach((item)=>{
-                    item.called_number_copy = item.called_number
-                    item.called_number = replaceStr(item.called_number, '****')
-                    item.isCalled = false
-                })
-
-                tableData.value = res.data
-                total.value = res.total
+                if(res.code === 1){
+                    loading.value = false
+                    // 隐藏电话号码
+                    res.data.forEach((item)=>{
+                        item.called_number_copy = item.called_number
+                        item.called_number = replaceStr(item.called_number, '****')
+                        item.isCalled = false
+                    })
+                    tableData.value = res.data
+                    total.value = res.total
+                }
             })
         }
         const editFormDialog = ref(false)
@@ -254,7 +255,6 @@ export default {
             handleOperation,
             tableTitle,
             tableData,
-            tableLoading,
             editFormDialog,
             editData,
             cancelEditForm,
