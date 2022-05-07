@@ -131,20 +131,19 @@ export default {
         vPagination
     },
     props: ['tableTitle', 'operates', 'specialNumber', 'specialUser', 'testNumbers', 'states',
-        'selectionType', 'pagination', 'params', 'payWays', 'payStatus', 'showSummary', 'export', 'url'],
+        'selectionType', 'pagination', 'where', 'payWays', 'payStatus', 'showSummary', 'export', 'url'],
     setup(props, context) {
         const {allExportExcel, selectExportExcel, replaceStr} = require("@/lqp")
         const selectExport = ref([])
         const selectTableData = ref([])
         // 表格
-        const params = ref({
-            page: 1,
-            limit: 15,
-        })
         const total = ref(0)
         const loading = ref(false)
         const tableData = ref([])
-
+        const params = ref(Object.assign({}, {
+            page: 1,
+            limit: 15,
+        }, props.where))
 
         const handleSelectionChange = async (val) => {
             selectExport.value = val
@@ -204,18 +203,24 @@ export default {
             selectExportExcel,
             allExportExcel,
             selectTableData,
-            params,
             tableData,
             total,
             loading,
+            params,
         }
     },
     mounted() {
-        this.getTableData();
+        this.getTableData()
+    },
+    watch: {
+        where (newValue, oldValue) {
+            this.getTableData();
+        }
     },
     methods: {
         getTableData () {
             this.loading = true
+            // this.params = Object.assign({}, this.params, this.where)
             post(this.url, this.params).then((res) => {
                 console.log(res)
                 if (res.code === 1) {

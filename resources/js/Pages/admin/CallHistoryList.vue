@@ -10,6 +10,7 @@
                 :selectionType="true"
                 :pagination="true"
                 :export="true"
+                :where="params"
                 :url="'getHistoryList'"
             >
                 <template v-slot:operates="scope">
@@ -52,8 +53,12 @@ export default {
     setup() {
         // 搜索框
         const role = ref('callHistory')
+        const params = ref({
+            limit: 30,
+        })
         const search = (f) => {
             console.log('子传父参数', f)
+            params.value = Object.assign({}, params.value, f)
         }
         // 表头
         const {replaceStr} = require("@/lqp")
@@ -235,6 +240,7 @@ export default {
             cancelEditForm,
             receiveEditForm,
             print,
+            params,
         }
     },
     mounted() {
