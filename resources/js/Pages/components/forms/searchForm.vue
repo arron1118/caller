@@ -157,11 +157,17 @@ export default {
             cancelSearch,
         }
     },
-    props: ['loading', 'role'],
+    props: {
+        loading: String,
+        role: String,
+    },
     watch: {
         searchRuleForm(newValue) {
             this.$emit('clickSearch', newValue, this.loading)
         }
+    },
+    created() {
+        console.log(this.role)
     },
     methods: {
         changeNumber (v) {

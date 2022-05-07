@@ -1,13 +1,14 @@
 <template>
     <admin-layout title="Dashboard">
         <div class="mb-6 bg-white rounded shadow pt-4">
-            <search-form :role="role" @clickSearch="search"></search-form>
+            <search-form  @clickSearch="search"></search-form>
         </div>
         <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
                 <div class="m-2 text-right border-b pb-2 flex flex-row justify-between">
                     <div></div>
                     <div class="flex flex-column justify-center items-center mx-4">
+                        <span>{{ role }}</span>
 <!--                        <el-button type="text" @click="">筛选列</el-button>-->
                         <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'通话记录报表')">选择导出</el-button>
                         <el-button type="text" @click="allExportExcel(tableData,tableTitle,'通话记录报表')">全部导出</el-button>
