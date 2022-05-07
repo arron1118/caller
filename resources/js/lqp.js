@@ -2,21 +2,23 @@ import {ref} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 
 const aa = 'aaa';
-function bb () {
+
+function bb() {
     return 'bb';
 }
+
 // 验证为11位数的手机
 const code = (phone) => {
     let telVerify = /^1[3456789]{1}\d{9}$/;
-   //验证是验证手机号码为11位，且以1开头。
-   // /^1[3456789]{1}\d{9}$/;
+    //验证是验证手机号码为11位，且以1开头。
+    // /^1[3456789]{1}\d{9}$/;
     return telVerify.test(phone)
 }
 // 隐藏电话号码
 const replaceStr = (str, char) => {
-    let a = str.substring(4,6)
-    let b = a.replace(a,char)
-    return str.substring(0,3) + b + str.substring(7,11)
+    let a = str.substring(4, 6)
+    let b = a.replace(a, char)
+    return str.substring(0, 3) + b + str.substring(7, 11)
 }
 //全部导出
 const excelData = ref([])
@@ -28,7 +30,7 @@ const allExportExcel = (tData, tTitle, tName) => {
             cancelButtonText: '取消',
             type: 'success',
         }
-        ).then(() => {
+    ).then(() => {
         excelData.value = tData
         export2Excel(tData, tTitle, tName)
     }).catch(() => {
@@ -37,10 +39,10 @@ const allExportExcel = (tData, tTitle, tName) => {
 }
 const export2Excel = (tData, tTitle, tName) => {
     require.ensure([], () => {
-        const { export_json_to_excel } = require('@/Pages/excel/export2Excel') // 这里必须使用绝对路径，使用@/+存放export2Excel的路径
+        const {export_json_to_excel} = require('@/Pages/excel/export2Excel') // 这里必须使用绝对路径，使用@/+存放export2Excel的路径
         const tHeader = [] // 导出的excel的表头字段名称
         const filterVal = [] // 对象属性，对应于tHeader
-        tTitle.forEach((item)=>{
+        tTitle.forEach((item) => {
             tHeader.push(item.label)
             filterVal.push(item.value)
         })
@@ -55,8 +57,8 @@ const formatJson = (filterVal, jsonData) => {
 // 选择导出
 const selectExcelData = ref([])
 const selectExportExcel = (tData, tTitle, tName) => {
-    if(tData.length<1){
-        ElMessage({type: 'warning',message: '请选择需要导出的数据'})
+    if (tData.length < 1) {
+        ElMessage({type: 'warning', message: '请选择需要导出的数据'})
         return false
     }
     // 数据写入excel
@@ -75,10 +77,10 @@ const selectExportExcel = (tData, tTitle, tName) => {
 }
 const export3Excel = (tData, tTitle, tName) => {
     require.ensure([], () => {
-        const { export_json_to_excel } = require('@/Pages/excel/export2Excel') // 这里必须使用绝对路径，使用@/+存放export2Excel的路径
+        const {export_json_to_excel} = require('@/Pages/excel/export2Excel') // 这里必须使用绝对路径，使用@/+存放export2Excel的路径
         const tHeader = [] // 导出的excel的表头字段名称
         const filterVal = [] // 对象属性，对应于tHeader
-        tTitle.forEach((item)=>{
+        tTitle.forEach((item) => {
             tHeader.push(item.label)
             filterVal.push(item.value)
         })
@@ -91,4 +93,4 @@ const formatJson2 = (filterVal, jsonData) => {
     return jsonData.map(v => filterVal.map(j => v[j]))
 }
 // 其他方法
-export { aa, bb, allExportExcel, selectExportExcel, replaceStr, code };
+export {aa, bb, allExportExcel, selectExportExcel, replaceStr, code};
