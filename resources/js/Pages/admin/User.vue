@@ -11,17 +11,21 @@
                         <span class="pl-2 text-gray-400">注：点击'已开通用户'列可查看用户列表内容</span>
                     </div>
                     <div class="flex flex-column justify-center items-center">
-                        <el-button type="" plain @click="selectExportExcel(selectTableData,tableTitle,'用户管理报表')">选择导出</el-button>
+                        <el-popover placement="bottom" :width="400" trigger="click">
+                            <template #reference>
+                                <el-button style="margin-right: 16px">Click to activate</el-button>
+                            </template>
+                            <el-checkbox v-for="(item, index) in tableTitle" :checked="item.show"  :label="item.label" size="large" @change="handleShow(item)" />
+<!--                            v-model="item.show"-->
+                        </el-popover>
+                        <el-button type="" plain @click="selectExportExcel(selectTableData,tableTitle,'用户管理报表')">选择导出
+                        </el-button>
                         <el-button type="" plain @click="allExportExcel(tableData,tableTitle,'用户管理报表')">全部导出</el-button>
-                        <el-button type="" plain class="mr-2"><el-icon><refresh /></el-icon></el-button>
-                        <el-cascader
-                            :options="tableTitle"
-                            :props="multiple"
-                            @change="handleChange"
-                            placeholder="筛选列2"
-                            clearable
-                            collapse-tags
-                        />
+                        <el-button type="" plain class="mr-2">
+                            <el-icon>
+                                <refresh/>
+                            </el-icon>
+                        </el-button>
                     </div>
                 </div>
                 <el-row class="relative">
@@ -49,7 +53,9 @@
                             @dialogUserList="dialogUserList"
                         >
                             <template v-slot:specialNumber="scope">
-                                <el-icon><phone color="#409EFC"/></el-icon>
+                                <el-icon>
+                                    <phone color="#409EFC"/>
+                                </el-icon>
                                 <span class="">{{ scope.scope.row.called_number }}</span>
                             </template>
                             <template v-slot:specialUser="scope">
@@ -90,10 +96,11 @@
         <add-form @clickAdd="receiveAddForm" @clickCancelAdd="cancelAddForm" :loading="loading"></add-form>
     </el-dialog>
     <el-dialog v-model="editFormDialog" title="编辑">
-        <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading" :editData="editData"></edit-form>
+        <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading"
+                   :editData="editData"></edit-form>
     </el-dialog>
     <el-dialog v-model="userLists" title="已开通用户" :fullscreen="true">
-       <user-table></user-table>
+        <user-table></user-table>
     </el-dialog>
 </template>
 
@@ -112,68 +119,16 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import {post} from "@/http/request";
 import {Timer, Phone, Menu, Loading, Refresh, TurnOff} from '@element-plus/icons-vue'
 import VAsides from '@/Pages/admin/vAsides/VAsides.vue'
+
 export default {
     name: "CallHistoryList",
     components: {
-        ButtonGroup,Timer,Phone,Menu,Loading,Refresh,TurnOff,
-        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable,UserTable,VAsides
+        ButtonGroup, Timer, Phone, Menu, Loading, Refresh, TurnOff,
+        AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable, UserTable, VAsides
     },
-    setup(){
+    setup() {
         // 搜索框
         const role = ref('user')
-        const search = (f) => {
-            console.log('子传父参数', f)
-        }
-        // 表头
-        const arr = ref([])
-        const multiple = { multiple: true }
-        const handleChange = (value) => {
-            arr.value=value
-            console.log(arr.value)
-            // tableTitle.value.forEach((item)=>{
-            //     console.log(item)
-            //     // if(item.value.indexOf(arr.value) > -1){
-            //     //     return item.value.show = false
-            //     // }
-            // })
-        }
-        const { allExportExcel, selectExportExcel, replaceStr } = require("@/lqp")
-        const addFormDialog = ref(false)
-        const receiveAddForm = (e, r) =>{
-            console.log('zhe',e)
-            console.log('zhe',r)
-            loading.value = r
-            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
-            setTimeout(function(){
-                loading.value = false
-                addFormDialog.value = false
-                ElMessage({
-                    type: 'success',
-                    // message: `action: ${action}`,
-                    message: '已提交'
-                })
-                // 重载表格数据
-
-            }, 3000);
-
-        }
-        const cancelAddForm = (e) => {
-            addFormDialog.value = e
-        }
-        const getTestNumbers = (v) => {
-            console.log('支付方式',v)
-            // todo
-
-        }
-        const getStates = (v) => {
-            console.log('支付方式',v)
-            // todo
-
-        }
-        // 表侧边栏
-        const getTreeId = (v) => {
-            console.log('id', v)
-        }
         // 表格
         const params = ref({
             page: 1,
@@ -181,7 +136,7 @@ export default {
         })
         const total = ref(0)
         const loading = ref(false)
-        const tableTitle = [
+        const tableTitle = ref([
             {
                 label: '编号',
                 value: 'axb_number',
@@ -255,17 +210,66 @@ export default {
                 show: true
             }
 
-        ]
+        ])
         const tableData = ref([])
         const selectTableData = ref([])
+
+        const search = (f) => {
+            console.log('子传父参数', f)
+        }
+        // 表头
+        const arr = ref([])
+        const multiple = {multiple: true}
+        const handleShow = (value) => {
+            console.log(value)
+            // tableTitle.value = Object.assign({}, tableTitle, [value])
+            console.log(tableTitle.value)
+        }
+        const {allExportExcel, selectExportExcel, replaceStr} = require("@/lqp")
+        const addFormDialog = ref(false)
+        const receiveAddForm = (e, r) => {
+            console.log('zhe', e)
+            console.log('zhe', r)
+            loading.value = r
+            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
+            setTimeout(function () {
+                loading.value = false
+                addFormDialog.value = false
+                ElMessage({
+                    type: 'success',
+                    // message: `action: ${action}`,
+                    message: '已提交'
+                })
+                // 重载表格数据
+
+            }, 3000);
+
+        }
+        const cancelAddForm = (e) => {
+            addFormDialog.value = e
+        }
+        const getTestNumbers = (v) => {
+            console.log('支付方式', v)
+            // todo
+
+        }
+        const getStates = (v) => {
+            console.log('支付方式', v)
+            // todo
+
+        }
+        // 表侧边栏
+        const getTreeId = (v) => {
+            console.log('id', v)
+        }
         const getTableData = async () => {
             loading.value = true
-            post('getHistoryList', params.value).then((res)=>{
+            post('getHistoryList', params.value).then((res) => {
                 console.log(res)
-                if(res.code === 1){
+                if (res.code === 1) {
                     loading.value = false
                     // 星号隐藏号码
-                    res.data.forEach((item)=>{
+                    res.data.forEach((item) => {
                         item.called_number_copy = item.called_number
                         item.called_number = replaceStr(item.called_number, '****')
                         item.isCalled = false
@@ -309,18 +313,18 @@ export default {
             }
         ])
         const editData = ref({})
-        const handleOperation = (op, row) =>{
-            if(op.types === 'edit'){
+        const handleOperation = (op, row) => {
+            if (op.types === 'edit') {
                 editFormDialog.value = true
                 editData.value = row.value
 
-            }else if(op.types === 'del'){
+            } else if (op.types === 'del') {
                 console.log(row.value.id)
                 ElMessageBox({
-                    title: '确认删除此id='+row.value.id+'数据吗？',
+                    title: '确认删除此id=' + row.value.id + '数据吗？',
                     message: h('p', null, [
                         h('span', null, '此数据将会被'),
-                        h('i', { style: 'color: #F56C6C' }, '删除'),
+                        h('i', {style: 'color: #F56C6C'}, '删除'),
                     ]),
                     showCancelButton: true,
                     confirmButtonText: '删除',
@@ -350,13 +354,13 @@ export default {
                 })
             }
         }
-        const receiveEditForm = (e, r) =>{
-            console.log('参数',e)
-            console.log('zhe',r)
+        const receiveEditForm = (e, r) => {
+            console.log('参数', e)
+            console.log('zhe', r)
             loading.value = r
             // todo
             // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
-            setTimeout(function(){
+            setTimeout(function () {
                 loading.value = false
                 editFormDialog.value = false
                 ElMessage({
@@ -372,9 +376,9 @@ export default {
         const cancelEditForm = (e) => {
             editFormDialog.value = e
         }
-        const changeState = (e,row,index) => {
+        const changeState = (e, row, index) => {
             // e返回状态，row当前行数据， index下标
-            console.log('zhe2',e)
+            console.log('zhe2', e)
             console.log(row)
             console.log(index)
             //todo
@@ -388,7 +392,7 @@ export default {
         return {
             arr,
             multiple,
-            handleChange,
+            handleShow,
             userLists,
             dialogUserList,
             getTableData,
@@ -434,7 +438,7 @@ export default {
         this.getTableData()
     },
     methods: {
-        selectExportData (value) {
+        selectExportData(value) {
             this.selectTableData = value
         }
     }
