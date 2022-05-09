@@ -46,8 +46,8 @@ return [
         ],
         [
             'id' => 8,
-            'title' => '测试代码',
-            'url' => 'admin.code',
+            'title' => '系统设置',
+            'url' => 'admin.settings',
             'icon' => ['fas', 'address-book']
         ]
     ],

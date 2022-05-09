@@ -5,29 +5,6 @@
         </div>
         <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
-                <div class="m-2 flex flex-row justify-between border-b pb-2">
-                    <div>
-                        <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
-                        <span class="pl-2 text-gray-400">注：点击'已开通用户'列可查看用户列表内容</span>
-                    </div>
-                    <div class="flex flex-column justify-center items-center">
-                        <el-popover placement="bottom" :width="400" trigger="click">
-                            <template #reference>
-                                <el-button style="margin-right: 16px">Click to activate</el-button>
-                            </template>
-                            <el-checkbox v-for="(item, index) in tableTitle" :checked="item.show"  :label="item.label" size="large" @change="handleShow(item)" />
-<!--                            v-model="item.show"-->
-                        </el-popover>
-                        <el-button type="" plain @click="selectExportExcel(selectTableData,tableTitle,'用户管理报表')">选择导出
-                        </el-button>
-                        <el-button type="" plain @click="allExportExcel(tableData,tableTitle,'用户管理报表')">全部导出</el-button>
-                        <el-button type="" plain class="mr-2">
-                            <el-icon>
-                                <refresh/>
-                            </el-icon>
-                        </el-button>
-                    </div>
-                </div>
                 <el-row class="relative">
                     <el-col :span="2" class="border-r">
                         <v-asides @getTreeId="getTreeId"></v-asides>
@@ -35,23 +12,29 @@
                     <el-col :span="22">
                         <basic-table
                             :tableTitle="tableTitle"
-                            :tableData="tableData"
-                            :loading="loading"
                             :operates="operates"
-                            :testNumbers="testNumbers"
-                            :states="states"
-                            @getTestNumbers="getTestNumbers"
-                            @getStates="getStates"
-                            :specialNumber="specialNumber"
-                            :specialUser="specialUser"
                             :selectionType="true"
                             :pagination="true"
-                            :total="total"
-                            :params="params"
-                            :getTableData="getTableData"
-                            @selectExports="selectExportData"
+                            :buttonGroups="true"
+                            :where="params"
+                            :url="'getHistoryList'"
+                            :exportName="exportName"
+                            :testNumbers="testNumbers"
+                            :states="states"
+                            :specialNumber="specialNumber"
+                            :specialUser="specialUser"
+                            :loading="loading"
+                            :openAccountSlot="true"
+                            @getTestNumbers="getTestNumbers"
+                            @getStates="getStates"
                             @dialogUserList="dialogUserList"
                         >
+                            <template v-slot:openAccount="scope">
+                                <div>
+                                    <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
+                                    <span class="pl-2 text-gray-400">注：点击'已开通用户'列可查看用户列表内容</span>
+                                </div>
+                            </template>
                             <template v-slot:specialNumber="scope">
                                 <el-icon>
                                     <phone color="#409EFC"/>
@@ -116,26 +99,20 @@ import UserTable from '@/Pages/admin/subUser/List.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
-import {post} from "@/http/request";
-import {Timer, Phone, Menu, Loading, Refresh, TurnOff} from '@element-plus/icons-vue'
+import {Phone} from '@element-plus/icons-vue'
 import VAsides from '@/Pages/admin/vAsides/VAsides.vue'
-
 export default {
     name: "CallHistoryList",
     components: {
-        ButtonGroup, Timer, Phone, Menu, Loading, Refresh, TurnOff,
+        ButtonGroup,Phone,
         AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable, UserTable, VAsides
     },
     setup() {
-        // 搜索框
         const role = ref('user')
-        // 表格
         const params = ref({
             page: 1,
             limit: 15,
         })
-        const total = ref(0)
-        const loading = ref(false)
         const tableTitle = ref([
             {
                 label: '编号',
@@ -211,22 +188,48 @@ export default {
             }
 
         ])
-        const tableData = ref([])
-        const selectTableData = ref([])
+        const addFormDialog = ref(false)
+        const editFormDialog = ref(false)
+        const operates = ref({
+            operate: true,
+            label: '操作',
+        })
+        const specialNumber = ref('')
+        const specialUser = ref('')
+        const openAccount = ref('')
+        const testNumbers = ref({
+            testNumber: true,
+            label: '测试账号',
+            width: 60
+        })
+        const states = ref({
+            state: true,
+            label: '状态',
+            width: 60
+        })
+        const operations = ref([{
+            types: 'edit',
+            title: '编辑',
+            type: 'success',
+            icon: ['fas', 'pen-to-square'],
 
+        },
+            {
+                types: 'del',
+                title: '删除',
+                type: 'danger',
+                icon: ['far', 'trash-can'],
+
+            }
+        ])
+        const editData = ref({})
+        const userLists = ref(false)
+        const exportName = ref('用户管理报表')
+        const loading = ref(false)
         const search = (f) => {
             console.log('子传父参数', f)
+            params.value = Object.assign({}, params.value, f)
         }
-        // 表头
-        const arr = ref([])
-        const multiple = {multiple: true}
-        const handleShow = (value) => {
-            console.log(value)
-            // tableTitle.value = Object.assign({}, tableTitle, [value])
-            console.log(tableTitle.value)
-        }
-        const {allExportExcel, selectExportExcel, replaceStr} = require("@/lqp")
-        const addFormDialog = ref(false)
         const receiveAddForm = (e, r) => {
             console.log('zhe', e)
             console.log('zhe', r)
@@ -258,61 +261,9 @@ export default {
             // todo
 
         }
-        // 表侧边栏
         const getTreeId = (v) => {
             console.log('id', v)
         }
-        const getTableData = async () => {
-            loading.value = true
-            post('getHistoryList', params.value).then((res) => {
-                console.log(res)
-                if (res.code === 1) {
-                    loading.value = false
-                    // 星号隐藏号码
-                    res.data.forEach((item) => {
-                        item.called_number_copy = item.called_number
-                        item.called_number = replaceStr(item.called_number, '****')
-                        item.isCalled = false
-                    })
-
-                    tableData.value = res.data
-                    total.value = res.total
-                }
-            })
-        }
-        const editFormDialog = ref(false)
-        const operates = ref({
-            operate: true,
-            label: '操作',
-        })
-        const specialNumber = ref('')
-        const specialUser = ref('')
-        const testNumbers = ref({
-            testNumber: true,
-            label: '测试账号',
-            width: 60
-        })
-        const states = ref({
-            state: true,
-            label: '状态',
-            width: 60
-        })
-        const operations = ref([{
-            types: 'edit',
-            title: '编辑',
-            type: 'success',
-            icon: ['fas', 'pen-to-square'],
-
-        },
-            {
-                types: 'del',
-                title: '删除',
-                type: 'danger',
-                icon: ['far', 'trash-can'],
-
-            }
-        ])
-        const editData = ref({})
         const handleOperation = (op, row) => {
             if (op.types === 'edit') {
                 editFormDialog.value = true
@@ -383,31 +334,24 @@ export default {
             console.log(index)
             //todo
         }
-        const userLists = ref(false)
         const dialogUserList = (v, id) => {
             console.log(v)
             console.log(id)
             userLists.value = v
         }
         return {
-            arr,
-            multiple,
-            handleShow,
+            loading,
+            openAccount,
+            exportName,
             userLists,
             dialogUserList,
-            getTableData,
-            total,
             params,
-            replaceStr,
-            selectExportExcel,
-            selectTableData,
             search,
             role,
             changeState,
             addFormDialog,
             receiveAddForm,
             cancelAddForm,
-            loading,
             operates,
             testNumbers,
             states,
@@ -416,30 +360,13 @@ export default {
             operations,
             handleOperation,
             tableTitle,
-            tableData,
             editFormDialog,
             editData,
             cancelEditForm,
             receiveEditForm,
-            allExportExcel,
             getTreeId,
             getStates,
             getTestNumbers
-
-        }
-    },
-    computed: {
-        tableTitle() {
-            // 筛选是否可见
-            return this.tableTitle.filter(item => item.show)
-        }
-    },
-    mounted() {
-        this.getTableData()
-    },
-    methods: {
-        selectExportData(value) {
-            this.selectTableData = value
         }
     }
 }

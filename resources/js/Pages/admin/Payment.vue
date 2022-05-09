@@ -5,23 +5,14 @@
         </div>
         <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
-                <div class="m-2 flex flex-row justify-between border-b pb-2">
-                    <div></div>
-                    <div class="flex flex-column justify-center items-center mx-4">
-                        <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'充值管理报表')">选择导出</el-button>
-                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'充值管理报表')">全部导出</el-button>
-                    </div>
-                </div>
                 <basic-table
                     :tableTitle="tableTitle"
-                    :tableData="tableData"
-                    :loading="loading"
                     :selectionType="true"
                     :pagination="true"
-                    :total="total"
-                    :params="params"
-                    :getTableData="getTableData"
-                    @selectExports="selectExportData"
+                    :buttonGroups="true"
+                    :where="params"
+                    :url="'getHistoryList'"
+                    :exportName="exportName"
                     :payWays="payWays"
                     @getPayWay="getPayWays"
                     :payStatus="payStatus"
@@ -50,39 +41,21 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/components/tables/BasicTable.vue';
 import { ref } from "vue"
-import {post} from "@/http/request";
 export default {
     name: "Payment",
     components: {
         AdminLayout,SearchForm,BasicTable
     },
     setup(){
-        // 搜索框
         const role = ref('payment')
-        const search = (f) => {
-            console.log('子传父参数', f)
-        }
-        // 表头
-        const { allExportExcel, selectExportExcel } = require("@/lqp")
-        // 表格
         const payWays = ref({
             label: '支付方式',
             width: 60
         })
-        const getPayWays = (v) => {
-            console.log('支付方式',v)
-            // todo
-
-        }
         const payStatus = ref({
             label: '支付状态',
             width: 60
         })
-        const getPayStatus = (v) => {
-            console.log('支付状态',v)
-            // todo
-
-        }
         const payWayIcon = ref([{
             title: '微信',
             type: 'success',
@@ -102,76 +75,72 @@ export default {
             page: 1,
             limit: 15,
         })
-        const total = ref(0)
-        const loading = ref(false)
-        const tableLoading = ref(false)
-        const tableTitle = [
+        const tableTitle = ref([
             {
                 label: '订单号',
                 value: 'axb_number',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '类型',
                 value: 'company',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '充值方',
                 value: 'company',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '充值金额（￥/元）',
                 value: 'call_duration',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '充值时间',
                 value: 'createtime',
-                sortable: true
+                sortable: true,
+                show: true
             },
             {
                 label: '支付时间',
                 value: 'createtime',
-                sortable: true
+                sortable: true,
+                show: true
             },
             {
                 label: '充值方式',
                 value: 'id',
-                sortable: false
+                sortable: false,
+                show: true
             },
             {
                 label: '状态',
                 value: 'id',
-                sortable: false
+                sortable: false,
+                show: true
             }
 
-        ]
-        const tableData = ref([])
-        const selectTableData = ref([])
-        const getTableData = () => {
-            loading.value = true
-            post('getHistoryList', params.value).then((res)=>{
-                console.log('表格数据',res)
-               if(res.code === 1){
-                   loading.value = false
-                   tableData.value = res.data
-                   total.value = res.total
-               }
-            })
+        ])
+        const exportName = ref('充值管理报表')
+        const search = (f) => {
+            console.log('子传父参数', f)
+            params.value = Object.assign({}, params.value, f)
+        }
+        const getPayWays = (v) => {
+            console.log('支付方式',v)
+            // todo
+        }
+        const getPayStatus = (v) => {
+            console.log('支付状态',v)
+            // todo
         }
         return{
-            role,search,allExportExcel,selectExportExcel,loading,tableLoading,tableTitle,
-            selectTableData,getTableData,tableData,total,params,payWays,getPayWays,payStatus,getPayStatus,payWayIcon
-        }
-    },
-    mounted() {
-        this.getTableData()
-    },
-    methods: {
-        selectExportData (value) {
-            this.selectTableData = value
+            role,search,tableTitle,params,payWays,getPayWays,payStatus,getPayStatus,payWayIcon,exportName
         }
     }
 }

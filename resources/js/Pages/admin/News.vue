@@ -5,28 +5,40 @@
         </div>
         <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
-                <div class="m-2 flex flex-row justify-between border-b pb-2">
-                    <el-button type="primary" @click="addFormDialog = true">发布</el-button>
-                    <div class="flex flex-column justify-center items-center mx-4">
-                        <el-upload action="" :auto-upload="false" :multiple="false" :show-file-list="false" :on-change="uploadXlsx" :file-list="xlsxList">
-                            <el-button type="text">批量导入</el-button>
-                        </el-upload>
-                        <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'资讯报表')">选择导出</el-button>
-                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'资讯报表')">全部导出</el-button>
-                    </div>
-                </div>
+<!--                <div class="m-2 flex flex-row justify-between border-b pb-2">-->
+<!--                    <el-button type="primary" @click="addFormDialog = true">发布</el-button>-->
+<!--                    <div class="flex flex-column justify-center items-center mx-4">-->
+<!--                        <el-upload action="" :auto-upload="false" :multiple="false" :show-file-list="false" :on-change="uploadXlsx" :file-list="xlsxList">-->
+<!--                            <el-button type="text">批量导入</el-button>-->
+<!--                        </el-upload>-->
+<!--                        <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'资讯报表')">选择导出</el-button>-->
+<!--                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'资讯报表')">全部导出</el-button>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <basic-table
                     :tableTitle="tableTitle"
-                    :tableData="tableData"
-                    :loading="loading"
                     :operates="operates"
                     :selectionType="true"
                     :pagination="true"
-                    :total="total"
-                    :params="params"
-                    :getTableData="getTableData"
-                    @selectExports="selectExportData"
+                    :buttonGroups="true"
+                    :where="params"
+                    :url="'getHistoryList'"
+                    :exportName="exportName"
+                    :releaseNewsSlot="true"
+                    :batchImportSlot="true"
                 >
+                    <template v-slot:releaseNews="scope">
+                        <div>
+                            <el-button type="primary" @click="addFormDialog = true">发布</el-button>
+                        </div>
+                    </template>
+                    <template v-slot:batchImport="scope">
+                        <div class="mr-2">
+                            <el-upload action="" :auto-upload="false" :multiple="false" :show-file-list="false" :on-change="uploadXlsx" :file-list="xlsxList">
+                                <el-button type="text">批量导入</el-button>
+                            </el-upload>
+                        </div>
+                    </template>
                     <template v-slot:operates="scope">
                         <table-operation
                             :operations="operations"
@@ -34,11 +46,11 @@
                             @handleOperation="handleOperation"
                         ></table-operation>
                     </template>
-                </basic-table>
-            </div>
-        </div>
-    </admin-layout>
-    <!--        弹框-->
+                                                    </basic-table>
+                                                </div>
+                                            </div>
+                                        </admin-layout>
+                                        <!--        弹框-->
     <el-dialog v-model="addFormDialog" title="发布资讯">
         <add-form @clickAdd="receiveAddForm" @clickCancelAdd="cancelAddForm" :loading="loading"></add-form>
     </el-dialog>
@@ -58,23 +70,73 @@ import EditForm from '@/Pages/admin/subNews/Edit.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
-import {post} from "@/http/request";
-import {Timer, Phone} from '@element-plus/icons-vue'
 export default {
     name: "News",
     components: {
-        ButtonGroup,Timer,Phone,
-        AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable
+        ButtonGroup,AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable
     },
     setup: function () {
         // 搜索框
         const role = ref('news')
+        const exportName = ref('资讯报表')
+        const addFormDialog = ref(false)
+        const params = ref({
+            page: 1,
+            limit: 15,
+        })
+        const loading = ref(false)
+        const tableTitle = ref( [
+            {
+                label: '标题',
+                value: 'axb_number',
+                sortable: false,
+                show: true
+            },
+            {
+                label: '置顶',
+                value: 'company',
+                sortable: false,
+                show: true
+            },
+            {
+                label: '查看',
+                value: 'customer',
+                sortable: false,
+                show: true
+            },
+            {
+                label: '更新时间',
+                value: 'called_number',
+                sortable: false,
+                show: true
+            }
+        ])
+        const editFormDialog = ref(false)
+        const operates = ref({
+            operate: true,
+            label: '操作',
+        })
+        const operations = ref([{
+            types: 'edit',
+            title: '编辑',
+            type: 'success',
+            icon: ['fas', 'pen-to-square'],
+
+        },
+            {
+                types: 'del',
+                title: '删除',
+                type: 'danger',
+                icon: ['far', 'trash-can'],
+
+            }
+        ])
+        const xlsxList = ref([])
+        const editData = ref({})
         const search = (f) => {
             console.log('子传父参数', f)
+            params.value = Object.assign({}, params.value, f)
         }
-        // 表头
-        const {allExportExcel, selectExportExcel, replaceStr} = require("@/lqp")
-        const addFormDialog = ref(false)
         const receiveAddForm = (e, r) => {
             console.log('zhe', e)
             console.log('zhe', r)
@@ -97,77 +159,6 @@ export default {
         const cancelAddForm = (e) => {
             addFormDialog.value = e
         }
-        // 表格
-        const params = ref({
-            page: 1,
-            limit: 15,
-        })
-        const total = ref(0)
-        const loading = ref(false)
-        const tableLoading = ref(false)
-        const tableTitle = [
-            {
-                label: '标题',
-                value: 'axb_number',
-                sortable: false
-            },
-            {
-                label: '置顶',
-                value: 'company',
-                sortable: false
-            },
-            {
-                label: '查看',
-                value: 'customer',
-                sortable: false
-            },
-            {
-                label: '更新时间',
-                value: 'called_number',
-                sortable: false,
-            }
-        ]
-        const tableData = ref([])
-        const selectTableData = ref([])
-        const getTableData = () => {
-            loading.value = true
-            post('getHistoryList', params.value).then((res) => {
-                console.log(res)
-               if(res.code === 1){
-                   loading.value = false
-                   // 隐藏电话号码
-                   res.data.forEach((item) => {
-                       item.called_number_copy = item.called_number
-                       item.called_number = replaceStr(item.called_number, '****')
-                       item.isCalled = false
-                   })
-
-                   tableData.value = res.data
-                   total.value = res.total
-               }
-            })
-        }
-        const editFormDialog = ref(false)
-        const operates = ref({
-            operate: true,
-            label: '操作',
-        })
-        const operations = ref([{
-            types: 'edit',
-            title: '编辑',
-            type: 'success',
-            icon: ['fas', 'pen-to-square'],
-
-        },
-            {
-                types: 'del',
-                title: '删除',
-                type: 'danger',
-                icon: ['far', 'trash-can'],
-
-            }
-        ])
-        const editData = ref({})
         const handleOperation = (op, row) => {
             if (op.types === 'edit') {
                 editFormDialog.value = true
@@ -250,7 +241,6 @@ export default {
 
 
         }
-        const xlsxList = ref([])
         const beforeAvatarUpload = async (file) => {
             let fileArr = file.name.split('.')
             let suffix = fileArr[fileArr.length - 1]
@@ -272,12 +262,7 @@ export default {
                 xlsxList,
                 beforeAvatarUpload,
                 handleAvatarSuccess,
-                getTableData,
-                total,
                 params,
-                replaceStr,
-                selectExportExcel,
-                selectTableData,
                 search,
                 role,
                 changeState,
@@ -290,21 +275,11 @@ export default {
                 operations,
                 handleOperation,
                 tableTitle,
-                tableData,
-                tableLoading,
                 editFormDialog,
                 editData,
                 cancelEditForm,
                 receiveEditForm,
-                allExportExcel
-            }
-        },
-        mounted(){
-            this.getTableData()
-        },
-        methods: {
-            selectExportData(value){
-                this.selectTableData = value
+                exportName
             }
         }
     }

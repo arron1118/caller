@@ -9,9 +9,10 @@
                 :operates="operates"
                 :selectionType="true"
                 :pagination="true"
-                :export="true"
+                :buttonGroups="true"
                 :where="params"
                 :url="'getHistoryList'"
+                :exportName="exportName"
             >
                 <template v-slot:operates="scope">
                     <table-operation
@@ -51,40 +52,11 @@ export default {
         AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable
     },
     setup() {
-        // 搜索框
+        const {replaceStr} = require("@/lqp")
         const role = ref('callHistory')
         const params = ref({
             limit: 30,
         })
-        const search = (f) => {
-            console.log('子传父参数', f)
-            params.value = Object.assign({}, params.value, f)
-        }
-        // 表头
-        const {replaceStr} = require("@/lqp")
-        const print = ref(false)
-        const addFormDialog = ref(false)
-        const receiveAddForm = (e, r) => {
-            console.log('zhe', e)
-            console.log('zhe', r)
-            loading.value = r
-            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
-            setTimeout(function () {
-                loading.value = false
-                addFormDialog.value = false
-                ElMessage({
-                    type: 'success',
-                    // message: `action: ${action}`,
-                    message: '已提交'
-                })
-                // 重载表格数据
-
-            }, 3000);
-
-        }
-        const cancelAddForm = (e) => {
-            addFormDialog.value = e
-        }
         const editFormDialog = ref(false)
         const tableTitle = ref([
             {
@@ -152,6 +124,34 @@ export default {
             }
         ])
         const editData = ref({})
+        const print = ref(false)
+        const addFormDialog = ref(false)
+        const exportName = ref('通话记录报表')
+        const search = (f) => {
+            console.log('子传父参数', f)
+            params.value = Object.assign({}, params.value, f)
+        }
+        const receiveAddForm = (e, r) => {
+            console.log('zhe', e)
+            console.log('zhe', r)
+            loading.value = r
+            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
+            setTimeout(function () {
+                loading.value = false
+                addFormDialog.value = false
+                ElMessage({
+                    type: 'success',
+                    // message: `action: ${action}`,
+                    message: '已提交'
+                })
+                // 重载表格数据
+
+            }, 3000);
+
+        }
+        const cancelAddForm = (e) => {
+            addFormDialog.value = e
+        }
         const handleOperation = (op, row) => {
             if (op.types === 'edit') {
                 editFormDialog.value = true
@@ -222,8 +222,8 @@ export default {
             console.log(index)
             //todo
         }
-
         return {
+            exportName,
             replaceStr,
             search,
             role,

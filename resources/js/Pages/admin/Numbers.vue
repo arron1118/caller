@@ -9,14 +9,14 @@
                 </div>
                 <basic-table
                     :tableTitle="tableTitle"
-                    :tableData="tableData"
-                    :loading="loading"
                     :operates="operates"
-                    :selectionType="false"
+                    :selectionType="true"
                     :pagination="true"
-                    :total="total"
-                    :params="params"
-                    :getTableData="getTableData"
+                    :buttonGroups="true"
+                    :where="params"
+                    :url="'getHistoryList'"
+                    :exportName="exportName"
+                    :loading="loading"
                 >
                     <template v-slot:operates="scope">
                         <table-operation
@@ -47,23 +47,65 @@ import AddForm from '@/Pages/admin/subNumbers/Add.vue'
 import EditForm from '@/Pages/admin/subNumbers/Edit.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
-import {post} from "@/http/request";
-import {Timer, Phone} from '@element-plus/icons-vue'
 export default {
     name: "Numbers",
     components: {
-        ButtonGroup,Timer,Phone,
-        AdminLayout,BasicTable,TableOperation,EditForm, AddForm
+        ButtonGroup,AdminLayout,BasicTable,TableOperation,EditForm, AddForm
     },
     setup(){
-        // 搜索框
         const role = ref('user')
+        const exportName = ref('号码管理报表')
+        const addFormDialog = ref(false)
+        const params = ref({
+            page: 1,
+            limit: 15,
+        })
+        const tableTitle = ref([
+            {
+                label: '号码',
+                value: 'axb_number',
+                sortable: false,
+                show: true
+            },
+            {
+                label: '企业使用情况',
+                value: 'company',
+                sortable: false,
+                show: true
+            },
+            {
+                label: '用户使用情况',
+                value: 'customer',
+                sortable: false,
+                show: true
+            }
+        ])
+        const editFormDialog = ref(false)
+        const operates = ref({
+            operate: true,
+            label: '操作',
+        })
+        const specialNumber = ref('')
+        const states = ref({
+            state: true,
+            label: '状态',
+            width: 60
+        })
+        const operations = ref([
+            {
+            types: 'edit',
+            title: '编辑',
+            type: 'success',
+            icon: ['fas', 'pen-to-square'],
+
+        }
+        ])
+        const editData = ref({})
+        const loading = ref(false)
         const search = (f) => {
             console.log('子传父参数', f)
+            params.value = Object.assign({}, params.value, f)
         }
-        // 表头
-        const { allExportExcel, selectExportExcel, replaceStr } = require("@/lqp")
-        const addFormDialog = ref(false)
         const receiveAddForm = (e, r) =>{
             console.log('zhe',e)
             console.log('zhe',r)
@@ -86,70 +128,6 @@ export default {
         const cancelAddForm = (e) => {
             addFormDialog.value = e
         }
-        // 表格
-        const params = ref({
-            page: 1,
-            limit: 15,
-        })
-        const total = ref(0)
-        const loading = ref(false)
-        const tableTitle = [
-            {
-                label: '号码',
-                value: 'axb_number',
-                sortable: false
-            },
-            {
-                label: '企业使用情况',
-                value: 'company',
-                sortable: false
-            },
-            {
-                label: '用户使用情况',
-                value: 'customer',
-                sortable: false
-            }
-        ]
-        const tableData = ref([])
-        const selectTableData = ref([])
-        const getTableData = () => {
-            loading.value = true
-            post('getHistoryList', params.value).then((res)=>{
-                console.log(res)
-                if(res.code === 1){
-                    loading.value = false
-                    // 隐藏电话号码
-                    res.data.forEach((item)=>{
-                        item.called_number_copy = item.called_number
-                        item.called_number = replaceStr(item.called_number, '****')
-                        item.isCalled = false
-                    })
-                    tableData.value = res.data
-                    total.value = res.total
-                }
-            })
-        }
-        const editFormDialog = ref(false)
-        const operates = ref({
-            operate: true,
-            label: '操作',
-        })
-        const specialNumber = ref('')
-        const states = ref({
-            state: true,
-            label: '状态',
-            width: 60
-        })
-        const operations = ref([
-            {
-            types: 'edit',
-            title: '编辑',
-            type: 'success',
-            icon: ['fas', 'pen-to-square'],
-
-        }
-        ])
-        const editData = ref({})
         const handleOperation = (op, row) =>{
             if(op.types === 'edit'){
                 editFormDialog.value = true
@@ -232,14 +210,10 @@ export default {
 
 
         }
-
         return {
-            getTableData,
-            total,
+            loading,
+            exportName,
             params,
-            replaceStr,
-            selectExportExcel,
-            selectTableData,
             search,
             role,
             changeState,
@@ -247,23 +221,17 @@ export default {
             addFormDialog,
             receiveAddForm,
             cancelAddForm,
-            loading,
             operates,
             states,
             specialNumber,
             operations,
             handleOperation,
             tableTitle,
-            tableData,
             editFormDialog,
             editData,
             cancelEditForm,
             receiveEditForm,
-            allExportExcel
         }
-    },
-    mounted() {
-        this.getTableData()
     }
 }
 </script>
