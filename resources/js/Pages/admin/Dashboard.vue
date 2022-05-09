@@ -73,7 +73,7 @@
                             :specialUsername="specialUsername"
                         >
                             <template v-slot:specialUsername="scope">
-                                <el-icon class="pr-2"><cold-drink color="#E6A23C"/></el-icon>
+                                <el-icon class="pr-1" v-if="scope.scope.$index<=2"><cold-drink color="#E6A23C" /></el-icon>
                                 <span class="">{{ scope.scope.row.username }}</span>
                             </template>
                         </basic-table>
@@ -135,7 +135,7 @@ export default {
         ])
         const params = ref({
             page: 1,
-            limit: 10,
+            limit: 8,
         })
         const specialUsername = ref('')
         return {

@@ -29,11 +29,11 @@
                 v-loading="loading"
                 style="width: 100%"
                 ref="multipleTableRef"
-                @selection-change="handleSelectionChange"
                 id="print"
+                row-key="id"
                 :sum-text="'合计'"
                 :show-summary="showSummary"
-                row-key="id"
+                @selection-change="handleSelectionChange"
                 @cell-click="handleColumn"
             >
                 <el-table-column type="selection" width="55" v-if="selectionType === true"/>
@@ -149,7 +149,6 @@ export default {
             page: 1,
             limit: 15,
         }, props.where))
-
         const handleSelectionChange = async (val) => {
             selectExport.value = val
         }
