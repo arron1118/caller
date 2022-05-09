@@ -1,21 +1,27 @@
 <template>
     <el-row>
         <el-col>
-            <div class="m-2 text-right border-b pb-2 flex flex-row justify-between" v-if="export">
-                <div></div>
+            <div class="m-2 text-right border-b pb-2 flex flex-row justify-between" v-if="buttonGroups === true">
+                <div>
+                    <slot name="openAccount" v-if="openAccountSlot === true"></slot>
+                    <slot name="releaseNews" v-if="releaseNewsSlot === true"></slot>
+                </div>
                 <div class="flex flex-column justify-center items-center mx-4">
-                    <slot name="button"></slot>
+                    <slot name="batchImport" v-if="batchImportSlot === true"></slot>
+                    <el-button type="text" @click="selectExportExcel(selectExport,tableTitle,exportName)">选择导出
+                    </el-button>
+                    <el-button type="text" @click="allExportExcel(tableData,tableTitle,exportName)">全部导出</el-button>
                     <el-popover placement="bottom" :width="150" popper-class="h-60 overflow-y-scroll" trigger="click">
                         <template #reference>
-                            <el-button style="margin-right: 16px">筛选列</el-button>
+                            <el-button type="text" style="margin-right: 16px">筛选列</el-button>
                         </template>
                         <el-checkbox v-for="item in tableTitle" v-model="item.show" :label="item.label" size="large"/>
                     </el-popover>
-                    <!--                        <el-button type="text" @click="">筛选列</el-button>-->
-                    <el-button type="text" @click="selectExportExcel(selectExport,tableTitle,'通话记录报表')">选择导出
+                    <el-button type="text" plain class="mr-2">
+                        <el-icon>
+                            <refresh/>
+                        </el-icon>
                     </el-button>
-                    <el-button type="text" @click="allExportExcel(tableData,tableTitle,'通话记录报表')">全部导出</el-button>
-                    <!--                        <el-button type="text" v-print="'#printId'" @click="print=true">打印</el-button>-->
                 </div>
             </div>
             <el-table
@@ -30,9 +36,6 @@
                 row-key="id"
                 @cell-click="handleColumn"
             >
-                <!--                @cell-click="handleColumn"-->
-                <!--                @cell-mouse-enter="handleMouseEnter"-->
-                <!--                @cell-mouse-leave="handleMouseLeave"-->
                 <el-table-column type="selection" width="55" v-if="selectionType === true"/>
                 <el-table-column
                     v-for="(item, index) in tableTitle.filter(item2 => item2.show)"
@@ -46,6 +49,9 @@
                     </template>
                     <template v-slot="scope" v-if="item.value === 'user_id'">
                         <slot name="specialUser" :scope="scope"></slot>
+                    </template>
+                    <template v-slot="scope" v-if="item.value === 'username'">
+                        <slot name="specialUsername" :scope="scope"></slot>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -124,19 +130,18 @@
 import {ref} from 'vue'
 import vPagination from '@/Pages/components/tables/Pagination.vue'
 import {post} from "@/http/request";
-
+import {Refresh} from '@element-plus/icons-vue'
 export default {
     name: "BasicTable",
     components: {
-        vPagination
+        vPagination,Refresh
     },
-    props: ['tableTitle', 'operates', 'specialNumber', 'specialUser', 'testNumbers', 'states',
-        'selectionType', 'pagination', 'where', 'payWays', 'payStatus', 'showSummary', 'export', 'url'],
+    props: ['tableTitle', 'operates', 'specialNumber', 'specialUser', 'testNumbers', 'states','specialUsername',
+        'selectionType', 'pagination', 'where', 'payWays', 'payStatus', 'showSummary', 'buttonGroups', 'url', 'exportName', 'openAccountSlot','releaseNewsSlot','batchImportSlot'],
     setup(props, context) {
         const {allExportExcel, selectExportExcel, replaceStr} = require("@/lqp")
         const selectExport = ref([])
         const selectTableData = ref([])
-        // 表格
         const total = ref(0)
         const loading = ref(false)
         const tableData = ref([])
@@ -213,6 +218,7 @@ export default {
         this.getTableData()
     },
     watch: {
+        // 需要每个页面传参数是因为搜索的时候，除了页码和每页数还有搜索字段要接收。
         where (newValue, oldValue) {
             this.getTableData();
         }
@@ -220,7 +226,6 @@ export default {
     methods: {
         getTableData () {
             this.loading = true
-            // this.params = Object.assign({}, this.params, this.where)
             post(this.url, this.params).then((res) => {
                 console.log(res)
                 if (res.code === 1) {

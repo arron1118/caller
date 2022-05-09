@@ -69,9 +69,9 @@ Route::prefix('admin')->group(function () {
         return redirect()->route('admin.login')->with(['msg' => '退出成功']);
     })->name('admin.logout');
 
-    Route::get('/code', function () {
-        return Inertia::render('admin/code', []);
-    })->name('admin.code');
+    Route::get('/settings', function () {
+        return Inertia::render('admin/Settings', []);
+    })->name('admin.settings');
 
 });
 
