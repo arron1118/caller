@@ -12,7 +12,8 @@
         "laravel/framework": "v8.83.0",
         "laravel/sanctum": "v2.14.0",
         "laravel/tinker": "v2.7.0",
-        "tightenco/ziggy": "^1.4"
+        "tightenco/ziggy": "^1.4",
+        "yansongda/pay": "~3.1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.17",

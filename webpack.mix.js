@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const {output} = require("./webpack.config");
 
 /*
  |--------------------------------------------------------------------------
@@ -15,7 +16,15 @@ mix.js('resources/js/app.js', 'public/js').vue()
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
-    ]).webpackConfig(require('./webpack.config'));
+    ])
+    .webpackConfig(require('./webpack.config'));
+
+mix.webpackConfig({
+    output: {
+        chunkFilename: `js/[name].${mix.inProduction() ? '[contenthash].' : ''}js`,
+        clean: true,
+    }
+})
 
 if (mix.inProduction()) {
     mix.version();
