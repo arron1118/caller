@@ -1,245 +1,198 @@
 <template>
     <company-layout title="Dashboard">
-        <el-row class="border py-4 mb-10">
-            <el-col :span="6">
-                <el-row>
-                    <el-col :span="24" class="text-center">
-                        <div class="mb-4 text-xl">您好，<span class="text-brand">测试</span>！</div>
-                        <el-image src="../../../img/user.png" fit="contain" class="h-20"></el-image>
-                    </el-col>
-                </el-row>
-            </el-col>
-            <el-col :span="18">
-                <el-row>
-                    <el-col :span="8">
-                        <el-row>
-                            <el-col :span="12">
-                                <div class="mb-2">账号：测试</div>
-                                <div>手机：***********</div>
-                            </el-col>
-                            <el-col :span="12">
-                                <div class="mb-2">当前余额/元</div>
-                                <div class="mb-2 text-yellow-600">
-                                    <el-icon>
-                                        <money/>
-                                    </el-icon>
-                                    <span class="text-2xl font-semibold ml-2">123456789</span></div>
-                                <el-button type="primary">立即充值</el-button>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                    <el-col :span="10"></el-col>
-                    <el-col :span="6" class="text-center">
-                        <el-row>
-                            <el-col :span="12">
-                                <el-image src="../../../img/serve.png" fit="contain"
-                                          class="w-auto h-10 mb-2"></el-image>
-                                <div class="mb-2">客服咨询</div>
-                                <div class="text-xl font-semibold hover:text-blue-400">13622850769</div>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-image src="../../../img/xiaoqiang.png" fit="contain"
-                                          class="w-auto h-10 mb-2"></el-image>
-                                <div class="mb-2">微信咨询</div>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                </el-row>
-            </el-col>
-        </el-row>
-        <el-row class="mb-4">
-            <el-col :span="24">
-                <div class="mb-4">
-                    <el-divider content-position="left">网站概况</el-divider>
-                    <el-row>
-                        <el-col :span="3">
-                        </el-col>
-                        <el-col :span="21">
+                <div class="shadow mb-6">
+                    <el-row class="border">
+                        <el-col :span="6">
                             <el-row>
-                                <el-col :span="4"
-                                        class="border-r-2 p-1 hover:bg-gray-50 hover:text-yellow-600 text-center mr-2 rounded">
-                                    <div>总消费</div>
-                                    <div class="mb-2">
-                                        <el-icon>
-                                            <money/>
-                                        </el-icon>
-                                        <span class="text-xl font-semibold ml-2">123456789</span></div>
-                                </el-col>
-                                <el-col :span="4"
-                                        class="border-r-2 p-1 hover:bg-gray-50 hover:text-yellow-600 text-center mr-2 rounded">
-                                    <div>今日</div>
-                                    <div class="mb-2">
-                                        <el-icon>
-                                            <money/>
-                                        </el-icon>
-                                        <span class="text-xl font-semibold ml-2">123456789</span></div>
-                                </el-col>
-                                <el-col :span="4"
-                                        class="border-r-2 p-1 hover:bg-gray-50 hover:text-yellow-600 text-center mr-2 rounded">
-                                    <div>昨日</div>
-                                    <div class="mb-2">
-                                        <el-icon>
-                                            <money/>
-                                        </el-icon>
-                                        <span class="text-xl font-semibold ml-2">123456789</span></div>
-                                </el-col>
-                                <el-col :span="4"
-                                        class="border-r-2 p-1 hover:bg-gray-50 hover:text-yellow-600 text-center mr-2 rounded">
-                                    <div>本月</div>
-                                    <div class="mb-2">
-                                        <el-icon>
-                                            <money/>
-                                        </el-icon>
-                                        <span class="text-xl font-semibold ml-2">123456789</span></div>
-                                </el-col>
-                                <el-col :span="4"
-                                        class="border-r-2 p-1 hover:bg-gray-50 hover:text-yellow-600 text-center mr-2 rounded">
-                                    <div>今年</div>
-                                    <div class="mb-2">
-                                        <el-icon>
-                                            <money/>
-                                        </el-icon>
-                                        <span class="text-xl font-semibold ml-2">123456789</span></div>
-                                </el-col>
-                                <el-col :span="4">
+                                <el-col :span="24" class="text-center">
+                                    <div class="mb-4">您好，<span class="text-brand">测试</span>！</div>
+                                    <el-image src="../../../img/user.png" fit="contain" class="h-20"></el-image>
                                 </el-col>
                             </el-row>
                         </el-col>
-                    </el-row>
-                </div>
-                <div class="mb-4">
-                    <el-divider content-position="left">呼叫统计</el-divider>
-                    <el-row>
-                        <el-col :span="3">
-                        </el-col>
-                        <el-col :span="21">
+                        <el-col :span="18">
                             <el-row>
                                 <el-col :span="8">
-
-                                </el-col>
-                                <el-col :span="16">
                                     <el-row>
-                                        <el-col :sm="12" :lg="6" class="hover:bg-gray-50">
-                                            <el-result
-                                                title="9999999"
-                                                sub-title="总呼出"
-                                            >
-                                                <template #icon>
-                                                    <el-icon :size="30" color="#409EFC">
-                                                        <headset/>
-                                                    </el-icon>
-                                                </template>
-                                            </el-result>
+                                        <el-col :span="12">
+                                            <div class="mb-2">账号：测试</div>
+                                            <div>手机：***********</div>
                                         </el-col>
-                                        <el-col :sm="12" :lg="6" class="hover:bg-gray-50">
-                                            <el-result
-                                                title="9999999"
-                                                sub-title="总时间(分)"
-                                            >
-                                                <template #icon>
-                                                    <el-icon :size="30" color="#545C64">
-                                                        <phone/>
-                                                    </el-icon>
-                                                </template>
-                                            </el-result>
+                                        <el-col :span="12">
+                                            <div class="mb-2">当前余额/元</div>
+                                            <div class="mb-2 text-yellow-600">
+                                                <el-icon>
+                                                    <money/>
+                                                </el-icon>
+                                                <span class="text-2xl font-semibold ml-2">123456789</span></div>
+                                            <el-button type="primary" >立即充值</el-button>
                                         </el-col>
-                                        <el-col :sm="12" :lg="6" class="hover:bg-gray-50">
-                                            <el-result
-                                                title="9999999"
-                                                sub-title="已接听"
-                                            >
-                                                <template #icon>
-                                                    <el-icon :size="30" color="#67C23A">
-                                                        <CircleCheck/>
-                                                    </el-icon>
-                                                </template>
-                                            </el-result>
+                                    </el-row>
+                                </el-col>
+                                <el-col :span="10"></el-col>
+                                <el-col :span="6" class="text-center">
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-image src="../../../img/serve.png" fit="contain"
+                                                      class="w-auto h-10 mb-2"></el-image>
+                                            <div class="mb-2">客服咨询</div>
+                                            <div class="font-semibold hover:text-blue-400">13622850769</div>
                                         </el-col>
-                                        <el-col :sm="12" :lg="6" class="hover:bg-gray-50">
-                                            <el-result
-                                                title="9999999"
-                                                sub-title="未接听"
-                                            >
-                                                <template #icon>
-                                                    <el-icon :size="30" color="#F56C6C">
-                                                        <CircleClose/>
-                                                    </el-icon>
-                                                </template>
-                                            </el-result>
+                                        <el-col :span="12">
+                                            <el-image src="../../../img/xiaoqiang.png" fit="contain"
+                                                      class="w-auto h-10 mb-2"></el-image>
+                                            <div class="mb-2">微信咨询</div>
                                         </el-col>
                                     </el-row>
                                 </el-col>
                             </el-row>
                         </el-col>
                     </el-row>
-                </div>
-                <div class="mb-4">
-                    <el-divider content-position="left">排行榜</el-divider>
-                    <el-row>
-                        <el-col :span="3">
+                    <el-row :gutter="20" class="text-center">
+                        <el-col :span="4">
+                            <div class="border-r hover:text-yellow-500">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>总收入</div>
+                            </div>
                         </el-col>
-                        <el-col :span="21">
-                            <Table :tableData="tableData"/>
+                        <el-col :span="4">
+                            <div class="border-r hover:text-yellow-500">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>总消费</div>
+                            </div>
+                        </el-col>
+                        <el-col :span="4">
+                            <div class="border-r hover:text-yellow-500">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>今日收入<span class="text-yellow-500">[ -96.70% ]</span></div>
+                            </div>
+                        </el-col>
+                        <el-col :span="4">
+                            <div class="border-r hover:text-yellow-500">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>昨日收入</div>
+                            </div>
+                        </el-col>
+                        <el-col :span="4">
+                            <div class="border-r hover:text-yellow-500">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>本月收入</div>
+                            </div>
+                        </el-col>
+                        <el-col :span="4">
+                            <div class="hover:text-yellow-500">
+                                <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
+                                <div>今年收入</div>
+                            </div>
                         </el-col>
                     </el-row>
                 </div>
-                <div class="mb-4">
-                    <el-divider content-position="left">近12小时拨号统计</el-divider>
+                <div class="mb-6 grid grid-cols-2 gap-4">
+                    <div class="bg-white rounded shadow p-4 grid grid-cols-3">
+                        <div class="col-span-2"><pie-echarts :pieTitle="pieTitle"/></div>
+                        <div class="pl-4 border-l mt-12">
+                            <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
+                                <div><el-icon :size="15" color="#409EFC" class="mx-2"><headset /></el-icon>总呼出</div>
+                                <div class="mx-2">99999</div>
+                            </div>
+                            <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
+                                <div><el-icon :size="15" color="#6b7280" class="mx-2"><phone /></el-icon>总时间(分)</div>
+                                <div class="mx-2">99999</div>
+                            </div>
+                            <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
+                                <div><el-icon :size="15" color="#22c55e" class="mx-2"><CircleCheck /></el-icon>已接听</div>
+                                <div class="mx-2">99999</div>
+                            </div>
+                            <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
+                                <div><el-icon :size="15" color="#ef4444" class="mx-2"><CircleClose /></el-icon>未接听</div>
+                                <div class="mx-2">99999</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="bg-white rounded shadow p-4">
+                        <div class="text-lg font-semibold text-gray-600 mb-4">排行榜</div>
+                        <basic-table
+                            :tableTitle="tableTitle"
+                            :where="params"
+                            :url="'getHistoryList'"
+                            :specialUsername="specialUsername"
+                        >
+                            <template v-slot:specialUsername="scope">
+                                <el-icon class="pr-1" v-if="scope.scope.$index<=2"><cold-drink color="#E6A23C" /></el-icon>
+                                <span class="">{{ scope.scope.row.username }}</span>
+                            </template>
+                        </basic-table>
+                    </div>
+                </div>
+                <div class="mb-6 bg-white rounded shadow p-4">
                     <el-row>
-                        <el-col :span="3">
-                        </el-col>
-                        <el-col :span="21">
-                            <Table :tableData="tableData"/>
+                        <el-col>
+                            <line-echarts :lineTitle="lineTitle"/>
                         </el-col>
                     </el-row>
                 </div>
-            </el-col>
-        </el-row>
     </company-layout>
 </template>
 
 <script>
-import CompanyLayout from "@/Layouts/CompanyLayout";
-import {Money, Headset, Phone, CircleCheck, CircleClose} from '@element-plus/icons-vue';
-import {ref, reactive} from "vue";
-import Table from '@/Pages/components/tables/PrintTable';
-
+import CompanyLayout from "@/Layouts/CompanyLayout"
+import { Money, Headset, Phone, CircleCheck, CircleClose, ColdDrink } from '@element-plus/icons-vue'
+import { ref } from "vue";
+import BasicTable from '@/Pages/company/components/tables/BasicTable.vue'
+import lineEcharts from '@/Pages/company/components/echarts/lineEcharts.vue'
+import barEcharts from '@/Pages/company/components/echarts/barEcharts.vue'
+import pieEcharts from '@/Pages/company/components/echarts/pieEcharts.vue'
 export default {
     name: "Dashboard",
     components: {
-        Table,
-        CompanyLayout,
-        Money,
-        Headset,
-        Phone,
-        CircleCheck,
-        CircleClose
+        CompanyLayout, Money, Headset, Phone, CircleCheck, CircleClose,ColdDrink, lineEcharts, barEcharts, pieEcharts, BasicTable
     },
-    setup() {
-        const tableData = [
+    setup(){
+        const lineTitle = ref('近12小时拨号统计')
+        const barTitle = ref('呼叫统计')
+        const pieTitle = ref('呼叫统计')
+        const tableTitle = ref([
             {
-                name: 'Tom',
-                answer: '10',
-                notAnswer: '12',
-                time: '100',
-                money: '100'
+                label: '公司名称',
+                value: 'username',
+                show: true
             },
             {
-                name: 'Tom',
-                answer: '10',
-                notAnswer: '12',
-                time: '100',
-                money: '100'
+                label: '未接听',
+                value: 'axb_number',
+                show: true
+            },
+            {
+                label: '已接听',
+                value: 'axb_number',
+                show: true
+            },
+            {
+                label: '时间（分）',
+                value: 'axb_number',
+                show: true
+            },
+            {
+                label: '消费金额',
+                value: 'axb_number',
+                show: true
             }
-
-        ]
+        ])
+        const params = ref({
+            page: 1,
+            limit: 8,
+        })
+        const specialUsername = ref('')
         return {
-            tableData
+            specialUsername,
+            tableTitle,
+            lineTitle,
+            barTitle,
+            pieTitle,
+            params
         }
-    },
-    mounted() {
-    },
-    methods: {}
+    }
 }
 </script>
 
