@@ -19,12 +19,12 @@ mix.js('resources/js/app.js', 'public/js').vue()
     ])
     .webpackConfig(require('./webpack.config'));
 
-mix.webpackConfig({
-    output: {
-        chunkFilename: `js/[name].${mix.inProduction() ? '[contenthash].' : ''}js`,
-        clean: true,
-    }
-})
+// mix.webpackConfig({
+//     output: {
+//         chunkFilename: `js/[name].${mix.inProduction() ? '[contenthash].' : ''}js`,
+//         clean: true,
+//     }
+// })
 
 if (mix.inProduction()) {
     mix.version();

@@ -16,7 +16,7 @@ import 'element-plus/dist/index.css'
 import Print from 'vue3-print-nb'
 
 createInertiaApp({
-    resolve: name => require(`./Pages/${name}`),
+    resolve: name => import(`./Pages/${name}`),
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)

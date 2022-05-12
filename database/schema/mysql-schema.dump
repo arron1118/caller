@@ -1,0 +1,335 @@
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `hbcall_admin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_admin` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'username',
+  `realname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `password` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '密码',
+  `salt` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `loginip` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0.0.0.0' COMMENT '登录IP',
+  `prevtime` int(11) NOT NULL DEFAULT '0' COMMENT '上次登录时间',
+  `logintime` int(11) NOT NULL DEFAULT '0' COMMENT '登录时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1 正常 0 禁止登录',
+  `device` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '设备信息',
+  `platform` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统信息',
+  `platform_version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统版本',
+  `browser` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '浏览器信息',
+  `browser_version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '浏览器版本',
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `token_expire_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='管理员表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_attachment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_attachment` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `admin_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'admin_id',
+  `company_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'company_id',
+  `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'user_id',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '物理路径',
+  `mime_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `file_extension` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '文件后缀',
+  `storage` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '存储位置',
+  `sha1` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '文件sha1编码',
+  `file_name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '文件名称',
+  `file_size` int(11) NOT NULL DEFAULT '0' COMMENT '文件大小',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='附件表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_call_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_call_history` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'username',
+  `company_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'company id',
+  `company` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'company',
+  `subid` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '通话唯一编号',
+  `callid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `caller_number` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '主叫号码',
+  `called_number` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '被叫号码',
+  `axb_number` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'axb小号',
+  `starttime` int(11) NOT NULL DEFAULT '0' COMMENT '开始时间',
+  `releasetime` int(11) NOT NULL DEFAULT '0' COMMENT '结束时间',
+  `call_duration` int(11) NOT NULL DEFAULT '0' COMMENT '呼叫时长',
+  `finish_type` tinyint(2) NOT NULL DEFAULT '0',
+  `finish_state` tinyint(2) NOT NULL DEFAULT '0',
+  `releasecause` tinyint(2) NOT NULL DEFAULT '0',
+  `record_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '录音地址',
+  `createtime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建日期',
+  `sync_at` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '同步时间',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '状态：0 未同步 1 已同步',
+  `customer_id` int(11) NOT NULL DEFAULT '0' COMMENT '客户ID',
+  `customer` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '客户名称',
+  `device` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '设备信息',
+  `platform` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统信息',
+  `platform_version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统版本',
+  `browser` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '浏览器信息',
+  `browser_version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '浏览器版本',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `subid` (`subid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='通话记录表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_company`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_company` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'username',
+  `realname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `password` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '密码',
+  `salt` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `corporation` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'corporation',
+  `balance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '余额',
+  `expense` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '消费金额',
+  `rate` decimal(4,3) unsigned NOT NULL DEFAULT '0.000' COMMENT '费率',
+  `ration` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '配额',
+  `limit_user` smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT '限制用户数据 0 为无限制',
+  `create_at` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `loginip` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0.0.0.0' COMMENT '登录IP',
+  `prevtime` int(11) NOT NULL DEFAULT '0' COMMENT '上次登录时间',
+  `logintime` int(11) NOT NULL DEFAULT '0' COMMENT '登录时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1 正常 0 禁止登录',
+  `is_test` tinyint(1) NOT NULL DEFAULT '0' COMMENT '测试用户 0 否 1 是',
+  `test_endtime` int(11) NOT NULL DEFAULT '0' COMMENT '测试结束时间',
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `token_expire_time` int(11) NOT NULL DEFAULT '0',
+  `platform` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统信息',
+  `platform_version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统版本',
+  `browser` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '浏览器信息',
+  `browser_version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '浏览器版本',
+  `device` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '设备信息',
+  `limit_call_number` smallint(4) NOT NULL DEFAULT '0' COMMENT '限制呼叫次数',
+  `phone` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '联系电话',
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '联系地址',
+  `contract_start_datetime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '合同开始时间',
+  `contract_end_datetime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '合同结束时间',
+  `contract_attachment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '合同附件',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `username` (`username`) USING BTREE,
+  UNIQUE KEY `corporation` (`corporation`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='企业表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_company_xnumber`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_company_xnumber` (
+  `company_id` int(11) unsigned NOT NULL,
+  `number_store_id` int(11) unsigned NOT NULL,
+  KEY `company_id` (`company_id`) USING BTREE,
+  KEY `number_store_id` (`number_store_id`) USING BTREE,
+  CONSTRAINT `company_id` FOREIGN KEY (`company_id`) REFERENCES `hbcall_company` (`id`),
+  CONSTRAINT `number_store_id` FOREIGN KEY (`number_store_id`) REFERENCES `hbcall_number_store` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='企业小号';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_customer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_customer` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '客户名称',
+  `phone` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '联系电话',
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `company_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '企业ID',
+  `createtime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `called_count` smallint(3) NOT NULL DEFAULT '0' COMMENT '拨打次数',
+  `last_calltime` int(11) NOT NULL DEFAULT '0' COMMENT '最后呼叫时间',
+  `email` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '邮箱',
+  `province` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `category_id` int(11) NOT NULL DEFAULT '0' COMMENT '分类ID',
+  `cate` smallint(4) NOT NULL DEFAULT '0' COMMENT '分类',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='客户表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_customer_record`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_customer_record` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '记录内容',
+  `customer_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '客户ID',
+  `create_at` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `next_call_time` int(11) unsigned NOT NULL COMMENT '下次呼叫时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='客户回访记录表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_expense`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_expense` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'user_id',
+  `company_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'company_id',
+  `call_history_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'call_history_id',
+  `duration` smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT '时间：分',
+  `rate` decimal(4,3) unsigned NOT NULL DEFAULT '0.000' COMMENT '费率',
+  `cost` decimal(4,3) NOT NULL DEFAULT '0.000' COMMENT '费用',
+  `title` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '标题',
+  `createtime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='通话消费记录表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_news`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_news` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `author_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '作者ID',
+  `is_top` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0 不置顶 1 置顶',
+  `is_hot` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0 不热 1 热',
+  `is_recommend` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0 不推荐 1 推荐',
+  `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '标题',
+  `keyword` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '关键词',
+  `cover_img` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '封面',
+  `intro` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '简介',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '内容',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '备注',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `view` int(11) NOT NULL DEFAULT '0' COMMENT '浏览量',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态 0 未发布 1 已发布 -1 已删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `title_2` (`title`) USING BTREE,
+  KEY `title` (`title`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='新闻表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_number_store`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_number_store` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `number` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'axb小号',
+  `company_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'company_id',
+  `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'user_id',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '状态：0 未使用 1 已使用 9 不可用',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='号码库';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_payment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_payment` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `payno` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '支付编号',
+  `payment_no` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '[微信、支付宝等]支付编号',
+  `company_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'company_id',
+  `corporation` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '企业名称',
+  `title` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '标题',
+  `amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '金额',
+  `pay_type` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '支付方式 1 微信 2 支付宝 3 手动充值',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `pay_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '支付时间',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '订单状态 0 未支付 1 已支付 2 已关闭',
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '备注',
+  `platform` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统信息',
+  `platform_version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统版本',
+  `browser` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '浏览器信息',
+  `browser_version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '浏览器版本',
+  `device` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '设备信息',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='充值表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'username',
+  `realname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `password` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '密码',
+  `salt` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `company_id` int(11) unsigned NOT NULL DEFAULT '0',
+  `number_store_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '号码ID',
+  `phone` char(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '手机号',
+  `axb_number` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'axb小号',
+  `create_at` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `loginip` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0.0.0.0' COMMENT '登录IP',
+  `prevtime` int(11) NOT NULL DEFAULT '0' COMMENT '上次登录时间',
+  `logintime` int(11) NOT NULL DEFAULT '0' COMMENT '登录时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1 正常 0 禁止登录',
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `token_expire_time` int(11) NOT NULL DEFAULT '0',
+  `platform` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统信息',
+  `platform_version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统版本',
+  `browser` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '浏览器信息',
+  `browser_version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '浏览器版本',
+  `device` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '设备信息',
+  `is_test` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否为测试用户 0 否 1 是',
+  `test_endtime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '测试结束时间',
+  `limit_call_number` smallint(4) NOT NULL DEFAULT '0' COMMENT '限制呼叫次数',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `username` (`username`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='用户表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `hbcall_user_view`;
+/*!50001 DROP VIEW IF EXISTS `hbcall_user_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `hbcall_user_view` AS SELECT 
+ 1 AS `id`,
+ 1 AS `username`,
+ 1 AS `realname`,
+ 1 AS `password`,
+ 1 AS `salt`,
+ 1 AS `company_id`,
+ 1 AS `axb_number`,
+ 1 AS `loginip`,
+ 1 AS `prevtime`,
+ 1 AS `logintime`,
+ 1 AS `status`*/;
+SET character_set_client = @saved_cs_client;
+DROP TABLE IF EXISTS `hbcall_user_xnumber`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `hbcall_user_xnumber` (
+  `user_id` int(11) unsigned NOT NULL,
+  `number_store_id` int(11) unsigned NOT NULL,
+  KEY `user_id` (`user_id`) USING BTREE,
+  KEY `number_store_id` (`number_store_id`) USING BTREE,
+  CONSTRAINT `hbcall_user_xnumber_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `hbcall_user` (`id`),
+  CONSTRAINT `hbcall_user_xnumber_ibfk_2` FOREIGN KEY (`number_store_id`) REFERENCES `hbcall_number_store` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='用户小号关联表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `test`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `test` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='测试表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50001 DROP VIEW IF EXISTS `hbcall_user_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `hbcall_user_view` AS select `hbcall_user`.`id` AS `id`,`hbcall_user`.`username` AS `username`,`hbcall_user`.`realname` AS `realname`,`hbcall_user`.`password` AS `password`,`hbcall_user`.`salt` AS `salt`,`hbcall_user`.`company_id` AS `company_id`,`hbcall_user`.`axb_number` AS `axb_number`,`hbcall_user`.`loginip` AS `loginip`,`hbcall_user`.`prevtime` AS `prevtime`,`hbcall_user`.`logintime` AS `logintime`,`hbcall_user`.`status` AS `status` from `hbcall_user` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
