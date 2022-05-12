@@ -9,7 +9,6 @@ module.exports = {
     },
     output: {
         chunkFilename: `js/[name].js?id=[contenthash]`,
-        clean: true,
     },
     module: {
         rules: [
