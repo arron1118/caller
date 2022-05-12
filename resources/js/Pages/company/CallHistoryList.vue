@@ -1,5 +1,5 @@
 <template>
-    <admin-layout title="Dashboard">
+    <company-layout title="Dashboard">
         <div class="mb-6 bg-white rounded shadow pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
@@ -23,7 +23,7 @@
                 </template>
             </basic-table>
         </div>
-    </admin-layout>
+    </company-layout>
     <!--    打印-->
     <div v-if="print===true">
         <div id="printId" style="height: 100%;">
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import AdminLayout from "@/Layouts/AdminLayout";
+import CompanyLayout from "@/Layouts/CompanyLayout";
 import SearchForm from "@/Pages/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/components/tables/BasicTable.vue';
 import TableOperation from "@/Pages/components/tables/TableOperation";
@@ -43,13 +43,11 @@ import EditForm from '@/Pages/admin/subUser/Edit.vue'
 import PrintTable from '@/Pages/components/tables/PrintTable.vue'
 import {h, reactive, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus"
-import {post} from "@/http/request";
-
 export default {
     name: "CallHistoryList",
     components: {
         ButtonGroup,
-        AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable
+        CompanyLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable
     },
     setup() {
         const {replaceStr} = require("@/lqp")

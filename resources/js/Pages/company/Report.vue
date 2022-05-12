@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout>
+    <CompanyLayout>
         <div class="mb-6 bg-white rounded shadow pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
@@ -18,18 +18,18 @@
                 </basic-table>
             </div>
         </div>
-    </AdminLayout>
+    </CompanyLayout>
 </template>
 
 <script>
-import AdminLayout from "@/Layouts/AdminLayout";
+import CompanyLayout from "@/Layouts/CompanyLayout";
 import SearchForm from "@/Pages/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/components/tables/BasicTable.vue';
 import { ref } from "vue"
 export default {
     name: "Report",
     components: {
-        AdminLayout,SearchForm,BasicTable
+        CompanyLayout,SearchForm,BasicTable
     },
     setup(){
         const role = ref('report')

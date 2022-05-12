@@ -2,11 +2,11 @@
     <div>
         <el-form ref="searchFormRef" :model="searchRuleForm" :inline="true" class="mx-4">
             <!--               用户管理-->
-            <el-form-item label="账号" class="mx-4" prop="number" v-if="role==='user'">
-                <el-input v-model.trim="searchRuleForm.number" placeholder="输入账号" @blur="changeNumber(searchRuleForm.number)"/>
+            <el-form-item label="账号" class="mx-4" prop="username" v-if="role==='user'">
+                <el-input v-model.trim="searchRuleForm.username" placeholder="输入账号" @blur="change1(searchRuleForm.username)"/>
             </el-form-item>
-            <el-form-item label="手机号" class="mr-4" prop="telNumber" v-if="role==='user'">
-                <el-input v-model.trim="searchRuleForm.telNumber" placeholder="输入手机号" @blur="changeTelNumber(searchRuleForm.telNumber)"/>
+            <el-form-item label="手机号" class="mr-4" prop="phone" v-if="role==='user'">
+                <el-input v-model.trim="searchRuleForm.phone" placeholder="输入手机号" @blur="change2(searchRuleForm.phone)"/>
             </el-form-item>
             <!--通话记录-->
             <el-form-item label="公司" label-width="" prop="company" v-if="role==='callHistory'">
@@ -117,19 +117,8 @@ export default {
         const searchFormRef = ref(null)
         const loading = ref(props.loading)
         const searchRuleForm = ref({
-            company: '',
-            staff: '',
-            dataTime: '',
-            operate: '',
-            number: '',
-            telNumber: '',
-            duration: 0,
-            payer: '',
-            payTime: '',
-            reportCompany: '',
-            reportTime: '',
-            newsTitle: '',
-            publishTime: ''
+            username: '',
+            phone: ''
 
         })
         const submitSearch = async () => {
@@ -170,13 +159,14 @@ export default {
         console.log(this.role)
     },
     methods: {
-        changeNumber (v) {
-            this.searchRuleForm = Object.assign({}, this.searchRuleForm, { number: v })
+        // 用户管理
+        change1 (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, { username: v })
         },
-        changeTelNumber (v) {
-            this.searchRuleForm = Object.assign({}, this.searchRuleForm, { telNumber: v })
+        change2(v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, { phone: v })
         },
-
+        //
         changeCompany (v) {
             this.searchRuleForm = Object.assign({}, this.searchRuleForm, { company: v })
         },

@@ -19,14 +19,14 @@
                             :where="params"
                             :url="'getHistoryList'"
                             :exportName="exportName"
-                            :testNumbers="testNumbers"
-                            :states="states"
+                            :isTest="isTest"
+                            :status="status"
                             :specialNumber="specialNumber"
                             :specialUser="specialUser"
                             :loading="loading"
                             :openAccountSlot="true"
-                            @getTestNumbers="getTestNumbers"
-                            @getStates="getStates"
+                            @getIsTest="getIsTest"
+                            @getStatus="getStatus"
                             @dialogUserList="dialogUserList"
                         >
                             <template v-slot:openAccount="scope">
@@ -44,22 +44,21 @@
                             <template v-slot:specialUser="scope">
                                 <span class="text-brand">{{ scope.scope.row.user_id }}</span>
                             </template>
-                            <template v-slot:testNumbers="scope">
+                            <template v-slot:IsTest="scope">
                                 <span
-                                    :class="scope.scope.row.testNumbers === 0 ? '' : ''"
-                                >{{ scope.scope.row.testNumbers === 0 ? "是" : "否" }}</span>
+                                    :class="scope.scope.row.is_test === 0 ? '' : ''"
+                                >{{ scope.scope.row.is_test === 0 ? "是" : "否" }}</span>
                             </template>
-                            <template v-slot:states="scope">
+                            <template v-slot:status="scope">
                                 <el-switch
-                                    v-model="scope.scope.row.state"
+                                    v-model="scope.scope.row.status"
                                     inline-prompt
                                     active-text="正常"
                                     inactive-text="禁用"
                                     active-color="#E6A23C"
-                                    :width="states.width"
-                                    @change="changeState($event, scope.scope.row, scope.scope.$index)"
+                                    :width="status.width"
+                                    @change="changeStatus($event, scope.scope.row, scope.scope.$index)"
                                 />
-
                             </template>
                             <template v-slot:operates="scope">
                                 <table-operation
@@ -116,78 +115,59 @@ export default {
         })
         const tableTitle = ref([
             {
-                label: '编号',
-                value: 'axb_number',
+                label: 'ID',
+                value: 'id',
                 sortable: false,
                 show: true
             },
             {
                 label: '账号',
-                value: 'company',
+                value: 'username',
                 sortable: false,
                 show: true
             },
             {
-                label: '已使用小号',
-                value: 'company',
+                label: '手机号',
+                value: 'phone',
                 sortable: false,
                 show: true
             },
             {
-                label: '坐席',
-                value: 'customer',
+                label: '小号',
+                value: 'number',
                 sortable: false,
                 show: true
             },
             {
-                label: '限制用户数量',
-                value: 'createtime',
+                label: '客户数量',
+                value: 'customer_count',
                 sortable: false,
                 show: true
             },
             {
-                label: '已开通用户',
-                value: 'user_id',
-                sortable: true,
-                show: true
-            },
-            {
-                label: '费率（￥/元）',
-                value: 'call_duration',
-                sortable: false,
-                show: true
-            },
-            {
-                label: '余额（￥/元）',
-                value: 'call_duration',
-                sortable: false,
-                show: true
-            },
-            {
-                label: '充值',
-                value: 'platform',
+                label: '呼叫总数',
+                value: 'call_history_count',
                 sortable: false,
                 show: true
             },
             {
                 label: '总消费',
-                value: 'platform',
-                sortable: false,
-                show: true
-            },
-            {
-                label: '最后登录',
-                value: 'platform',
-                sortable: false,
+                value: 'expense_sum',
+                sortable: true,
                 show: true
             },
             {
                 label: '到期日期',
-                value: 'platform',
+                value: 'test_endtime',
+                sortable: false,
+                show: true
+            },
+            {
+                label: '登录时间',
+                value: 'logintime',
                 sortable: false,
                 show: true
             }
-
         ])
         const addFormDialog = ref(false)
         const editFormDialog = ref(false)
@@ -198,12 +178,12 @@ export default {
         const specialNumber = ref('')
         const specialUser = ref('')
         const openAccount = ref('')
-        const testNumbers = ref({
+        const isTest = ref({
             testNumber: true,
             label: '测试账号',
             width: 60
         })
-        const states = ref({
+        const status = ref({
             state: true,
             label: '状态',
             width: 60
@@ -252,13 +232,13 @@ export default {
         const cancelAddForm = (e) => {
             addFormDialog.value = e
         }
-        const getTestNumbers = (v) => {
-            console.log('支付方式', v)
+        const getIsTest = (v) => {
+            console.log('zhe', v)
             // todo
 
         }
-        const getStates = (v) => {
-            console.log('支付方式', v)
+        const getStatus = (v) => {
+            console.log('p', v)
             // todo
 
         }
@@ -269,7 +249,6 @@ export default {
             if (op.types === 'edit') {
                 editFormDialog.value = true
                 editData.value = row.value
-
             } else if (op.types === 'del') {
                 console.log(row.value.id)
                 ElMessageBox({
@@ -328,7 +307,7 @@ export default {
         const cancelEditForm = (e) => {
             editFormDialog.value = e
         }
-        const changeState = (e, row, index) => {
+        const changeStatus = (e, row, index) => {
             // e返回状态，row当前行数据， index下标
             console.log('zhe2', e)
             console.log(row)
@@ -349,13 +328,13 @@ export default {
             params,
             search,
             role,
-            changeState,
+            changeStatus,
             addFormDialog,
             receiveAddForm,
             cancelAddForm,
             operates,
-            testNumbers,
-            states,
+            isTest,
+            status,
             specialNumber,
             specialUser,
             operations,
@@ -366,8 +345,8 @@ export default {
             cancelEditForm,
             receiveEditForm,
             getTreeId,
-            getStates,
-            getTestNumbers
+            getStatus,
+            getIsTest
         }
     }
 }
