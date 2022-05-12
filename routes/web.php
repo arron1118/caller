@@ -83,7 +83,9 @@ Route::prefix('company')->group(function () {
         return Inertia::render('company/Dashboard');
     })->name('company.dashboard');
 
-    Route::get('/user', [User::class, 'show'])->name('company.user');
+    Route::get('/user', function () {
+        return Inertia::render('company/User', []);
+    })->name('company.user');
 
     Route::get('/sub/add', function () {
         return Inertia::render('sub/Add', []);
@@ -104,6 +106,10 @@ Route::prefix('company')->group(function () {
     Route::get('/report', function () {
         return Inertia::render('company/Report', []);
     })->name('company.report');
+
+    Route::get('/customer', function () {
+        return Inertia::render('company/Customer', []);
+    })->name('company.customer');
 
     Route::get('/login', function () {
         return Inertia::render('company/Login');

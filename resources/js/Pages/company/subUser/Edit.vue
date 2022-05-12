@@ -2,21 +2,18 @@
     <div>
         <basic-tabs :tabsList="tabsList" :activeName="activeName" @getTabs="getTab">
             <div class="mt-4" v-show="activeName === 'first'">
-                <el-form class="px-6" ref="addFormRef" :model="ruleForm2" :label-position="labelPosition">
+                <el-form class="px-6" ref="editFormRef" :model="ruleForm2" :label-position="labelPosition">
                     <el-form-item label="账号" label-width="140px" prop="number">
-                        <el-input v-model.trim="ruleForm2.number" autocomplete="off" />
+                        <el-input v-model.trim="editData.number" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="密码" label-width="140px" prop="password">
-                        <el-input v-model.trim="ruleForm2.password" type="password" autocomplete="off" />
+                        <el-input v-model.trim="editData.password" type="password" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="公司名称" label-width="140px" prop="name">
-                        <el-input v-model.trim="ruleForm2.name" autocomplete="off" />
-                    </el-form-item>
-                    <el-form-item label="跟进人" label-width="140px" prop="name">
-                        <el-input v-model.trim="ruleForm2.sale" autocomplete="off" />
+                        <el-input v-model.trim="editData.name" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="小号" label-width="140px" prop="minNumber">
-                        <el-select v-model="ruleForm2.minNumber" placeholder="请选择名下小号">
+                        <el-select v-model="editData.minNumber" placeholder="请选择名下小号">
                             <el-option label="Zone No.1" value="shanghai" />
                             <el-option label="Zone No.2" value="beijing" />
                         </el-select>
@@ -25,7 +22,7 @@
                         <div>
                             <div class="block">
                                 <el-input-number
-                                    v-model="ruleForm2.sit"
+                                    v-model="editData.sit"
                                     :min="1"
                                     controls-position="right"
                                     @change="handleChangeSit"
@@ -38,7 +35,7 @@
                         <div>
                             <div class="block">
                                 <el-input-number
-                                    v-model="ruleForm2.limitNumber"
+                                    v-model="editData.limitNumber"
                                     :min="0"
                                     controls-position="right"
                                     @change="handleChangeLimitNumber"
@@ -51,7 +48,7 @@
                         <div>
                             <div class="block">
                                 <el-input-number
-                                    v-model="ruleForm2.rate"
+                                    v-model="editData.rate"
                                     :min="0.15"
                                     controls-position="right"
                                     @change="handleChangeRate"
@@ -62,7 +59,7 @@
                     </el-form-item>
                     <el-form-item label="测试账号" label-width="140px" prop="testNumber">
                         <el-switch
-                            v-model="ruleForm2.testNumber"
+                            v-model="editData.testNumber"
                             inline-prompt
                             active-text="是"
                             inactive-text="否"
@@ -70,52 +67,52 @@
                             @change="changeSwitch"
                         />
                     </el-form-item>
-                    <el-form-item label="结束时间" label-width="140px" prop="state" v-show="ruleForm2.testNumber">
+                    <el-form-item label="结束时间" label-width="140px" prop="state" v-show="editData.testNumber">
                         <div>
                             <div class="block">
                                 <el-date-picker
-                                    v-model="ruleForm2.dataTime"
+                                    v-model="editData.dataTime"
                                     type="datetime"
                                     placeholder=""
                                     @change="handleChangeDateTime"
                                     value-format="YYYY-MM-DD hh:mm:ss"
                                 />
                             </div>
-                            <div class="text-xs text-gray-400">提示：超过测试时间将被淘汰，空为无限制。</div>
+                            <div class="text-xs text-gray-400">超过测试时间将被淘汰，空为无限制。</div>
                         </div>
                     </el-form-item>
                     <el-form-item label="状态" label-width="140px" prop="state">
                         <div>
                             <div class="block">
                                 <el-switch
-                                    v-model="ruleForm2.state"
+                                    v-model="editData.state"
                                     inline-prompt
                                     active-text="启用"
                                     inactive-text="禁止"
                                     :width="width"
                                 />
                             </div>
-                            <div class="text-xs text-gray-400">提示：禁止后，该账号下的所有拨号账号将无法正常使用。</div>
+                            <div class="text-xs text-gray-400">禁止后，该账号下的所有拨号账号将无法正常使用。</div>
                         </div>
                     </el-form-item>
                 </el-form>
             </div>
             <div class="mt-4" v-show="activeName === 'second'">
-                <el-form class="px-6" ref="addFormRef" :model="ruleForm2" :label-position="labelPosition">
+                <el-form class="px-6" ref="editFormRef" :model="ruleForm2" :label-position="labelPosition">
                     <el-form-item label="公司名称" label-width="140px" prop="company">
-                        <el-input v-model.trim="ruleForm2.company" autocomplete="off" />
+                        <el-input v-model.trim="editData.company" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="联系人" label-width="140px" prop="contacts">
-                        <el-input v-model.trim="ruleForm2.contacts" autocomplete="off" />
+                        <el-input v-model.trim="editData.contacts" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="联系方式" label-width="140px" prop="ways">
-                        <el-input v-model.trim="ruleForm2.ways" autocomplete="off" />
+                        <el-input v-model.trim="editData.ways" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="合同时间" label-width="140px" prop="contractTime">
                         <div>
                             <div class="block">
                                 <el-date-picker
-                                    v-model="ruleForm2.contractTime"
+                                    v-model="editData.contractTime"
                                     type="datetimerange"
                                     placeholder=""
                                     @change="handleChangeContractTime"
@@ -126,13 +123,13 @@
                     </el-form-item>
                     <el-form-item label="合同" label-width="140px" prop="contractImage">
                         <image-upload></image-upload>
-<!--                        <el-input v-model.trim="ruleForm2.contractImage" autocomplete="off" />-->
+                        <!--                        <el-input v-model.trim="ruleForm2.contractImage" autocomplete="off" />-->
                     </el-form-item>
                 </el-form>
             </div>
             <div class="flex flex-row justify-center mt-8">
-                <el-button @click="cancelAdd()">取消</el-button>
-                <el-button type="primary" :loading="loading" @click="submitAdd()"
+                <el-button @click="cancelEdit()">取消</el-button>
+                <el-button type="primary" :loading="loading" @click="submitEdit()"
                 >开通</el-button
                 >
             </div>
@@ -145,7 +142,7 @@ import {ref, reactive, unref} from "vue"
 import BasicTabs from '@/Pages/components/tabs/BasicTabs'
 import ImageUpload from "@/Pages/components/plugins/ImageUpload";
 export default {
-    name: "Add",
+    name: "Edit",
     components: {
         BasicTabs,ImageUpload
     },
@@ -162,12 +159,16 @@ export default {
         // forms
         const labelPosition = ref('left')
         const width = ref(60)
-        const addFormRef = ref(null)
+        const editFormRef = ref(null)
         const loading = ref(props.loading)
         const changeSwitch = (val) =>{
             if(val === false){
                 ruleForm2.dataTime = ''
             }
+        }
+        const handleChangeDateTime = (value) => {
+            console.log(value)
+            ruleForm2.dataTime = value
         }
         const handleChangeSit = (value) => {
             ruleForm2.sit = value
@@ -178,33 +179,13 @@ export default {
         const handleChangeRate = (value) => {
             ruleForm2.rate = value
         }
-        const handleChangeDateTime = (value) => {
-            ruleForm2.dataTime = value
-        }
         const handleChangeContractTime = (value) => {
             ruleForm2.contractTime = value
         }
-        const ruleForm2 = reactive({
-            number: '',
-            password: '',
-            sit: 1,
-            limitNumber: 0,
-            minNumber: '',
-            rate: 0.15,
-            name: '',
-            testNumber: true,
-            state: true,
-            dataTime: '',
-            sale:'',
-            company:'',
-            contacts:'',
-            ways:'',
-            contractTime:'',
-            contractImage:'',
-        })
-        const submitAdd = async () => {
+        const ruleForm2 = reactive(props.editData)
+        const submitEdit = async () => {
             loading.value = true
-            const form = unref(addFormRef)
+            const form = unref(editFormRef)
             if (!form) return
             try {
                 await form.validate()
@@ -244,35 +225,35 @@ export default {
                     contractTime:contractTime,
                     contractImage:contractImage,
                 }
-                console.log('开通参数', params, loading.value)
-                context.emit('clickAdd', params, loading.value)
-                // todo
+                console.log('编辑参数', params, loading.value)
+                context.emit('clickEdit', params, loading.value)
             } catch (error) {
             }
         }
-        const cancelAdd = async () => {
-            context.emit('clickCancelAdd', false)
+        const cancelEdit = async () => {
+            context.emit('clickCancelEdit', false)
         }
         return{
             getTab,
             activeName,
             tabsList,
+            labelPosition,
             changeSwitch,
             width,
             handleChangeSit,
             handleChangeLimitNumber,
             handleChangeRate,
-            addFormRef,
+            editFormRef,
             ruleForm2,
             loading,
-            submitAdd,
-            cancelAdd,
+            submitEdit,
+            cancelEdit,
             handleChangeDateTime,
-            handleChangeContractTime,
-            labelPosition
+            handleChangeContractTime
         }
     },
-    props:['loading'],
+    props:['loading', 'editData'],
+    methods: {}
 }
 </script>
 

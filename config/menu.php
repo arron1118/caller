@@ -82,6 +82,12 @@ return [
             'url' => 'company.report',
             'icon' => ['fas', 'chart-area']
         ],
+        [
+            'id' => 6,
+            'title' => '客户管理',
+            'url' => 'company.customer',
+            'icon' => ['fas', 'chart-area']
+        ],
     ],
     'home' => [
         [

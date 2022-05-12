@@ -13,10 +13,7 @@
                 </div>
             </div>
             <div class="order-last bg-white py-4 px-6 shadow-2xl" style="width: 400px ">
-                <div class="text-2xl text-center mb-8 mt-4 font-semibold text-brand">
-                    登录
-                    <span class="text-gray-400 text-sm">管理员</span>
-                </div>
+                <div class="text-2xl text-center mb-8 mt-4 font-semibold text-brand">登录</div>
                 <el-form
                     ref="ruleFormRef"
                     :model="ruleForm"
@@ -61,7 +58,7 @@ export default {
         const ruleFormRef = ref(null)
         const formSize = ref('large')
         const ruleForm = reactive({
-            name: 'test',
+            name: 'admin',
             password: '123456',
             img: '1234'
         })
@@ -124,7 +121,7 @@ export default {
                 }
                 console.log('参数', params)
                 // todo
-                this.$inertia.get('/company')
+                this.$inertia.get('/admin/dashboard')
             } catch (error) {
 
             }

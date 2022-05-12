@@ -1,5 +1,5 @@
 <template>
-    <admin-layout title="Dashboard">
+    <company-layout title="Dashboard">
         <div class="mb-6 bg-white rounded shadow pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
@@ -73,7 +73,7 @@
                 </el-row>
             </div>
         </div>
-    </admin-layout>
+    </company-layout>
     <!--        弹框-->
     <el-dialog v-model="addFormDialog" title="开通账号">
         <add-form @clickAdd="receiveAddForm" @clickCancelAdd="cancelAddForm" :loading="loading"></add-form>
@@ -88,24 +88,25 @@
 </template>
 
 <script>
-import AdminLayout from "@/Layouts/AdminLayout";
-import SearchForm from "@/Pages/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/components/tables/BasicTable.vue';
-import TableOperation from "@/Pages/components/tables/TableOperation";
-import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
-import AddForm from '@/Pages/admin/subUser/Add.vue'
-import EditForm from '@/Pages/admin/subUser/Edit.vue'
-import UserTable from '@/Pages/admin/subUser/List.vue'
-import PrintTable from '@/Pages/components/tables/PrintTable.vue'
+import CompanyLayout from "@/Layouts/CompanyLayout";
+import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
+import BasicTable from '@/Pages/company/components/tables/BasicTable.vue';
+import TableOperation from "@/Pages/company/components/tables/TableOperation";
+import ButtonGroup from '@/Pages/company/components/buttons/ButtonGroup.vue';
+import PrintTable from '@/Pages/company/components/tables/PrintTable.vue'
+import AddForm from '@/Pages/company/subUser/Add.vue'
+import EditForm from '@/Pages/company/subUser/Edit.vue'
+import UserTable from '@/Pages/company/subUser/List.vue'
+import VAsides from '@/Pages/company/vAsides/VAsides.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Phone} from '@element-plus/icons-vue'
-import VAsides from '@/Pages/admin/vAsides/VAsides.vue'
+
 export default {
     name: "User",
     components: {
         ButtonGroup,Phone,
-        AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable, UserTable, VAsides
+        CompanyLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable, UserTable, VAsides
     },
     setup() {
         const role = ref('user')
