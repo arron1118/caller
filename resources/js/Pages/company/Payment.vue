@@ -1,54 +1,70 @@
 <template>
-    <AdminLayout>
+    <company-layout>
         <div class="mb-6 bg-white rounded shadow pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
-        <div class="mb-6 bg-white rounded shadow p-4">
-            <div class="border rounded">
-                <basic-table
-                    :tableTitle="tableTitle"
-                    :selectionType="true"
-                    :pagination="true"
-                    :buttonGroups="true"
-                    :where="params"
-                    :url="'getHistoryList'"
-                    :exportName="exportName"
-                    :payWays="payWays"
-                    @getPayWay="getPayWays"
-                    :payStatus="payStatus"
-                    @getPayStatus="getPayStatus"
-                >
-                    <template v-slot:payWays="scope">
-                        <el-tag
-                            :type="scope.scope.row.status === 0 ? '' : 'success'"
-                            disable-transitions
-                        ><font-awesome-icon :icon="scope.scope.row.status === 0 ? ['fas', 'pen-to-square'] : ['fas', 'trash-can']"></font-awesome-icon></el-tag>
-                    </template>
-                    <template v-slot:payStatus="scope">
-                        <el-tag
-                            :type="scope.scope.row.status === 0 ? '' : scope.scope.row.status === 1? 'danger' : 'success'"
-                            disable-transitions
-                        >{{ scope.scope.row.status === 0 ? "已付款" : scope.scope.row.status === 1? "未付款" : ""}}</el-tag>
-                    </template>
-                </basic-table>
-            </div>
+        <div class="mb-6 border rounded">
+            <basic-table
+                :tableTitle="tableTitle"
+                :selectionType="true"
+                :pagination="true"
+                :buttonGroups="true"
+                :where="params"
+                :url="'getHistoryList'"
+                :exportName="exportName"
+                :payType="payType"
+                :payingSlot="true"
+                @getPayType="getPayType"
+                :payStatus="payStatus"
+                @getPayStatus="getPayStatus"
+            >
+                <template v-slot:payingSlot="scope">
+                    <div>
+                        <el-button type="primary" @click="addFormDialog = true">立即充值</el-button>
+                    </div>
+                </template>
+                <template v-slot:payType="scope">
+                    <el-tag :type="scope.scope.row.status === 1 ? '' : scope.scope.row.status === 2? '' : 'success'" disable-transitions>
+                        <font-awesome-icon :icon="scope.scope.row.status === 1 ? ['fas', 'pen-to-square']:scope.scope.row.status === 2?['fas', 'pen-to-square'] : ['fas', 'trash-can']" />
+                    </el-tag>
+                </template>
+                <template v-slot:payStatus="scope">
+                    <el-tag
+                        :type="scope.scope.row.status === 1 ? 'success' : scope.scope.row.status === 2? 'info' : 'danger'"
+                        disable-transitions
+                    >
+                        {{ scope.scope.row.status === 1 ? "已付款" : scope.scope.row.status === 2? "未付款" : "已关闭"}}
+                    </el-tag>
+                </template>
+            </basic-table>
         </div>
-    </AdminLayout>
+    </company-layout>
+    <!--        弹框-->
+    <el-dialog v-model="addFormDialog" title="充值">
+        <add-form @clickAdd="receiveAddForm" @clickCancelAdd="cancelAddForm" :loading="loading"></add-form>
+    </el-dialog>
 </template>
 
 <script>
-import AdminLayout from "@/Layouts/AdminLayout";
-import SearchForm from "@/Pages/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/components/tables/BasicTable.vue';
+import CompanyLayout from "@/Layouts/CompanyLayout";
+import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
+import BasicTable from '@/Pages/company/components/tables/BasicTable.vue';
+import AddForm from '@/Pages/company/subPay/Add.vue'
 import { ref } from "vue"
+import {ElMessage} from "element-plus";
 export default {
     name: "Payment",
     components: {
-        AdminLayout,SearchForm,BasicTable
+        CompanyLayout,
+        SearchForm,
+        BasicTable,
+        AddForm
     },
     setup(){
         const role = ref('payment')
-        const payWays = ref({
+        const addFormDialog = ref(false)
+        const loading = ref(false)
+        const payType = ref({
             label: '支付方式',
             width: 60
         })
@@ -77,61 +93,54 @@ export default {
         })
         const tableTitle = ref([
             {
+                label: 'ID',
+                value: 'id',
+                sortable: false,
+                show: true
+            },
+            {
                 label: '订单号',
-                value: 'axb_number',
+                value: 'payno',
                 sortable: false,
                 show: true
             },
             {
                 label: '类型',
-                value: 'company',
+                value: 'title',
                 sortable: false,
                 show: true
             },
             {
                 label: '充值方',
-                value: 'company',
+                value: 'corporation',
                 sortable: false,
                 show: true
             },
             {
-                label: '充值金额（￥/元）',
-                value: 'call_duration',
+                label: '金额（￥/元）',
+                value: 'amount',
                 sortable: false,
                 show: true
             },
             {
                 label: '充值时间',
-                value: 'createtime',
+                value: 'create_time',
                 sortable: true,
                 show: true
             },
             {
                 label: '支付时间',
-                value: 'createtime',
+                value: 'pay_time',
                 sortable: true,
                 show: true
-            },
-            {
-                label: '充值方式',
-                value: 'id',
-                sortable: false,
-                show: true
-            },
-            {
-                label: '状态',
-                value: 'id',
-                sortable: false,
-                show: true
             }
-
         ])
         const exportName = ref('充值管理报表')
         const search = (f) => {
             console.log('子传父参数', f)
             params.value = Object.assign({}, params.value, f)
         }
-        const getPayWays = (v) => {
+        const getPayType = (v) => {
             console.log('支付方式',v)
             // todo
         }
@@ -139,8 +148,42 @@ export default {
             console.log('支付状态',v)
             // todo
         }
+        const receiveAddForm = (e, r) => {
+            console.log('zhe', e)
+            console.log('zhe', r)
+            loading.value = r
+            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
+            setTimeout(function () {
+                loading.value = false
+                addFormDialog.value = false
+                ElMessage({
+                    type: 'success',
+                    // message: `action: ${action}`,
+                    message: '已提交'
+                })
+                // 重载表格数据
+
+            }, 3000);
+
+        }
+        const cancelAddForm = (e) => {
+            addFormDialog.value = e
+        }
         return{
-            role,search,tableTitle,params,payWays,getPayWays,payStatus,getPayStatus,payWayIcon,exportName
+            addFormDialog,
+            role,
+            search,
+            tableTitle,
+            params,
+            payType,
+            getPayType,
+            payStatus,
+            getPayStatus,
+            payWayIcon,
+            exportName,
+            receiveAddForm,
+            cancelAddForm,
+            loading
         }
     }
 }

@@ -40,9 +40,9 @@
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
-import BasicTable from '@/Pages/components/tables/BasicTable.vue';
-import TableOperation from "@/Pages/components/tables/TableOperation";
-import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
+import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
+import TableOperation from "@/Pages/admin/components/tables/TableOperation";
+import ButtonGroup from '@/Pages/admin/components/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/admin/subNumbers/Add.vue'
 import EditForm from '@/Pages/admin/subNumbers/Edit.vue'
 import {h, ref} from "vue"

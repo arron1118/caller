@@ -89,14 +89,14 @@
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
-import SearchForm from "@/Pages/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/components/tables/BasicTable.vue';
-import TableOperation from "@/Pages/components/tables/TableOperation";
-import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
+import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
+import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
+import TableOperation from "@/Pages/admin/components/tables/TableOperation";
+import ButtonGroup from '@/Pages/admin/components/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/admin/subUser/Add.vue'
 import EditForm from '@/Pages/admin/subUser/Edit.vue'
 import UserTable from '@/Pages/admin/subUser/List.vue'
-import PrintTable from '@/Pages/components/tables/PrintTable.vue'
+import PrintTable from '@/Pages/admin/components/tables/PrintTable.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Phone} from '@element-plus/icons-vue'

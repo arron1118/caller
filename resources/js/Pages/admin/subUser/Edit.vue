@@ -139,8 +139,8 @@
 
 <script>
 import {ref, reactive, unref} from "vue"
-import BasicTabs from '@/Pages/components/tabs/BasicTabs'
-import ImageUpload from "@/Pages/components/plugins/ImageUpload";
+import BasicTabs from '@/Pages/admin/components/tabs/BasicTabs'
+import ImageUpload from "@/Pages/admin/components/plugins/ImageUpload";
 export default {
     name: "Edit",
     components: {

@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import BasicTable from '@/Pages/components/tables/BasicTable.vue';
+import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
 import {post} from "@/http/request";
 export default {
     name: "List",
