@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout>
+    <company-layout>
         <div class="mb-6 bg-white rounded shadow pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
@@ -18,18 +18,18 @@
                 </basic-table>
             </div>
         </div>
-    </AdminLayout>
+    </company-layout>
 </template>
 
 <script>
-import AdminLayout from "@/Layouts/AdminLayout";
-import SearchForm from "@/Pages/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/components/tables/BasicTable.vue';
+import CompanyLayout from "@/Layouts/CompanyLayout";
+import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
+import BasicTable from '@/Pages/company/components/tables/BasicTable.vue';
 import { ref } from "vue"
 export default {
     name: "Report",
     components: {
-        AdminLayout,SearchForm,BasicTable
+        CompanyLayout,SearchForm,BasicTable
     },
     setup(){
         const role = ref('report')
@@ -40,43 +40,43 @@ export default {
         const tableTitle = ref( [
             {
                 label: '用户编号',
-                value: 'axb_number',
+                value: 'id',
                 sortable: false,
                 show: true
             },
             {
                 label: '用户名称',
-                value: 'company',
+                value: 'username',
                 sortable: false,
                 show: true
             },
             {
                 label: '拨号次数',
-                value: 'id',
+                value: 'total',
                 sortable: true,
                 show: true
             },
             {
                 label: '接通次数(>0秒)',
-                value: 'id',
+                value: 'total1',
                 sortable: true,
                 show: true
             },
             {
                 label: '有效呼叫(>30秒)',
-                value: 'id',
+                value: 'total2',
                 sortable: true,
                 show: true
             },
             {
                 label: '时间(分)',
-                value: 'createtime',
+                value: 'duration',
                 sortable: true,
                 show: true
             },
             {
                 label: '消费金额（￥/元）',
-                value: 'call_duration',
+                value: 'cost',
                 sortable: true,
                 show: true
             }

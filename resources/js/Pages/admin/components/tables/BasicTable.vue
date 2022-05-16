@@ -128,7 +128,7 @@
 
 <script>
 import {ref} from 'vue'
-import vPagination from '@/Pages/components/tables/Pagination.vue'
+import vPagination from '@/Pages/admin/components/tables/Pagination.vue'
 import {post} from "@/http/request";
 import {Refresh} from '@element-plus/icons-vue'
 export default {

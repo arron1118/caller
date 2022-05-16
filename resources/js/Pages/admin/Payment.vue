@@ -38,8 +38,8 @@
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
-import SearchForm from "@/Pages/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/components/tables/BasicTable.vue';
+import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
+import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
 import { ref } from "vue"
 export default {
     name: "Payment",

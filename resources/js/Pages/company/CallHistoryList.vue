@@ -1,5 +1,5 @@
 <template>
-    <admin-layout title="Dashboard">
+    <company-layout title="Dashboard">
         <div class="mb-6 bg-white rounded shadow pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
@@ -23,7 +23,7 @@
                 </template>
             </basic-table>
         </div>
-    </admin-layout>
+    </company-layout>
     <!--    打印-->
     <div v-if="print===true">
         <div id="printId" style="height: 100%;">
@@ -33,23 +33,21 @@
 </template>
 
 <script>
-import AdminLayout from "@/Layouts/AdminLayout";
-import SearchForm from "@/Pages/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/components/tables/BasicTable.vue';
-import TableOperation from "@/Pages/components/tables/TableOperation";
-import ButtonGroup from '@/Pages/components/buttons/ButtonGroup.vue';
-import AddForm from '@/Pages/admin/subUser/Add.vue'
-import EditForm from '@/Pages/admin/subUser/Edit.vue'
-import PrintTable from '@/Pages/components/tables/PrintTable.vue'
+import CompanyLayout from "@/Layouts/CompanyLayout";
+import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
+import BasicTable from '@/Pages/company/components/tables/BasicTable.vue';
+import TableOperation from "@/Pages/company/components/tables/TableOperation";
+import ButtonGroup from '@/Pages/company/components/buttons/ButtonGroup.vue';
+import AddForm from '@/Pages/company/subUser/Add.vue'
+import EditForm from '@/Pages/company/subUser/Edit.vue'
+import PrintTable from '@/Pages/company/components/tables/PrintTable.vue'
 import {h, reactive, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus"
-import {post} from "@/http/request";
-
 export default {
     name: "CallHistoryList",
     components: {
         ButtonGroup,
-        AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable
+        CompanyLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable
     },
     setup() {
         const {replaceStr} = require("@/lqp")
@@ -60,14 +58,20 @@ export default {
         const editFormDialog = ref(false)
         const tableTitle = ref([
             {
+                label: 'ID',
+                value: 'id',
+                sortable: false,
+                show: true,
+            },
+            {
                 label: '编号',
-                value: 'axb_number',
+                value: 'subid',
                 sortable: false,
                 show: true,
             },
             {
                 label: '操作人',
-                value: 'company',
+                value: 'username',
                 sortable: false,
                 show: true,
             },
@@ -97,13 +101,13 @@ export default {
             },
             {
                 label: '消费金额（￥/元）',
-                value: 'call_duration',
+                value: 'cost',
                 sortable: false,
                 show: true,
             },
             {
                 label: '录音',
-                value: 'platform',
+                value: 'cost',
                 sortable: false,
                 show: true,
             }

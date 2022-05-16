@@ -93,10 +93,10 @@
 import AdminLayout from "@/Layouts/AdminLayout"
 import { Money, Headset, Phone, CircleCheck, CircleClose, ColdDrink } from '@element-plus/icons-vue'
 import { ref } from "vue";
-import BasicTable from '../components/tables/BasicTable.vue'
-import lineEcharts from '@/Pages/components/echarts/lineEcharts.vue'
-import barEcharts from '@/Pages/components/echarts/barEcharts.vue'
-import pieEcharts from '@/Pages/components/echarts/pieEcharts.vue'
+import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue'
+import lineEcharts from '@/Pages/admin/components/echarts/lineEcharts.vue'
+import barEcharts from '@/Pages/admin/components/echarts/barEcharts.vue'
+import pieEcharts from '@/Pages/admin/components/echarts/pieEcharts.vue'
 export default {
     name: "Dashboard",
     components: {

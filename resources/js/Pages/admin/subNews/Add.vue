@@ -39,8 +39,8 @@
 
 <script>
 import {ref, reactive, unref} from "vue"
-import ImageUpload from '@/Pages/components/plugins/ImageUpload.vue'
-import TinyMce from '@/Pages/components/plugins/TinyMce.vue'
+import ImageUpload from '@/Pages/admin/components/plugins/ImageUpload.vue'
+import TinyMce from '@/Pages/admin/components/plugins/TinyMce.vue'
 export default {
     name: "Add",
     components: {

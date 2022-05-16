@@ -3,8 +3,8 @@
         <el-col>
             <div class="m-2 text-right border-b pb-2 flex flex-row justify-between" v-if="buttonGroups === true">
                 <div>
-                    <slot name="openAccount" v-if="openAccountSlot === true"></slot>
-                    <slot name="releaseNews" v-if="releaseNewsSlot === true"></slot>
+                    <slot name="payingSlot" v-if="payingSlot === true"></slot>
+                    <slot name="customerSlot" v-if="customerSlot === true"></slot>
                 </div>
                 <div class="flex flex-column justify-center items-center mx-4">
                     <slot name="batchImport" v-if="batchImportSlot === true"></slot>
@@ -55,29 +55,29 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    :label="testNumbers.label"
-                    v-if="testNumbers"
-                    prop="testNumbers"
+                    :label="isTest.label"
+                    v-if="isTest"
+                    prop="is_test"
                     :filters="[{ text: '是', value: '0' },{ text: '否', value: '1' }]"
-                    :filter-method="filterTestNumbers"
+                    :filter-method="filterIsTest"
                     filter-placement="bottom-end"
-                    column-key="testNumbers"
+                    column-key="isTest"
                 >
                     <template v-slot="scope">
-                        <slot name="testNumbers" :scope="scope"></slot>
+                        <slot name="is_test" :scope="scope"></slot>
                     </template>
                 </el-table-column>
                 <el-table-column
-                    :label="states.label"
-                    v-if="states"
-                    prop="states"
-                    :filters="[{ text: '禁用', value: '0' },{ text: '正常', value: '1' }]"
-                    :filter-method="filterStates"
+                    :label="status.label"
+                    v-if="status"
+                    prop="status"
+                    :filters="[{ text: '禁用', value: false },{ text: '正常', value: true }]"
+                    :filter-method="filterStatus"
                     filter-placement="bottom-end"
-                    column-key="states"
+                    column-key="status"
                 >
                     <template v-slot="scope">
-                        <slot name="states" :scope="scope"></slot>
+                        <slot name="status" :scope="scope"></slot>
                     </template>
                 </el-table-column>
                 <el-table-column v-if="operates" :label="operates.label" fixed="right" width="120">
@@ -86,24 +86,23 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    :label="payWays.label"
-                    v-if="payWays"
-                    prop="payWays"
-                    :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' }]"
+                    :label="payType.label"
+                    v-if="payType"
+                    prop="payType"
+                    :filters="[{ text: '微信', value: '1' },{ text: '支付宝', value: '2' },{ text: '手动充值', value: '3' }]"
                     :filter-method="filterWays"
                     filter-placement="bottom-end"
-                    column-key="payWays"
-
+                    column-key="payType"
                 >
                     <template v-slot="scope">
-                        <slot name="payWays" :scope="scope"></slot>
+                        <slot name="payType" :scope="scope"></slot>
                     </template>
                 </el-table-column>
                 <el-table-column
                     :label="payStatus.label"
                     v-if="payStatus"
                     prop="payStatus"
-                    :filters="[{ text: '0', value: '0' },{ text: '1', value: '1' },{ text: '2', value: '2' }]"
+                    :filters="[{ text: '已付款', value: '1' },{ text: '未付款', value: '2' },{ text: '已关闭', value: '3' }]"
                     :filter-method="filterStatus"
                     filter-placement="bottom-end"
                     column-key="payStatus"
@@ -128,7 +127,7 @@
 
 <script>
 import {ref} from 'vue'
-import vPagination from '@/Pages/components/tables/Pagination.vue'
+import vPagination from '@/Pages/company/components/tables/Pagination.vue'
 import {post} from "@/http/request";
 import {Refresh} from '@element-plus/icons-vue'
 export default {
@@ -136,8 +135,27 @@ export default {
     components: {
         vPagination,Refresh
     },
-    props: ['tableTitle', 'operates', 'specialNumber', 'specialUser', 'testNumbers', 'states','specialUsername',
-        'selectionType', 'pagination', 'where', 'payWays', 'payStatus', 'showSummary', 'buttonGroups', 'url', 'exportName', 'openAccountSlot','releaseNewsSlot','batchImportSlot'],
+    props: [
+        'tableTitle',
+        'operates',
+        'specialNumber',
+        'specialUser',
+        'isTest',
+        'status',
+        'specialUsername',
+        'selectionType',
+        'pagination',
+        'where',
+        'payType',
+        'payStatus',
+        'showSummary',
+        'buttonGroups',
+        'url',
+        'exportName',
+        'payingSlot',
+        'customerSlot',
+        'batchImportSlot',
+    ],
     setup(props, context) {
         const {allExportExcel, selectExportExcel, replaceStr} = require("@/lqp")
         const selectExport = ref([])
@@ -165,26 +183,19 @@ export default {
                 context.emit('dialogUserList', true, row.id)
             }
         }
-        const filterTestNumbers = (value, row) => {
+        const filterIsTest = (value, row) => {
             console.log(value)
             console.log(row)
-            row.testNumbers = value
-            console.log(row.testNumbers)
-            context.emit('getTestNumbers', row.testNumbers)
-        }
-        const filterStates = (value, row) => {
-            console.log(value)
-            console.log(row)
-            row.states = value
-            console.log(row.states)
-            context.emit('getStates', row.states)
+            row.is_test = value
+            console.log(row.is_test)
+            context.emit('getIsTest', row.is_test)
         }
         const filterWays = (value, row) => {
             console.log(value)
             console.log(row)
             row.status = value
             console.log(row.status)
-            context.emit('getPayWays', row.status)
+            context.emit('getPayType', row.status)
 
         }
         const filterStatus = (value, row) => {
@@ -202,8 +213,7 @@ export default {
             replaceStr,
             filterWays,
             filterStatus,
-            filterTestNumbers,
-            filterStates,
+            filterIsTest,
             selectExportExcel,
             allExportExcel,
             selectTableData,
