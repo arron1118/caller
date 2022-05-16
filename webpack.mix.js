@@ -1,5 +1,4 @@
 const mix = require('laravel-mix');
-const {output} = require("./webpack.config");
 
 /*
  |--------------------------------------------------------------------------
@@ -18,13 +17,6 @@ mix.js('resources/js/app.js', 'public/js').vue()
         require('tailwindcss'),
     ])
     .webpackConfig(require('./webpack.config'));
-
-// mix.webpackConfig({
-//     output: {
-//         chunkFilename: `js/[name].${mix.inProduction() ? '[contenthash].' : ''}js`,
-//         clean: true,
-//     }
-// })
 
 if (mix.inProduction()) {
     mix.version();

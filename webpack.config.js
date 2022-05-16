@@ -1,5 +1,4 @@
 const path = require('path');
-const mix = require("laravel-mix");
 
 module.exports = {
     resolve: {
@@ -8,7 +7,7 @@ module.exports = {
         },
     },
     output: {
-        chunkFilename: `js/[name].js?id=[contenthash]`,
+        chunkFilename: `js/[name].js?id=[chunkhash]`,
     },
     module: {
         rules: [
