@@ -36,7 +36,7 @@
                 :sum-text="'合计'"
                 :show-summary="showSummary"
                 @selection-change="handleSelectionChange"
-                @cell-click="handleColumn"
+                @cell-mouse-enter="specialNumber"
             >
                 <el-table-column type="selection" width="55" v-if="selectionType === true"/>
                 <el-table-column
@@ -172,18 +172,16 @@ export default {
         const handleSelectionChange = async (val) => {
             selectExport.value = val
         }
-        const handleColumn = (row, column, event, cell) => {
+        const specialNumber = (row, column, event, cell) => {
+            console.log(row)
+            row.called_number = replaceStr(row.called_number, '****')
             // 隐藏电话号码
-            row.isCalled = !row.isCalled
-            if (row.isCalled === true) {
-                row.called_number = row.called_number_copy
-            } else if (row.isCalled === false) {
-                row.called_number = replaceStr(row.called_number, '****')
-            }
-            // 点击获取用户列表
-            if (column.property === 'user_id') {
-                context.emit('dialogUserList', true, row.id)
-            }
+            // row.isCalled = !row.isCalled
+            // if (row.isCalled === true) {
+            //     row.called_number = row.called_number_copy
+            // } else if (row.isCalled === false) {
+            //     row.called_number = replaceStr(row.called_number, '****')
+            // }
         }
         const filterIsTest = (value, row) => {
             console.log(value)
@@ -211,7 +209,7 @@ export default {
         return {
             selectExport,
             handleSelectionChange,
-            handleColumn,
+            specialNumber,
             replaceStr,
             filterWays,
             filterStatus,

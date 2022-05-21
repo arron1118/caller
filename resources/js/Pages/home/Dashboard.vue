@@ -8,6 +8,7 @@
                     :where="params"
                     :url="'getHistoryList'"
                     :customerSlot="true"
+                    :operates="operates"
                 >
                     <template v-slot:customerSlot="scope">
                         <el-button-group>
@@ -17,6 +18,13 @@
                             <el-button type="success" plain @click="addFormDialog = true">下载模板</el-button>
                             <el-button type="info" plain @click="addFormDialog = true">导入说明</el-button>
                         </el-button-group>
+                    </template>
+                    <template v-slot:operates="scope">
+                        <table-operation
+                            :operations="operations"
+                            :rawData="scope.scope.row"
+                            @handleOperation="handleOperation"
+                        ></table-operation>
                     </template>
                 </basic-table>
             </div>
@@ -55,59 +63,29 @@
 <script>
 import HomeLayout from "@/Layouts/HomeLayout"
 import { InfoFilled } from '@element-plus/icons-vue'
-import { ElNotification } from 'element-plus'
+import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
 import { ref,h } from "vue"
 import BasicTable from '@/Pages/home/components/tables/BasicTable.vue'
+import TableOperation from "@/Pages/admin/components/tables/TableOperation";
 export default {
     name: "Dashboard",
     components: {
-        InfoFilled, HomeLayout, BasicTable,
+        InfoFilled, HomeLayout, BasicTable,TableOperation
     },
     setup(){
         const {replaceStr} = require("@/lqp")
-        const infosDialog = () => {
-            ElNotification({
-                title: '温馨提示',
-                message: h(
-                    "div",
-                    {
-                        style:"padding: 2px;",
-                    },
-                   [
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '1、只允许拨打本公司业务电话，不允许拨打其他行业电话。'
-                       ),
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '2、拨号当中不允许出现：金融、地产相关高频行业。'
-                       ),
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '3、通话中不允许出现：代开发票、造假等违法字眼。'
-                       ),
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '4、不允许在通话中辱骂。'
-                       ),
-                   ]
-                ),
-                type: 'info',
-                duration: 0,
-            })
+        const operates = ref({
+            operate: true,
+            label: '操作',
+        })
+        const operations = ref([{
+            types: 'edit',
+            title: '拨打电话',
+            type: 'primary',
+            icon: ['fas', 'pen-to-square'],
+
         }
+        ])
         const text = ref([])
         const numberList = ref([
             {text: '1'},
@@ -154,15 +132,97 @@ export default {
             page: 1,
             limit: 8,
         })
+        const infosDialog = () => {
+            ElNotification({
+                title: '温馨提示',
+                message: h(
+                    "div",
+                    {
+                        style:"padding: 2px;",
+                    },
+                   [
+                       h(
+                           "div",
+                           {
+                               style: 'color: #E6A23C'
+                           },
+                           '1、只允许拨打本公司业务电话，不允许拨打其他行业电话。'
+                       ),
+                       h(
+                           "div",
+                           {
+                               style: 'color: #E6A23C'
+                           },
+                           '2、拨号当中不允许出现：金融、地产相关高频行业。'
+                       ),
+                       h(
+                           "div",
+                           {
+                               style: 'color: #E6A23C'
+                           },
+                           '3、通话中不允许出现：代开发票、造假等违法字眼。'
+                       ),
+                       h(
+                           "div",
+                           {
+                               style: 'color: #E6A23C'
+                           },
+                           '4、不允许在通话中辱骂。'
+                       ),
+                   ]
+                ),
+                type: 'info',
+                duration: 0,
+            })
+        }
         const getNumber = (v) => {
             if(v.text === '-'){
                 text.value = []
                 return false
             }
             text.value = text.value + v.text
-
+        }
+        const handleOperation = (op, row) => {
+          if (op.types === 'edit') {
+                console.log(row.value)
+                // ElMessageBox({
+                //     title: '确认删除此id=' + row.value.id + '数据吗？',
+                //     message: h('p', null, [
+                //         h('span', null, '此数据将会被'),
+                //         h('i', {style: 'color: #F56C6C'}, '删除'),
+                //     ]),
+                //     showCancelButton: true,
+                //     confirmButtonText: '删除',
+                //     cancelButtonText: '取消',
+                //     beforeClose: (action, instance, done) => {
+                //         if (action === 'confirm') {
+                //             let params = row.value.id
+                //             console.log('删除项id', params)
+                //             instance.confirmButtonLoading = true
+                //             instance.confirmButtonText = 'Loading...'
+                //             setTimeout(() => {
+                //                 done()
+                //                 setTimeout(() => {
+                //                     instance.confirmButtonLoading = false
+                //                 }, 300)
+                //             }, 3000)
+                //             // todo
+                //         } else {
+                //             done()
+                //         }
+                //     },
+                // }).then(() => {
+                //     ElMessage({
+                //         type: 'success',
+                //         message: '已删除'
+                //     })
+                // })
+            }
         }
         return {
+            operates,
+            operations,
+            handleOperation,
             infosDialog,
             text,
             getNumber,
