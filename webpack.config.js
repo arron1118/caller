@@ -4,7 +4,7 @@ const mix = require("laravel-mix");
 module.exports = {
     resolve: {
         alias: {
-            '@': path.resolve('resources/js'),
+            '@': path.resolve('resources/js')
         },
     },
     output: {

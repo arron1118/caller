@@ -231,8 +231,6 @@ export default {
             params.value = Object.assign({}, params.value, f)
         }
         const receiveAddForm = (e, r) => {
-            console.log('zhe', e)
-            console.log('zhe', r)
             loading.value = r
             // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
             setTimeout(function () {

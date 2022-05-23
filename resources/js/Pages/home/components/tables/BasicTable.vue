@@ -27,6 +27,7 @@
             </div>
 
             <el-table
+                v-if="showTable === true"
                 :data="tableData"
                 v-loading="loading"
                 style="width: 100%"
@@ -138,6 +139,7 @@ export default {
         vPagination,Refresh
     },
     props: [
+        'showTable',
         'tableTitle',
         'operates',
         'specialNumber',

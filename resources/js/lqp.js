@@ -6,7 +6,6 @@ const aa = 'aaa';
 function bb() {
     return 'bb';
 }
-
 // 验证为11位数的手机
 const code = (phone) => {
     let telVerify = /^1[3456789]{1}\d{9}$/;

@@ -9,14 +9,13 @@
                     :url="'getHistoryList'"
                     :customerSlot="true"
                     :operates="operates"
+                    :showTable="showTable"
                 >
                     <template v-slot:customerSlot="scope">
                         <el-button-group>
                             <el-button type="primary" @click="addFormDialog = true">导入客户</el-button>
-                            <el-button type="primary" plain @click="addFormDialog = true">上次导入</el-button>
-                            <el-button type="danger" plain @click="addFormDialog = true">清空列表</el-button>
-                            <el-button type="success" plain @click="addFormDialog = true">下载模板</el-button>
-                            <el-button type="info" plain @click="addFormDialog = true">导入说明</el-button>
+                            <el-button type="primary" plain @click="showTable = true">上次导入</el-button>
+                            <el-button type="danger" plain @click="showTable = false">清除列表</el-button>
                         </el-button-group>
                     </template>
                     <template v-slot:operates="scope">
@@ -58,6 +57,14 @@
             </div>
         </div>
     </home-layout>
+    <!--        弹框-->
+    <el-dialog v-model="addFormDialog" title="导入客户">
+        <add-form
+            @clickAdd="receiveAddForm"
+            @clickCancelAdd="cancelAddForm"
+            :loading="loading"
+        ></add-form>
+    </el-dialog>
 </template>
 
 <script>
@@ -67,13 +74,16 @@ import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
 import { ref,h } from "vue"
 import BasicTable from '@/Pages/home/components/tables/BasicTable.vue'
 import TableOperation from "@/Pages/admin/components/tables/TableOperation";
+import AddForm from '@/Pages/home/subDashboard/Add.vue'
+
 export default {
     name: "Dashboard",
     components: {
-        InfoFilled, HomeLayout, BasicTable,TableOperation
+        AddForm,InfoFilled, HomeLayout, BasicTable,TableOperation
     },
     setup(){
-        const {replaceStr} = require("@/lqp")
+        const {replaceStr, getCountDown} = require("@/lqp")
+        console.log('999', getCountDown)
         const operates = ref({
             operate: true,
             label: '操作',
@@ -132,6 +142,22 @@ export default {
             page: 1,
             limit: 8,
         })
+        const addFormDialog = ref(false)
+        const loading = ref(false)
+        const showTable = ref(false)
+        const time = ref(10)
+        const getTime = (t) => {
+            let interval = setInterval(() => {
+                    if(t === 0){
+                        clearInterval(interval)
+                    }else{
+                        t--
+                        return t
+                    }
+                },
+                1000)
+        }
+        const number = ref('13450031402')
         const infosDialog = () => {
             ElNotification({
                 title: '温馨提示',
@@ -185,41 +211,46 @@ export default {
         const handleOperation = (op, row) => {
           if (op.types === 'edit') {
                 console.log(row.value)
-                // ElMessageBox({
-                //     title: '确认删除此id=' + row.value.id + '数据吗？',
-                //     message: h('p', null, [
-                //         h('span', null, '此数据将会被'),
-                //         h('i', {style: 'color: #F56C6C'}, '删除'),
-                //     ]),
-                //     showCancelButton: true,
-                //     confirmButtonText: '删除',
-                //     cancelButtonText: '取消',
-                //     beforeClose: (action, instance, done) => {
-                //         if (action === 'confirm') {
-                //             let params = row.value.id
-                //             console.log('删除项id', params)
-                //             instance.confirmButtonLoading = true
-                //             instance.confirmButtonText = 'Loading...'
-                //             setTimeout(() => {
-                //                 done()
-                //                 setTimeout(() => {
-                //                     instance.confirmButtonLoading = false
-                //                 }, 300)
-                //             }, 3000)
-                //             // todo
-                //         } else {
-                //             done()
-                //         }
-                //     },
-                // }).then(() => {
-                //     ElMessage({
-                //         type: 'success',
-                //         message: '已删除'
-                //     })
-                // })
+              ElMessageBox({
+                  title: '拨号成功！',
+                  message: h('p', null, [
+                      h('span', null, [
+                          h('span', null, '请在'),
+                          h('span', {style: 'color: red'}, time.value),
+                          h('span', null, '秒内用手机拨打号码：')
+                      ]),
+                      h('span', {style: 'font-size: 20px; color: teal'}, number.value)
+                  ]),
+              })
+
             }
         }
+        const receiveAddForm = (e, r) => {
+            loading.value = r
+            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
+            setTimeout(function () {
+                loading.value = false
+                addFormDialog.value = false
+                ElMessage({
+                    type: 'success',
+                    // message: `action: ${action}`,
+                    message: '已提交'
+                })
+                // 重载表格数据
+
+            }, 3000);
+
+        }
+        const cancelAddForm = (e) => {
+            addFormDialog.value = e
+        }
         return {
+            getTime,
+            showTable,
+            receiveAddForm,
+            cancelAddForm,
+            loading,
+            addFormDialog,
             operates,
             operations,
             handleOperation,
@@ -229,7 +260,10 @@ export default {
             numberList,
             tableTitle,
             params,
-            replaceStr
+            replaceStr,
+            getCountDown,
+            time,
+            number
         }
     }
 }
