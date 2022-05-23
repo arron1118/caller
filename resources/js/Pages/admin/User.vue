@@ -194,19 +194,6 @@ export default {
             operate: true,
             label: '操作',
         })
-        const specialNumber = ref('')
-        const specialUser = ref('')
-        const openAccount = ref('')
-        const testNumbers = ref({
-            testNumber: true,
-            label: '测试账号',
-            width: 60
-        })
-        const states = ref({
-            state: true,
-            label: '状态',
-            width: 60
-        })
         const operations = ref([{
             types: 'edit',
             title: '编辑',
@@ -222,6 +209,19 @@ export default {
 
             }
         ])
+        const specialNumber = ref('')
+        const specialUser = ref('')
+        const openAccount = ref('')
+        const testNumbers = ref({
+            testNumber: true,
+            label: '测试账号',
+            width: 60
+        })
+        const states = ref({
+            state: true,
+            label: '状态',
+            width: 60
+        })
         const editData = ref({})
         const userLists = ref(false)
         const exportName = ref('用户管理报表')
@@ -353,11 +353,11 @@ export default {
             receiveAddForm,
             cancelAddForm,
             operates,
+            operations,
             testNumbers,
             states,
             specialNumber,
             specialUser,
-            operations,
             handleOperation,
             tableTitle,
             editFormDialog,

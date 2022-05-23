@@ -120,6 +120,44 @@ Route::prefix('company')->group(function () {
     })->name('company.logout');
 });
 
+Route::prefix('home')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('home/Dashboard');
+    })->name('home.dashboard');
+
+    Route::get('/callhistorylist', function () {
+        return Inertia::render('home/CallHistoryList', []);
+    })->name('home.callhistorylist');
+
+    Route::get('/customer', function () {
+        return Inertia::render('home/Customer', []);
+    })->name('home.customer');
+
+    Route::get('/sub/add', function () {
+        return Inertia::render('sub/Add', []);
+    })->name('home.sub.add');
+
+    Route::get('/sub/edit', function () {
+        return Inertia::render('sub/Edit', []);
+    })->name('home.sub.edit');
+
+    Route::get('/material', function () {
+        return Inertia::render('home/Material', []);
+    })->name('home.material');
+
+    Route::get('/changePassword', function () {
+        return Inertia::render('home/ChangePassword', []);
+    })->name('home.changePassword');
+
+    Route::get('/login', function () {
+        return Inertia::render('home/Login');
+    })->name('home.login');
+
+    Route::get('/logout', function () {
+        return redirect()->route('home.login')->with(['msg' => '退出成功']);
+    })->name('home.logout');
+});
+
 Route::prefix('portal')->group(function () {
     Route::get('/', function () {
         return '喵头鹰呼叫中心首页';

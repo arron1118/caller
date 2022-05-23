@@ -92,26 +92,32 @@ return [
     'home' => [
         [
             'id' => 1,
-            'title' => '控制台',
+            'title' => '呼叫中心',
             'url' => 'home.dashboard',
             'icon' => ['fas', 'gauge-high']
         ],
         [
             'id' => 2,
-            'title' => '用户管理',
-            'url' => 'home.user',
-            'icon' => ['fas', 'users']
-        ],
-        [
-            'id' => 3,
             'title' => '通话记录',
             'url' => 'home.callhistorylist',
             'icon' => ['fas', 'clock']
         ],
         [
+            'id' => 3,
+            'title' => '客户管理',
+            'url' => 'home.customer',
+            'icon' => ['fas', 'users']
+        ],
+        [
+            'id' => 4,
+            'title' => '基本资料',
+            'url' => 'home.material',
+            'icon' => ['fas', 'chart-area']
+        ],
+        [
             'id' => 5,
-            'title' => '通话报表',
-            'url' => 'home.report',
+            'title' => '修改密码',
+            'url' => 'home.changePassword',
             'icon' => ['fas', 'chart-area']
         ],
     ],
