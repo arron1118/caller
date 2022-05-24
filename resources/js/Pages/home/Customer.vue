@@ -16,14 +16,13 @@
                     :showSummary="true"
                     :customerSlot="true"
                     :operates="operates"
+                    @selectDate="selectDate($event)"
                 >
                     <template v-slot:customerSlot="scope">
                         <el-button-group>
                             <el-button type="primary" @click="addFormDialog = true">添加客户</el-button>
-                            <el-button type="primary" plain @click="addFormDialog = true">导入客户</el-button>
-                            <el-button type="danger" plain @click="addFormDialog = true">批量删除</el-button>
                             <el-button type="success" plain @click="addFormDialog = true">移动分类</el-button>
-                            <el-button type="info" plain @click="addFormDialog = true">导入说明</el-button>
+                            <el-button type="primary" plain @click="importCustomer = true">导入客户</el-button>
                             <span class="pl-2 text-gray-400">注：点击'回访记录'列可查看详细内容</span>
                         </el-button-group>
                     </template>
@@ -46,20 +45,31 @@
         <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading"
                    :editData="editData"></edit-form>
     </el-dialog>
+    <!--        弹框-->
+    <el-dialog v-model="importCustomer" title="导入客户">
+        <import-customer
+            @clickAdd="receiveAddForm"
+            @clickCancelAdd="cancelAddForm"
+            :loading="loading"
+        ></import-customer>
+    </el-dialog>
 </template>
 
 <script>
 import HomeLayout from "@/Layouts/HomeLayout";
 import SearchForm from "@/Pages/home/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/home/components/tables/BasicTable.vue';
-import AddForm from '@/Pages/home/subCustomers/Add.vue'
-import EditForm from '@/Pages/home/subCustomers/Edit.vue'
+import AddForm from '@/Pages/home/sub/subCustomers/Add.vue'
+import EditForm from '@/Pages/home/sub/subCustomers/Edit.vue'
 import TableOperation from "@/Pages/home/components/tables/TableOperation";
+import importCustomer from '@/Pages/home/sub/importCustomer.vue'
+
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 export default {
     name: "Customer",
     components: {
+        importCustomer,
         HomeLayout,
         SearchForm,
         BasicTable,
@@ -70,6 +80,7 @@ export default {
     setup(){
         const role = ref('customer')
         const addFormDialog = ref(false)
+        const importCustomer = ref(false)
         const editFormDialog = ref(false)
         const loading = ref(false)
         const params = ref({
@@ -246,6 +257,7 @@ export default {
             editFormDialog.value = e
         }
         return{
+            importCustomer,
             loading,
             role,
             tableTitle,
@@ -262,6 +274,11 @@ export default {
             operations,
             handleOperation
         }
+    },
+    mounted() {
+        // this.selectDate(d){
+        //     console.log(d)
+        // }
     }
 }
 </script>

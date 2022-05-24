@@ -4,11 +4,12 @@
             <div class="m-2 text-right border-b pb-2 flex flex-row justify-between">
                 <div>
                     <slot name="customerSlot" v-if="customerSlot === true"></slot>
+                    <el-button type="danger" @click="allDeleted">批量删除</el-button>
                 </div>
                 <div v-if="buttonGroups === true">
                     <div class="flex flex-column justify-center items-center mx-4">
                         <slot name="batchImport" v-if="batchImportSlot === true"></slot>
-                        <el-button type="text" @click="selectExportExcel(selectExport,tableTitle,exportName)">选择导出
+                        <el-button type="text" @click="selectExportExcel(selectDate,tableTitle,exportName)">选择导出
                         </el-button>
                         <el-button type="text" @click="allExportExcel(tableData,tableTitle,exportName)">全部导出</el-button>
                         <el-popover placement="bottom" :width="150" popper-class="h-60 overflow-y-scroll" trigger="click">
@@ -27,7 +28,6 @@
             </div>
 
             <el-table
-                v-if="showTable === true"
                 :data="tableData"
                 v-loading="loading"
                 style="width: 100%"
@@ -162,7 +162,7 @@ export default {
     ],
     setup(props, context) {
         const {allExportExcel, selectExportExcel, replaceStr} = require("@/lqp")
-        const selectExport = ref([])
+        const selectDate = ref([])
         const selectTableData = ref([])
         const total = ref(0)
         const loading = ref(false)
@@ -171,8 +171,14 @@ export default {
             page: 1,
             limit: 15,
         }, props.where))
+        const allDeleted = async() => {
+            if(selectDate.value.length < 1){
+                console.log('033')
+            }
+        }
         const handleSelectionChange = async (val) => {
-            selectExport.value = val
+            selectDate.value = val
+            context.$emit('selectDate', selectDate.value)
         }
         const specialNumber = (row, column, event, cell) => {
             console.log(row)
@@ -209,7 +215,8 @@ export default {
 
         }
         return {
-            selectExport,
+            allDeleted,
+            selectDate,
             handleSelectionChange,
             specialNumber,
             replaceStr,

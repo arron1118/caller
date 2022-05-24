@@ -22,7 +22,7 @@ import {ElMessage} from "element-plus";
 export default {
     name: "Edit",
     setup(props, context){
-        const { code } = require("@/lqp")
+        const { phoneCode } = require("@/lqp")
         const width = ref(60)
         const editFormRef = ref(null)
         const loading = ref(props.loading)
@@ -41,7 +41,7 @@ export default {
                 const params = {
                     number: number
                 }
-                if(!code(params.number)){
+                if(!phoneCode(params.number)){
                     ElMessage({
                         type: 'warning',
                         message: '请输入11位数的号码！'

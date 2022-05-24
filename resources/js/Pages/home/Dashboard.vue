@@ -13,7 +13,7 @@
                 >
                     <template v-slot:customerSlot="scope">
                         <el-button-group>
-                            <el-button type="primary" @click="addFormDialog = true">导入客户</el-button>
+                            <el-button type="primary" @click="importCustomer = true">导入客户</el-button>
                             <el-button type="primary" plain @click="showTable = true">上次导入</el-button>
                             <el-button type="danger" plain @click="showTable = false">清除列表</el-button>
                         </el-button-group>
@@ -59,11 +59,11 @@
     </home-layout>
     <!--        弹框-->
     <el-dialog v-model="addFormDialog" title="导入客户">
-        <add-form
+        <import-customer
             @clickAdd="receiveAddForm"
             @clickCancelAdd="cancelAddForm"
             :loading="loading"
-        ></add-form>
+        ></import-customer>
     </el-dialog>
 </template>
 
@@ -74,16 +74,15 @@ import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
 import { ref,h } from "vue"
 import BasicTable from '@/Pages/home/components/tables/BasicTable.vue'
 import TableOperation from "@/Pages/admin/components/tables/TableOperation";
-import AddForm from '@/Pages/home/subDashboard/Add.vue'
+import importCustomer from '@/Pages/home/sub/importCustomer.vue'
 
 export default {
     name: "Dashboard",
     components: {
-        AddForm,InfoFilled, HomeLayout, BasicTable,TableOperation
+        importCustomer,InfoFilled, HomeLayout, BasicTable,TableOperation
     },
     setup(){
         const {replaceStr, getCountDown} = require("@/lqp")
-        console.log('999', getCountDown)
         const operates = ref({
             operate: true,
             label: '操作',
@@ -142,7 +141,7 @@ export default {
             page: 1,
             limit: 8,
         })
-        const addFormDialog = ref(false)
+        const importCustomer = ref(false)
         const loading = ref(false)
         const showTable = ref(false)
         const time = ref(10)
@@ -250,7 +249,7 @@ export default {
             receiveAddForm,
             cancelAddForm,
             loading,
-            addFormDialog,
+            importCustomer,
             operates,
             operations,
             handleOperation,
