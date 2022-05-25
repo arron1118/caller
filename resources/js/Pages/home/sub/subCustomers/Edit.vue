@@ -63,12 +63,12 @@ export default {
                     comment: comment
                 }
                 console.log('编辑参数', params, loading.value)
-                context.emit('clickEdit', params, loading.value)
+                context.emit('submitEdit', params, loading.value)
             } catch (error) {
             }
         }
         const cancelEdit = async () => {
-            context.emit('clickCancelEdit', false)
+            context.emit('cancelEdit', false)
         }
         return{
             editFormRef,
@@ -79,7 +79,6 @@ export default {
         }
     },
     props:['loading', 'editData'],
-    methods: {}
 }
 </script>
 

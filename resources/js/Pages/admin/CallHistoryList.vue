@@ -50,7 +50,6 @@ export default {
         AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable
     },
     setup() {
-        const {replaceStr} = require("@/lqp")
         const role = ref('callHistory')
         const params = ref({
             limit: 30,
@@ -222,7 +221,6 @@ export default {
         }
         return {
             exportName,
-            replaceStr,
             search,
             role,
             changeState,

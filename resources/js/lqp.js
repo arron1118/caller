@@ -6,6 +6,43 @@ const aa = 'aaa';
 function bb() {
     return 'bb';
 }
+//
+const TipsBox = (type,message) => {
+    ElMessage({
+        type: type,
+        message: message
+    })
+}
+// 操作询问框
+const QueryBox = (title, message, type, result) => {
+     ElMessageBox({
+        title: title,
+        message: message,
+        type: type,
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+                instance.confirmButtonLoading = true
+                instance.confirmButtonText = '确定'
+                setTimeout(() => {
+                    done()
+                    setTimeout(() => {
+                        instance.confirmButtonLoading = false
+                    }, 300)
+                }, 3000)
+            } else {
+                done()
+            }
+        },
+    }).then(() => {
+        ElMessage({
+            type: 'success',
+            message: result,
+        })
+    })
+}
 // 验证为11位数的手机
 const phoneCode = (phone) => {
     let telVerify = /^1[3456789]{1}\d{9}$/;
@@ -92,4 +129,4 @@ const formatJson2 = (filterVal, jsonData) => {
     return jsonData.map(v => filterVal.map(j => v[j]))
 }
 // 其他方法
-export {aa, bb, allExportExcel, selectExportExcel, replaceStr, phoneCode};
+export {aa, bb, allExportExcel, selectExportExcel, replaceStr, phoneCode, TipsBox, QueryBox};

@@ -73,13 +73,13 @@ export default {
                     comment: comment
                 }
                 console.log('开通参数', params, loading.value)
-                context.emit('clickAdd', params, loading.value)
+                context.emit('submitAdd', params, loading.value)
                 // todo
             } catch (error) {
             }
         }
         const cancelAdd = async () => {
-            context.emit('clickCancelAdd', false)
+            context.emit('cancelAdd', false)
         }
         return{
             addFormRef,

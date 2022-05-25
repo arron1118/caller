@@ -4,21 +4,20 @@
             <div class="m-2 text-right border-b pb-2 flex flex-row justify-between">
                 <div>
                     <slot name="customerSlot" v-if="customerSlot === true"></slot>
-                    <el-button type="danger" @click="allDeleted">批量删除</el-button>
                 </div>
                 <div v-if="buttonGroups === true">
                     <div class="flex flex-column justify-center items-center mx-4">
                         <slot name="batchImport" v-if="batchImportSlot === true"></slot>
-                        <el-button type="text" @click="selectExportExcel(selectDate,tableTitle,exportName)">选择导出
+                        <el-button @click="selectExportExcel(selectDate,tableTitle,exportName)">选择导出
                         </el-button>
-                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,exportName)">全部导出</el-button>
+                        <el-button @click="allExportExcel(tableData,tableTitle,exportName)">全部导出</el-button>
                         <el-popover placement="bottom" :width="150" popper-class="h-60 overflow-y-scroll" trigger="click">
                             <template #reference>
-                                <el-button type="text" style="margin-right: 16px">筛选列</el-button>
+                                <el-button style="margin-right: 16px">筛选列</el-button>
                             </template>
                             <el-checkbox v-for="item in tableTitle" v-model="item.show" :label="item.label" size="large"/>
                         </el-popover>
-                        <el-button type="text" plain class="mr-2">
+                        <el-button plain class="mr-2">
                             <el-icon>
                                 <refresh/>
                             </el-icon>
@@ -171,17 +170,11 @@ export default {
             page: 1,
             limit: 15,
         }, props.where))
-        const allDeleted = async() => {
-            if(selectDate.value.length < 1){
-                console.log('033')
-            }
-        }
         const handleSelectionChange = async (val) => {
             selectDate.value = val
-            context.$emit('selectDate', selectDate.value)
+            context.emit('selectDate', selectDate.value)
         }
         const specialNumber = (row, column, event, cell) => {
-            console.log(row)
             row.called_number = replaceStr(row.called_number, '****')
             // 隐藏电话号码
             // row.isCalled = !row.isCalled
@@ -192,30 +185,20 @@ export default {
             // }
         }
         const filterIsTest = (value, row) => {
-            console.log(value)
-            console.log(row)
             row.is_test = value
-            console.log(row.is_test)
             context.emit('getIsTest', row.is_test)
         }
         const filterWays = (value, row) => {
-            console.log(value)
-            console.log(row)
             row.status = value
-            console.log(row.status)
             context.emit('getPayType', row.status)
 
         }
         const filterStatus = (value, row) => {
-            console.log(value)
-            console.log(row)
             row.status = value
-            console.log(row.status)
             context.emit('getPayStatus', row.status)
 
         }
         return {
-            allDeleted,
             selectDate,
             handleSelectionChange,
             specialNumber,
@@ -245,7 +228,6 @@ export default {
         getTableData () {
             this.loading = true
             post(this.url, this.params).then((res) => {
-                console.log(res)
                 if (res.code === 1) {
                     this.loading = false
                     this.tableData = res.data

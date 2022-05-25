@@ -47,17 +47,17 @@
         </el-tab-pane>
     </el-tabs>
     <div class="flex flex-row justify-center mt-8">
-        <el-button @click="cancelAdd()">取消</el-button>
-        <el-button type="primary" :loading="loading" @click="submitAdd()"
+        <el-button @click="cancelImport()">取消</el-button>
+        <el-button type="primary" :loading="loading" @click="submitImport()"
         >确定</el-button
         >
     </div>
 </template>
 
 <script>
-import {ref, unref} from "vue"
+import { ref } from "vue"
 export default {
-    name: "Add",
+    name: "ImportCustomer",
     components: {
     },
     setup(props, context){
@@ -71,18 +71,18 @@ export default {
         const handleClick = (tab, event) => {
             console.log(tab, event)
         }
-        const cancelAdd = async () => {
-            context.emit('clickCancelAdd', false)
+        const cancelImport = async () => {
+            context.emit('cancelImport', false)
         }
-        const submitAdd = async () => {
+        const submitImport = async () => {
             // if() 没有结果则提示
             loading.value = true
             const data ='lpp'
-            context.emit('clickAdd', data, loading.value)
+            context.emit('submitImport', data, loading.value)
         }
         return{
-            submitAdd,
-            cancelAdd,
+            submitImport,
+            cancelImport,
             activeName,
             handleClick,
             loading,

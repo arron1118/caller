@@ -16,13 +16,14 @@
                     :showSummary="true"
                     :customerSlot="true"
                     :operates="operates"
-                    @selectDate="selectDate($event)"
+                    @selectDate="selectDate"
                 >
                     <template v-slot:customerSlot="scope">
                         <el-button-group>
                             <el-button type="primary" @click="addFormDialog = true">添加客户</el-button>
-                            <el-button type="success" plain @click="addFormDialog = true">移动分类</el-button>
-                            <el-button type="primary" plain @click="importCustomer = true">导入客户</el-button>
+                            <el-button type="primary" plain @click="importDialog = true">导入客户</el-button>
+                            <el-button type="success" plain @click="moveCategory">移动分类</el-button>
+                            <el-button type="danger" plain @click="allDeleted">批量删除</el-button>
                             <span class="pl-2 text-gray-400">注：点击'回访记录'列可查看详细内容</span>
                         </el-button-group>
                     </template>
@@ -39,19 +40,21 @@
     </home-layout>
     <!--        弹框-->
     <el-dialog v-model="addFormDialog" title="添加客户">
-        <add-form @clickAdd="receiveAddForm" @clickCancelAdd="cancelAddForm" :loading="loading"></add-form>
+        <add-form @submitAdd="submitAdd" @cancelAdd="cancelAdd" :loading="loading"></add-form>
     </el-dialog>
     <el-dialog v-model="editFormDialog" title="编辑">
-        <edit-form @clickEdit="receiveEditForm" @clickCancelEdit="cancelEditForm" :loading="loading"
+        <edit-form @submitEdit="submitEdit" @cancelEdit="cancelEdit" :loading="loading"
                    :editData="editData"></edit-form>
     </el-dialog>
-    <!--        弹框-->
-    <el-dialog v-model="importCustomer" title="导入客户">
+    <el-dialog v-model="importDialog" title="导入客户">
         <import-customer
-            @clickAdd="receiveAddForm"
-            @clickCancelAdd="cancelAddForm"
+            @submitImport="submitImport"
+            @cancelImport="cancelImport"
             :loading="loading"
         ></import-customer>
+    </el-dialog>
+    <el-dialog v-model="categoryDialog" title="选择分类">
+        <category-customer :ids="ids"></category-customer>
     </el-dialog>
 </template>
 
@@ -63,13 +66,14 @@ import AddForm from '@/Pages/home/sub/subCustomers/Add.vue'
 import EditForm from '@/Pages/home/sub/subCustomers/Edit.vue'
 import TableOperation from "@/Pages/home/components/tables/TableOperation";
 import importCustomer from '@/Pages/home/sub/importCustomer.vue'
+import categoryCustomer from '@/Pages/home/sub/categoryCustomer.vue'
+import { ref } from "vue"
 
-import {h, ref} from "vue"
-import {ElMessage, ElMessageBox} from "element-plus";
 export default {
     name: "Customer",
     components: {
         importCustomer,
+        categoryCustomer,
         HomeLayout,
         SearchForm,
         BasicTable,
@@ -78,10 +82,12 @@ export default {
         TableOperation
     },
     setup(){
+        const { TipsBox, QueryBox } = require("@/lqp")
         const role = ref('customer')
         const addFormDialog = ref(false)
-        const importCustomer = ref(false)
         const editFormDialog = ref(false)
+        const importDialog = ref(false)
+        const categoryDialog = ref(false)
         const loading = ref(false)
         const params = ref({
             page: 1,
@@ -169,72 +175,34 @@ export default {
 
             }
         ])
+        const ids = ref([])
         const handleOperation = (op, row) => {
             if (op.types === 'edit') {
                 editFormDialog.value = true
                 editData.value = row.value
             } else if (op.types === 'del') {
                 console.log(row.value.id)
-                ElMessageBox({
-                    title: '确认删除此id=' + row.value.id + '数据吗？',
-                    message: h('p', null, [
-                        h('span', null, '此数据将会被'),
-                        h('i', {style: 'color: #F56C6C'}, '删除'),
-                    ]),
-                    showCancelButton: true,
-                    confirmButtonText: '删除',
-                    cancelButtonText: '取消',
-                    beforeClose: (action, instance, done) => {
-                        if (action === 'confirm') {
-                            let params = row.value.id
-                            console.log('删除项id', params)
-                            instance.confirmButtonLoading = true
-                            instance.confirmButtonText = 'Loading...'
-                            setTimeout(() => {
-                                done()
-                                setTimeout(() => {
-                                    instance.confirmButtonLoading = false
-                                }, 300)
-                            }, 3000)
-                            // todo
-                        } else {
-                            done()
-                        }
-                    },
-                }).then(() => {
-                    ElMessage({
-                        type: 'success',
-                        message: '已删除'
-                    })
-                })
+                QueryBox('提示', '确定要删除数据吗？', 'error', '已删除')
             }
         }
         const search = (f) => {
             console.log('子传父参数', f)
             params.value = Object.assign({}, params.value, f)
         }
-        const receiveAddForm = (e, r) => {
-            console.log('zhe', e)
-            console.log('zhe', r)
+        const submitAdd = (e, r) => {
             loading.value = r
             // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
             setTimeout(function () {
                 loading.value = false
                 addFormDialog.value = false
-                ElMessage({
-                    type: 'success',
-                    // message: `action: ${action}`,
-                    message: '已提交'
-                })
-                // 重载表格数据
-
+                TipsBox('success', '已提交')
             }, 3000);
 
         }
-        const cancelAddForm = (e) => {
+        const cancelAdd = (e) => {
             addFormDialog.value = e
         }
-        const receiveEditForm = (e, r) => {
+        const submitEdit = (e, r) => {
             console.log('参数', e)
             console.log('zhe', r)
             loading.value = r
@@ -243,21 +211,70 @@ export default {
             setTimeout(function () {
                 loading.value = false
                 editFormDialog.value = false
-                ElMessage({
-                    type: 'success',
-                    // message: `action: ${action}`,
-                    message: '已提交'
-                })
-                // 重载表格数据
-
+                TipsBox('success', '已提交')
             }, 3000);
 
         }
-        const cancelEditForm = (e) => {
+        const cancelEdit = (e) => {
             editFormDialog.value = e
         }
+        const submitImport = (e,r) => {
+            loading.value = r
+            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
+            setTimeout(function () {
+                loading.value = false
+                importDialog.value = false
+                TipsBox('success', '已提交')
+            }, 3000);
+
+        }
+        const cancelImport = (e) => {
+            importDialog.value = e
+        }
+        const selectDate = (d) => {
+            let a = []
+            d.forEach((item)=>{
+                a.push(item.id)
+            })
+            a.forEach((item)=>{
+                if(ids.value.indexOf(item) === -1){
+                    ids.value.push(item)
+                }
+            })
+            console.log('zheids', ids.value)
+        }
+        const allDeleted = async() => {
+            if(selectDate.value.length < 1){
+                TipsBox('warning', '请选择需要删除的数据！')
+                return false
+            }else{
+                let ids = []
+                selectDate.value.forEach((item)=>{
+                    ids.push(item.id)
+                })
+                console.log('ok', ids)
+                // todo
+                QueryBox('提示', '确定要删除数据吗？', 'error', '已删除')
+            }
+        }
+        const moveCategory = async() => {
+            if(ids.value.length < 1){
+                TipsBox('warning', '请选择需要移动的客户！')
+                return false
+            }else{
+                categoryDialog.value = true
+            }
+        }
         return{
-            importCustomer,
+            ids,
+            categoryDialog,
+            moveCategory,
+            QueryBox,
+            submitImport,
+            cancelImport,
+            allDeleted,
+            selectDate,
+            importDialog,
             loading,
             role,
             tableTitle,
@@ -266,19 +283,14 @@ export default {
             exportName,
             addFormDialog,
             editFormDialog,
-            receiveAddForm,
-            cancelAddForm,
-            receiveEditForm,
-            cancelEditForm,
+            submitAdd,
+            cancelAdd,
+            submitEdit,
+            cancelEdit,
             operates,
             operations,
             handleOperation
         }
-    },
-    mounted() {
-        // this.selectDate(d){
-        //     console.log(d)
-        // }
     }
 }
 </script>
