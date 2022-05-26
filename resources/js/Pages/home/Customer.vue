@@ -54,7 +54,11 @@
         ></import-customer>
     </el-dialog>
     <el-dialog v-model="categoryDialog" title="选择分类">
-        <category-customer :ids="ids"></category-customer>
+        <category-customer
+            :ids="this.ids"
+            :loading="loading"
+            @submitCategory="submitCategory"
+        ></category-customer>
     </el-dialog>
 </template>
 
@@ -176,6 +180,7 @@ export default {
             }
         ])
         const ids = ref([])
+        const editData = ref([])
         const handleOperation = (op, row) => {
             if (op.types === 'edit') {
                 editFormDialog.value = true
@@ -236,23 +241,23 @@ export default {
             d.forEach((item)=>{
                 a.push(item.id)
             })
-            a.forEach((item)=>{
-                if(ids.value.indexOf(item) === -1){
-                    ids.value.push(item)
-                }
-            })
-            console.log('zheids', ids.value)
+            a.join(',')
+            ids.value = a
+            // 去重
+            // a.forEach((item)=>{
+            //     if(this.ids.indexOf(item) === -1){
+            //         this.ids.push(item)
+            //     }
+            // })
+            // console.log('this.ids', this.ids)
+
         }
         const allDeleted = async() => {
-            if(selectDate.value.length < 1){
+            if(ids.value.length < 1){
                 TipsBox('warning', '请选择需要删除的数据！')
                 return false
             }else{
-                let ids = []
-                selectDate.value.forEach((item)=>{
-                    ids.push(item.id)
-                })
-                console.log('ok', ids)
+                console.log('ok', ids.value)
                 // todo
                 QueryBox('提示', '确定要删除数据吗？', 'error', '已删除')
             }
@@ -265,15 +270,22 @@ export default {
                 categoryDialog.value = true
             }
         }
+        const submitCategory = async(p, b) =>{
+            console.log('cs', p, b)
+            categoryDialog.value = false
+            TipsBox('success', '已提交')
+        }
         return{
+            editData,
+            submitCategory,
             ids,
+            selectDate,
             categoryDialog,
             moveCategory,
             QueryBox,
             submitImport,
             cancelImport,
             allDeleted,
-            selectDate,
             importDialog,
             loading,
             role,

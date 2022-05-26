@@ -1,6 +1,10 @@
 <template>
     <div>
-        <el-form ref="addFormRef" :model="ruleForm">
+        <el-form
+            ref="addFormRef"
+            :model="ruleForm"
+
+        >
             <el-form-item label="类型" label-width="140px" prop="cate">
                 <el-select v-model="ruleForm.cate" placeholder="请选择类型">
                     <el-option label="Zone No.1" value="shanghai" />

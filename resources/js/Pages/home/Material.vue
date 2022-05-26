@@ -44,80 +44,81 @@
 
 <script>
 import HomeLayout from "@/Layouts/HomeLayout";
-import {reactive, ref, unref} from "vue"
+import {defineComponent, reactive, ref, unref} from "vue"
 import {ElMessage} from "element-plus";
 import { post } from "@/http/request"
-const { phoneCode } = require("@/lqp")
-export default {
+export default defineComponent({
     name: "Material",
     components: {
         HomeLayout,
     },
     setup(){
-        const editFormFiled = ref([])
+        const {checkMobile} = require("@/validator")
         const url = ref('getHistoryList')
         const where = ref({
             limit: 1,
             page: 1
         })
-        const editFormRef = ref(null)
+
         const loading = ref(false)
         const getData =  () => {
             post(url.value, where.value).then((res)=> {
                 editFormFiled.value = res.data[0]
             })
         }
-        const validatePass = (rule, value, callback, source, options) => {
-            if (value === '') {
-                callback(new Error('请输入正确的手机号'))
-            }else if(value.length !== 11){
-                callback(new Error('请输入正确的手机号'))
-            }else if(!phoneCode(value)){
-                callback(new Error('请输入正确的手机号'))
-            }
-        }
+
+        // 注册验证
+        const editFormRef = ref(null)
+        const editFormFiled = ref([])
+        // 注册验证规则
         const rules = reactive({
             caller_number:[
-                { validator: validatePass,
+                { validator: checkMobile,
                     required: true,
                     trigger: 'blur'
                 }
             ]
         })
-        const submitAdd = async () => {
-            const form = unref(editFormRef)
-            if (!form) return
-            try {
-                // await form.validate()
-                const {
-                    username,
-                    realname,
-                    phone,
-                    ip,
-                    time,
-                    lasttime
-                } = editFormFiled
-                const params = {
-                    username: username,
-                    realname: realname,
-                    phone: phone,
-                    ip: ip,
-                    time: time,
-                    lasttime: lasttime
-                }
-                loading.value = true
-                console.log('开通参数', params)
-                setTimeout(function () {
-                    loading.value = false
-                    ElMessage({
-                        type: 'success',
-                        message: '已提交'
-                    })
-                }, 3000);
+        const submitAdd = () => {
+            const formEl = unref(editFormRef)
+            if (!formEl) return
+            formEl.validateField("caller_number", (valid) => {
+                if (valid) {
+                    console.log('submit!')
+                    try {
+                        const {
+                            username,
+                            realname,
+                            phone,
+                            ip,
+                            time,
+                            lasttime
+                        } = editFormFiled
+                        const params = {
+                            username: username,
+                            realname: realname,
+                            phone: phone,
+                            ip: ip,
+                            time: time,
+                            lasttime: lasttime
+                        }
+                        loading.value = true
+                        console.log('开通参数', params)
+                        setTimeout(function () {
+                            loading.value = false
+                            ElMessage({
+                                type: 'success',
+                                message: '已提交'
+                            })
+                        }, 3000);
 
-                // todo
-            } catch (error) {
-            }
+                        // todo
+                    } catch (error) {}
+                } else {
+                    console.log('error submit!')
+                    return false
+                }
+            })
         }
         const cancelAdd = async () => {
             loading.value = false
@@ -138,7 +139,7 @@ export default {
     mounted() {
         this.getData()
     },
-}
+})
 </script>
 
 <style scoped>

@@ -42,6 +42,7 @@ export default {
         HomeLayout,
     },
     setup(){
+        const { checkOldPassword, checkNewPassword, checkConfirmPassword} = require("@/validator")
         const materialData = ref([])
         const url = ref('getHistoryList')
         const where = ref({
@@ -58,22 +59,22 @@ export default {
         const rules = reactive({
             old_password: [
                 {
+                    validator: checkOldPassword,
                     required: true,
-                    message: '请输入旧密码',
                     trigger: 'blur',
                 },
             ],
             new_password: [
                 {
+                    validator: checkNewPassword,
                     required: true,
-                    message: '请输入新密码',
                     trigger: 'blur',
                 },
             ],
             confirm_password: [
                 {
+                    validator: checkConfirmPassword,
                     required: true,
-                    message: '请输入确认密码',
                     trigger: 'blur',
                 },
             ],
@@ -85,36 +86,45 @@ export default {
             })
         }
         const submitAdd = async () => {
-            const form = unref(addFormRef)
-            if (!form) return
-            try {
-                await form.validate()
-                const {
-                    old_password,
-                    new_password,
-                    confirm_password
-                } = ruleForm
-                const params = {
-                    old_password: old_password,
-                    new_password: new_password,
-                    confirm_password: confirm_password
+            const formEl = unref(addFormRef)
+            if (!formEl) return
+            let fields = ["old_password", "new_password", "confirm_password"]
+            formEl.validateField(fields, (valid) => {
+                if (valid) {
+                    console.log('submit!')
+                    try {
+                        const {
+                            old_password,
+                            new_password,
+                            confirm_password
+                        } = ruleForm
+                        const params = {
+                            old_password: old_password,
+                            new_password: new_password,
+                            confirm_password: confirm_password
+                        }
+                        loading.value = true
+                        console.log('开通参数', params)
+                        setTimeout(function () {
+                            loading.value = false
+                            ElMessage({
+                                type: 'success',
+                                // message: `action: ${action}`,
+                                message: '已提交'
+                            })
+                            // 重载表格数据
+
+                        }, 3000);
+
+                        // todo
+                    } catch (error) {
+                    }
+                } else {
+                    console.log('error submit!')
+                    return false
                 }
-                loading.value = true
-                console.log('开通参数', params)
-                setTimeout(function () {
-                    loading.value = false
-                    ElMessage({
-                        type: 'success',
-                        // message: `action: ${action}`,
-                        message: '已提交'
-                    })
-                    // 重载表格数据
+            })
 
-                }, 3000);
-
-                // todo
-            } catch (error) {
-            }
         }
         const cancelAdd = async () => {
             loading.value = false
