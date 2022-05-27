@@ -13,7 +13,7 @@
                 >
                     <template v-slot:customerSlot="scope">
                         <el-button-group>
-                            <el-button type="primary" @click="importCustomer = true">导入客户</el-button>
+                            <el-button type="primary" @click="importDialog = true">导入客户</el-button>
                             <el-button type="primary" plain @click="showTable = true">上次导入</el-button>
                             <el-button type="danger" plain @click="showTable = false">清除列表</el-button>
                         </el-button-group>
@@ -27,16 +27,20 @@
                     </template>
                 </basic-table>
             </div>
-            <div class="bg-white rounded shadow-lg text-center p-4">
-                <div class="text-right mb-6">
-                    <el-tooltip
-                        class="box-item"
-                        effect="dark"
-                        content="点击查看注意事项"
-                        placement="top-start"
-                    >
-                    <el-icon :size="18" @click="infosDialog"><InfoFilled /></el-icon>
-                    </el-tooltip>
+            <div class="bg-white rounded shadow-lg p-4">
+                <div class="text-lg font-semibold text-gray-600 mb-4 ml-2 flex flex-row justify-between">
+                    <div>拨打面板</div>
+                   <div>
+                       <el-tooltip
+                           class="box-item"
+                           effect="dark"
+                           content="点击查看注意事项"
+                           placement="top-start"
+                           :visible="visible"
+                       >
+                           <el-icon :size="18" @click="infosDialog"><InfoFilled /></el-icon>
+                       </el-tooltip>
+                   </div>
                 </div>
                <div>
                    <el-input class="h-20 mb-4 text-center"
@@ -44,6 +48,7 @@
                              maxlength="11"
                              placeholder="请输入号码"
                              clearable
+                             @keyup.enter.native="makeCall(text)"
                    ></el-input>
                </div>
                 <div class=" grid grid-cols-3">
@@ -52,13 +57,13 @@
                     </div>
                 </div>
                 <div class="mt-6">
-                    <el-button type="primary" class="w-full">拨号</el-button>
+                    <el-button type="primary" class="w-full" @click="makeCall(text)">拨号</el-button>
                 </div>
             </div>
         </div>
     </home-layout>
     <!--        弹框-->
-    <el-dialog v-model="addFormDialog" title="导入客户">
+    <el-dialog v-model="importDialog" title="导入客户">
         <import-customer
             @clickAdd="receiveAddForm"
             @clickCancelAdd="cancelAddForm"
@@ -82,7 +87,7 @@ export default {
         importCustomer,InfoFilled, HomeLayout, BasicTable,TableOperation
     },
     setup(){
-        const {replaceStr, getCountDown} = require("@/lqp")
+        const {replaceStr, getCountDown, TipsBox, phoneCode, ContextBox} = require("@/lqp")
         const operates = ref({
             operate: true,
             label: '操作',
@@ -112,27 +117,22 @@ export default {
         ])
         const tableTitle = ref([
             {
-                label: '公司名称',
+                label: '客户名称',
                 value: 'username',
                 show: true
             },
             {
-                label: '未接听',
+                label: '电话号码',
                 value: 'axb_number',
                 show: true
             },
             {
-                label: '已接听',
+                label: '所在地',
                 value: 'axb_number',
                 show: true
             },
             {
-                label: '时间（分）',
-                value: 'axb_number',
-                show: true
-            },
-            {
-                label: '消费金额',
+                label: '邮箱',
                 value: 'axb_number',
                 show: true
             }
@@ -141,10 +141,12 @@ export default {
             page: 1,
             limit: 8,
         })
-        const importCustomer = ref(false)
+        const importDialog = ref(false)
         const loading = ref(false)
         const showTable = ref(false)
         const time = ref(10)
+        const number = ref('13450031402')
+        const visible = ref(true)
         const getTime = (t) => {
             let interval = setInterval(() => {
                     if(t === 0){
@@ -156,49 +158,9 @@ export default {
                 },
                 1000)
         }
-        const number = ref('13450031402')
         const infosDialog = () => {
-            ElNotification({
-                title: '温馨提示',
-                message: h(
-                    "div",
-                    {
-                        style:"padding: 2px;",
-                    },
-                   [
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '1、只允许拨打本公司业务电话，不允许拨打其他行业电话。'
-                       ),
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '2、拨号当中不允许出现：金融、地产相关高频行业。'
-                       ),
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '3、通话中不允许出现：代开发票、造假等违法字眼。'
-                       ),
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '4、不允许在通话中辱骂。'
-                       ),
-                   ]
-                ),
-                type: 'info',
-                duration: 0,
-            })
+            visible.value = false
+            ContextBox()
         }
         const getNumber = (v) => {
             if(v.text === '-'){
@@ -243,13 +205,27 @@ export default {
         const cancelAddForm = (e) => {
             addFormDialog.value = e
         }
+        const makeCall = (phone) => {
+            if(phone.length<1){
+                TipsBox('warning', '请输入号码!')
+                return false
+            }
+            if(!phoneCode(phone)){
+                TipsBox('warning', '请输入正确的号码!')
+                return false
+            }
+             console.log('submit', phone)
+
+        }
         return {
+            visible,
+            makeCall,
             getTime,
             showTable,
             receiveAddForm,
             cancelAddForm,
             loading,
-            importCustomer,
+            importDialog,
             operates,
             operations,
             handleOperation,
@@ -264,7 +240,7 @@ export default {
             time,
             number
         }
-    }
+    },
 }
 </script>
 

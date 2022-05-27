@@ -3,7 +3,7 @@
         <el-form
             ref="addFormRef"
             :model="ruleForm"
-
+            :rules="rules"
         >
             <el-form-item label="类型" label-width="140px" prop="cate">
                 <el-select v-model="ruleForm.cate" placeholder="请选择类型">
@@ -41,9 +41,8 @@
 import {ref, reactive, unref} from "vue"
 export default {
     name: "Add",
-    components: {
-    },
     setup(props, context){
+        const { checkMobile, checkTitle } = require("@/validator")
         const addFormRef = ref(null)
         const loading = ref(props.loading)
         const ruleForm = reactive({
@@ -54,38 +53,59 @@ export default {
             email: '',
             comment: ''
         })
+        const rules = reactive({
+            title:[{
+                validator: checkTitle,
+                required: true,
+                trigger: 'blur'
+            }],
+            phone: [{
+                validator: checkMobile,
+                required: true,
+                trigger: 'blur'
+            }]
+        })
         const submitAdd = async () => {
             loading.value = true
-            const form = unref(addFormRef)
-            if (!form) return
-            try {
-                await form.validate()
-                const {
-                    cate,
-                    title,
-                    phone,
-                    province,
-                    email,
-                    comment,
-                } = ruleForm
-                const params = {
-                    cate: cate,
-                    title: title,
-                    phone: phone,
-                    province: province,
-                    email: email,
-                    comment: comment
+            const formEl = unref(addFormRef)
+            if (!formEl) return
+            let fields = ["title", "phone"]
+            formEl.validateField(fields, (valid)=>{
+                if(valid){
+                    console.log("yes")
+                    try {
+                        const {
+                            cate,
+                            title,
+                            phone,
+                            province,
+                            email,
+                            comment,
+                        } = ruleForm
+                        const params = {
+                            cate: cate,
+                            title: title,
+                            phone: phone,
+                            province: province,
+                            email: email,
+                            comment: comment
+                        }
+                        console.log('开通参数', params, loading.value)
+                        context.emit('submitAdd', params, loading.value)
+                        // todo
+                    } catch (error) {
+                    }
+                }else{
+                    console.log('no')
                 }
-                console.log('开通参数', params, loading.value)
-                context.emit('submitAdd', params, loading.value)
-                // todo
-            } catch (error) {
-            }
+            })
+
         }
         const cancelAdd = async () => {
             context.emit('cancelAdd', false)
         }
         return{
+            rules,
             addFormRef,
             ruleForm,
             loading,

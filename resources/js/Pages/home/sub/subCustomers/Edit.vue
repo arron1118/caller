@@ -1,6 +1,10 @@
 <template>
     <div>
-        <el-form ref="editFormRef" :model="ruleForm">
+        <el-form
+            ref="editFormRef"
+            :model="ruleForm"
+            :rules="rules"
+        >
             <el-form-item label="类型" label-width="140px" prop="cate">
                 <el-select v-model="editData.cate" placeholder="请选择类型">
                     <el-option label="Zone No.1" value="shanghai" />
@@ -25,7 +29,7 @@
             <div class="flex flex-row justify-center mt-8">
                 <el-button @click="cancelEdit()">取消</el-button>
                 <el-button type="primary" :loading="loading" @click="submitEdit()"
-                >开通</el-button
+                >确定</el-button
                 >
             </div>
         </el-form>
@@ -40,37 +44,58 @@ export default {
         const editFormRef = ref(null)
         const loading = ref(props.loading)
         const ruleForm = reactive(props.editData)
+        const { checkMobile, checkTitle } = require("@/validator")
+        const rules = reactive({
+            title:[{
+                validator: checkTitle,
+                required: true,
+                trigger: 'blur'
+            }],
+            phone: [{
+                validator: checkMobile,
+                required: true,
+                trigger: 'blur'
+            }]
+        })
         const submitEdit = async () => {
             loading.value = true
-            const form = unref(editFormRef)
-            if (!form) return
-            try {
-                await form.validate()
-                const {
-                    cate,
-                    title,
-                    phone,
-                    province,
-                    email,
-                    comment,
-                } = ruleForm
-                const params = {
-                    cate: cate,
-                    title: title,
-                    phone: phone,
-                    province: province,
-                    email: email,
-                    comment: comment
+            const formEl = unref(editFormRef)
+            if (!formEl) return
+            let fields = ["title", "phone"]
+            formEl.validateField(fields, (valid)=> {
+                if (valid) {
+                    try {
+                        const {
+                            cate,
+                            title,
+                            phone,
+                            province,
+                            email,
+                            comment,
+                        } = ruleForm
+                        const params = {
+                            cate: cate,
+                            title: title,
+                            phone: phone,
+                            province: province,
+                            email: email,
+                            comment: comment
+                        }
+                        console.log('编辑参数', params, loading.value)
+                        context.emit('submitEdit', params, loading.value)
+                    } catch (error) {
+                    }
+                }else{
+                    console.log( )
                 }
-                console.log('编辑参数', params, loading.value)
-                context.emit('submitEdit', params, loading.value)
-            } catch (error) {
-            }
+            })
+
         }
         const cancelEdit = async () => {
             context.emit('cancelEdit', false)
         }
         return{
+            rules,
             editFormRef,
             ruleForm,
             loading,

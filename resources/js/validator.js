@@ -37,4 +37,12 @@ const checkConfirmPassword = (rule, value, callback) => {
         callback()
     }
 }
-export {checkMobile, checkOldPassword, checkNewPassword, checkConfirmPassword}
+const checkTitle = (rule, value, callback) => {
+    if (value === '') {
+        callback(new Error('请输入客户名称!'))
+        return false
+    }else{
+        callback()
+    }
+}
+export {checkMobile, checkOldPassword, checkNewPassword, checkConfirmPassword, checkTitle}
