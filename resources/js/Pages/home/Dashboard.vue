@@ -10,7 +10,11 @@
                     :customerSlot="true"
                     :operates="operates"
                     :showTable="showTable"
+                    :specialNumber="true"
                 >
+                    <template v-slot:specialNumber="scope">
+                        <span class="text-blue-500">{{ scope.scope.row.axb_number }}</span>
+                    </template>
                     <template v-slot:customerSlot="scope">
                         <el-button-group>
                             <el-button type="primary" @click="importDialog = true">导入客户</el-button>
@@ -80,6 +84,7 @@ import { ref,h } from "vue"
 import BasicTable from '@/Pages/home/components/tables/BasicTable.vue'
 import TableOperation from "@/Pages/admin/components/tables/TableOperation";
 import importCustomer from '@/Pages/home/sub/importCustomer.vue'
+import {ContextBox2} from "../../lqp";
 
 export default {
     name: "Dashboard",
@@ -87,7 +92,8 @@ export default {
         importCustomer,InfoFilled, HomeLayout, BasicTable,TableOperation
     },
     setup(){
-        const {replaceStr, getCountDown, TipsBox, phoneCode, ContextBox} = require("@/lqp")
+        const {replaceStr, getCountDown, phoneCode} = require("@/lqp")
+        const { TipsBox, ContextBox, ContextBox2} = require("@/feedback")
         const operates = ref({
             operate: true,
             label: '操作',
@@ -171,19 +177,9 @@ export default {
         }
         const handleOperation = (op, row) => {
           if (op.types === 'edit') {
-                console.log(row.value)
-              ElMessageBox({
-                  title: '拨号成功！',
-                  message: h('p', null, [
-                      h('span', null, [
-                          h('span', null, '请在'),
-                          h('span', {style: 'color: red'}, time.value),
-                          h('span', null, '秒内用手机拨打号码：')
-                      ]),
-                      h('span', {style: 'font-size: 20px; color: teal'}, number.value)
-                  ]),
-              })
-
+              text.value = row.value.axb_number
+              makeCall(text.value)
+              ContextBox2(time.value, number.value)
             }
         }
         const receiveAddForm = (e, r) => {
@@ -215,7 +211,7 @@ export default {
                 return false
             }
              console.log('submit', phone)
-
+             // todo
         }
         return {
             visible,

@@ -43,18 +43,8 @@
                     :label="item.label"
                     :sortable="item.sortable === true"
                 >
-                </el-table-column>
-                <el-table-column
-                    :label="status.label"
-                    v-if="status"
-                    prop="status"
-                    :filters="[{ text: '禁用', value: false },{ text: '正常', value: true }]"
-                    :filter-method="filterStatus"
-                    filter-placement="bottom-end"
-                    column-key="status"
-                >
-                    <template v-slot="scope">
-                        <slot name="status" :scope="scope"></slot>
+                    <template v-slot="scope" v-if="item.value === 'axb_number'">
+                        <slot name="specialNumber" :scope="scope"></slot>
                     </template>
                 </el-table-column>
                 <el-table-column v-if="operates" :label="operates.label" fixed="right" width="120">
@@ -97,7 +87,8 @@ export default {
         url:{type: String},
         exportName:{type: String},
         customerSlot:{type: Boolean},
-        batchImportSlot:{type: Boolean}
+        batchImportSlot:{type: Boolean},
+        specialNumber:{type: Boolean}
     },
     setup(props, context) {
         const {allExportExcel, selectExportExcel} = require("@/lqp")
@@ -144,6 +135,7 @@ export default {
                     this.loading = false
                     this.tableData = res.data
                     this.total = res.total
+                    console.log('gbm', this.tableData)
                 }
             })
         }

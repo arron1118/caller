@@ -86,7 +86,7 @@ export default {
         TableOperation
     },
     setup(){
-        const { TipsBox, QueryBox } = require("@/lqp")
+        const { TipsBox, QueryBox } = require("@/feedback")
         const role = ref('customer')
         const addFormDialog = ref(false)
         const editFormDialog = ref(false)

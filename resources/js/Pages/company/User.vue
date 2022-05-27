@@ -21,7 +21,7 @@
                             :exportName="exportName"
                             :isTest="isTest"
                             :status="status"
-                            :specialNumber="specialNumber"
+                            :specialNumber="true"
                             :specialUser="specialUser"
                             :loading="loading"
                             :openAccountSlot="true"
@@ -175,7 +175,6 @@ export default {
             operate: true,
             label: '操作',
         })
-        const specialNumber = ref('')
         const specialUser = ref('')
         const openAccount = ref('')
         const isTest = ref({
@@ -335,7 +334,6 @@ export default {
             operates,
             isTest,
             status,
-            specialNumber,
             specialUser,
             operations,
             handleOperation,

@@ -40,7 +40,7 @@ export default {
         HomeLayout, ButtonGroup, SearchForm, BasicTable, TableOperation
     },
     setup() {
-        const { QueryBox } = require("@/lqp")
+        const { QueryBox } = require("@/feedback")
         const role = ref('callHistory')
         const params = ref({
             limit: 30,
