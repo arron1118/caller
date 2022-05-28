@@ -79,12 +79,11 @@
 <script>
 import HomeLayout from "@/Layouts/HomeLayout"
 import { InfoFilled } from '@element-plus/icons-vue'
-import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
-import { ref,h } from "vue"
+import {ElMessage} from 'element-plus'
+import { ref } from "vue"
 import BasicTable from '@/Pages/home/components/tables/BasicTable.vue'
 import TableOperation from "@/Pages/admin/components/tables/TableOperation";
 import importCustomer from '@/Pages/home/sub/importCustomer.vue'
-import {ContextBox2} from "../../lqp";
 
 export default {
     name: "Dashboard",
@@ -92,8 +91,8 @@ export default {
         importCustomer,InfoFilled, HomeLayout, BasicTable,TableOperation
     },
     setup(){
-        const {replaceStr, getCountDown, phoneCode} = require("@/lqp")
-        const { TipsBox, ContextBox, ContextBox2} = require("@/feedback")
+        const {replaceStr, getCountDown, makeCall} = require("@/lqp")
+        const { ContextBox, ContextBox2 } = require("@/feedback")
         const operates = ref({
             operate: true,
             label: '操作',
@@ -201,21 +200,9 @@ export default {
         const cancelAddForm = (e) => {
             addFormDialog.value = e
         }
-        const makeCall = (phone) => {
-            if(phone.length<1){
-                TipsBox('warning', '请输入号码!')
-                return false
-            }
-            if(!phoneCode(phone)){
-                TipsBox('warning', '请输入正确的号码!')
-                return false
-            }
-             console.log('submit', phone)
-             // todo
-        }
         return {
-            visible,
             makeCall,
+            visible,
             getTime,
             showTable,
             receiveAddForm,

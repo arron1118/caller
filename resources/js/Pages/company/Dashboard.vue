@@ -1,7 +1,7 @@
 <template>
     <company-layout title="Dashboard">
-                <div class="shadow mb-6">
-                    <el-row class="border">
+                <div class="shadow mb-6 border">
+                    <el-row class="py-4">
                         <el-col :span="6">
                             <el-row>
                                 <el-col :span="24" class="text-center">
@@ -48,7 +48,7 @@
                             </el-row>
                         </el-col>
                     </el-row>
-                    <el-row :gutter="20" class="text-center">
+                    <el-row class="text-center bg-gray-50 py-2">
                         <el-col :span="4">
                             <div class="border-r hover:text-yellow-500">
                                 <div class="mb-2"><span class="text-lg font-semibold">123456789</span></div>
@@ -88,7 +88,7 @@
                     </el-row>
                 </div>
                 <div class="mb-6 grid grid-cols-2 gap-4">
-                    <div class="bg-white rounded shadow p-4 grid grid-cols-3">
+                    <div class="bg-white rounded shadow p-4 grid grid-cols-3 border">
                         <div class="col-span-2"><pie-echarts :pieTitle="pieTitle"/></div>
                         <div class="pl-4 border-l mt-12">
                             <div class="flex flex-row justify-between mb-4 hover:bg-gray-100">
@@ -108,9 +108,8 @@
                                 <div class="mx-2">99999</div>
                             </div>
                         </div>
-
                     </div>
-                    <div class="bg-white rounded shadow p-4">
+                    <div class="bg-white rounded shadow p-4 border">
                         <div class="text-lg font-semibold text-gray-600 mb-4">排行榜</div>
                         <basic-table
                             :tableTitle="tableTitle"
@@ -125,7 +124,7 @@
                         </basic-table>
                     </div>
                 </div>
-                <div class="mb-6 bg-white rounded shadow p-4">
+                <div class="mb-6 bg-white rounded shadow p-4 border">
                     <el-row>
                         <el-col>
                             <line-echarts :lineTitle="lineTitle"/>
@@ -197,5 +196,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

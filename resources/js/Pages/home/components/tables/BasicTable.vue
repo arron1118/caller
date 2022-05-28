@@ -47,7 +47,7 @@
                         <slot name="specialNumber" :scope="scope"></slot>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="operates" :label="operates.label" fixed="right" width="120">
+                <el-table-column v-if="operates" :label="operates.label" fixed="right" :width="operatesWidth">
                     <template v-slot="scope">
                         <slot name="operates" :scope="scope"></slot>
                     </template>
@@ -88,7 +88,8 @@ export default {
         exportName:{type: String},
         customerSlot:{type: Boolean},
         batchImportSlot:{type: Boolean},
-        specialNumber:{type: Boolean}
+        specialNumber:{type: Boolean},
+        operatesWidth:{type: Number, default: 120}
     },
     setup(props, context) {
         const {allExportExcel, selectExportExcel} = require("@/lqp")

@@ -3,9 +3,8 @@
         <div class="mb-6 bg-white rounded shadow pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
-        <div class="mb-6 bg-white rounded shadow p-4">
-            <div class="border rounded">
-                <basic-table
+        <div class="border rounded">
+             <basic-table
                     :tableTitle="tableTitle"
                     :selectionType="true"
                     :pagination="true"
@@ -16,6 +15,7 @@
                     :showSummary="true"
                     :customerSlot="true"
                     :operates="operates"
+                    :operatesWidth="160"
                     @selectDate="selectDate"
                 >
                     <template v-slot:customerSlot="scope">
@@ -35,7 +35,6 @@
                         ></table-operation>
                     </template>
                 </basic-table>
-            </div>
         </div>
     </home-layout>
     <!--        弹框-->
@@ -87,6 +86,7 @@ export default {
     },
     setup(){
         const { TipsBox, QueryBox } = require("@/feedback")
+        const { makeCall } = require("@/lqp")
         const role = ref('customer')
         const addFormDialog = ref(false)
         const editFormDialog = ref(false)
@@ -164,7 +164,15 @@ export default {
             operate: true,
             label: '操作',
         })
-        const operations = ref([{
+        const operations = ref([
+            {
+                types: 'call',
+                title: '拨打',
+                type: 'primary',
+                icon: ['fas', 'pen-to-square'],
+
+            },
+            {
             types: 'edit',
             title: '编辑',
             type: 'success',
@@ -188,6 +196,10 @@ export default {
             } else if (op.types === 'del') {
                 console.log(row.value.id)
                 QueryBox('提示', '确定要删除数据吗？', 'error', '已删除')
+            } else if (op.types === 'call'){
+                console.log(row.value)
+                let phone = row.value.axb_number
+                makeCall(phone)
             }
         }
         const search = (f) => {

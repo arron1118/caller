@@ -1,10 +1,23 @@
-import {h, ref} from "vue";
-import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
-
+import {ref} from "vue";
+import {ElMessage, ElMessageBox} from "element-plus";
+import {TipsBox} from "@/feedback"
 const aa = 'aaa';
 
 function bb() {
     return 'bb';
+}
+// 拨打
+const makeCall = (phone) => {
+    if(phone.length<1){
+        TipsBox('warning', '请输入号码!')
+        return false
+    }
+    if(!phoneCode(phone)){
+        TipsBox('warning', '请输入正确的号码!')
+        return false
+    }
+    console.log('submit', phone)
+    // todo
 }
 // 验证为11位数的手机
 const phoneCode = (phone) => {
@@ -92,4 +105,4 @@ const formatJson2 = (filterVal, jsonData) => {
     return jsonData.map(v => filterVal.map(j => v[j]))
 }
 // 其他方法
-export {aa, bb, allExportExcel, selectExportExcel, replaceStr, phoneCode};
+export {aa, bb, allExportExcel, selectExportExcel, replaceStr, phoneCode, makeCall};
