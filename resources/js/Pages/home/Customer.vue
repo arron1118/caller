@@ -6,9 +6,6 @@
         <div class="border rounded">
              <basic-table
                     :tableTitle="tableTitle"
-                    :selectionType="true"
-                    :pagination="true"
-                    :buttonGroups="true"
                     :where="params"
                     :url="'getHistoryList'"
                     :exportName="exportName"
@@ -64,7 +61,7 @@
 <script>
 import HomeLayout from "@/Layouts/HomeLayout";
 import SearchForm from "@/Pages/home/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/home/components/tables/BasicTable.vue';
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import AddForm from '@/Pages/home/sub/subCustomers/Add.vue'
 import EditForm from '@/Pages/home/sub/subCustomers/Edit.vue'
 import TableOperation from "@/Pages/home/components/tables/TableOperation";

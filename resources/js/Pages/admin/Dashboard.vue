@@ -70,7 +70,10 @@
                             :tableTitle="tableTitle"
                             :where="params"
                             :url="'getHistoryList'"
-                            :specialUsername="specialUsername"
+                            :specialUsername="true"
+                            :buttonGroups="false"
+                            :selectionType="false"
+                            :pagination="false"
                         >
                             <template v-slot:specialUsername="scope">
                                 <el-icon class="pr-1" v-if="scope.scope.$index<=2"><cold-drink color="#E6A23C" /></el-icon>
@@ -93,7 +96,7 @@
 import AdminLayout from "@/Layouts/AdminLayout"
 import { Money, Headset, Phone, CircleCheck, CircleClose, ColdDrink } from '@element-plus/icons-vue'
 import { ref } from "vue";
-import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue'
+import BasicTable from '@/Pages/common/tables/BasicTable.vue'
 import lineEcharts from '@/Pages/admin/components/echarts/lineEcharts.vue'
 import barEcharts from '@/Pages/admin/components/echarts/barEcharts.vue'
 import pieEcharts from '@/Pages/admin/components/echarts/pieEcharts.vue'
@@ -137,9 +140,7 @@ export default {
             page: 1,
             limit: 8,
         })
-        const specialUsername = ref('')
         return {
-            specialUsername,
             tableTitle,
             lineTitle,
             barTitle,

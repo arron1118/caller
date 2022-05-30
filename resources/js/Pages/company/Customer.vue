@@ -7,13 +7,9 @@
             <div class="border rounded">
                 <basic-table
                     :tableTitle="tableTitle"
-                    :selectionType="true"
-                    :pagination="true"
-                    :buttonGroups="true"
                     :where="params"
                     :url="'getHistoryList'"
                     :exportName="exportName"
-                    :showSummary="true"
                     :customerSlot="true"
                     :operates="operates"
                 >
@@ -46,7 +42,7 @@
 <script>
 import CompanyLayout from "@/Layouts/CompanyLayout";
 import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/company/components/tables/BasicTable.vue';
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import AddForm from '@/Pages/company/subCustomers/Add.vue'
 import EditForm from '@/Pages/company/subCustomers/Edit.vue'
 import TableOperation from "@/Pages/company/components/tables/TableOperation";

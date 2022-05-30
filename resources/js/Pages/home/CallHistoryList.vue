@@ -7,9 +7,6 @@
             <basic-table
                 :tableTitle="tableTitle"
                 :operates="operates"
-                :selectionType="true"
-                :pagination="true"
-                :buttonGroups="true"
                 :where="params"
                 :url="'getHistoryList'"
                 :exportName="exportName"
@@ -29,11 +26,10 @@
 <script>
 import HomeLayout from "@/Layouts/HomeLayout";
 import SearchForm from "@/Pages/home/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/home/components/tables/BasicTable.vue';
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import TableOperation from "@/Pages/home/components/tables/TableOperation";
 import ButtonGroup from '@/Pages/home/components/buttons/ButtonGroup.vue';
-import {h, reactive, ref} from "vue"
-import {ElMessage, ElMessageBox} from "element-plus"
+import { ref } from "vue"
 export default {
     name: "CallHistoryList",
     components: {

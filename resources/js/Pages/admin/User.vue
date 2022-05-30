@@ -13,34 +13,25 @@
                         <basic-table
                             :tableTitle="tableTitle"
                             :operates="operates"
-                            :selectionType="true"
-                            :pagination="true"
-                            :buttonGroups="true"
                             :where="params"
                             :url="'getHistoryList'"
                             :exportName="exportName"
                             :testNumbers="testNumbers"
-                            :states="states"
-                            :specialNumber="specialNumber"
-                            :specialUser="specialUser"
+                            :status="status"
+                            :specialUser="true"
                             :loading="loading"
                             :openAccountSlot="true"
                             @getTestNumbers="getTestNumbers"
-                            @getStates="getStates"
+                            @getStatus="getStatus"
                             @dialogUserList="dialogUserList"
                         >
-                            <template v-slot:openAccount="scope">
+                            <template v-slot:openAccountSlot="scope">
                                 <div>
                                     <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
                                     <span class="pl-2 text-gray-400">注：点击'已开通用户'列可查看用户列表内容</span>
                                 </div>
                             </template>
-                            <template v-slot:specialNumber="scope">
-                                <el-icon>
-                                    <phone color="#409EFC"/>
-                                </el-icon>
-                                <span class="">{{ scope.scope.row.called_number }}</span>
-                            </template>
+
                             <template v-slot:specialUser="scope">
                                 <span class="text-brand">{{ scope.scope.row.user_id }}</span>
                             </template>
@@ -49,14 +40,14 @@
                                     :class="scope.scope.row.testNumbers === 0 ? '' : ''"
                                 >{{ scope.scope.row.testNumbers === 0 ? "是" : "否" }}</span>
                             </template>
-                            <template v-slot:states="scope">
+                            <template v-slot:status="scope">
                                 <el-switch
                                     v-model="scope.scope.row.state"
                                     inline-prompt
                                     active-text="正常"
                                     inactive-text="禁用"
                                     active-color="#E6A23C"
-                                    :width="states.width"
+                                    :width="status.width"
                                     @change="changeState($event, scope.scope.row, scope.scope.$index)"
                                 />
 
@@ -90,7 +81,7 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import TableOperation from "@/Pages/admin/components/tables/TableOperation";
 import ButtonGroup from '@/Pages/admin/components/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/admin/subUser/Add.vue'
@@ -209,15 +200,12 @@ export default {
 
             }
         ])
-        const specialNumber = ref('')
-        const specialUser = ref('')
-        const openAccount = ref('')
         const testNumbers = ref({
             testNumber: true,
             label: '测试账号',
             width: 60
         })
-        const states = ref({
+        const status = ref({
             state: true,
             label: '状态',
             width: 60
@@ -254,7 +242,7 @@ export default {
             // todo
 
         }
-        const getStates = (v) => {
+        const getStatus = (v) => {
             console.log('支付方式', v)
             // todo
 
@@ -339,7 +327,6 @@ export default {
         }
         return {
             loading,
-            openAccount,
             exportName,
             userLists,
             dialogUserList,
@@ -353,9 +340,7 @@ export default {
             operates,
             operations,
             testNumbers,
-            states,
-            specialNumber,
-            specialUser,
+            status,
             handleOperation,
             tableTitle,
             editFormDialog,
@@ -363,7 +348,7 @@ export default {
             cancelEditForm,
             receiveEditForm,
             getTreeId,
-            getStates,
+            getStatus,
             getTestNumbers
         }
     }

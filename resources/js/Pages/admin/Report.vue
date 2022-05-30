@@ -7,9 +7,6 @@
             <div class="border rounded">
                 <basic-table
                     :tableTitle="tableTitle"
-                    :selectionType="true"
-                    :pagination="true"
-                    :buttonGroups="true"
                     :where="params"
                     :url="'getHistoryList'"
                     :exportName="exportName"
@@ -24,7 +21,7 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import { ref } from "vue"
 export default {
     name: "Report",

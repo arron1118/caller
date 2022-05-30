@@ -1,36 +1,42 @@
 <template>
     <el-row>
         <el-col>
-            <div class="m-2 text-right border-b pb-2 flex flex-row justify-between" v-if="buttonGroups === true">
+            <div class="m-2 text-right border-b pb-2 flex flex-row justify-between">
                 <div>
-                    <slot name="payingSlot" v-if="payingSlot === true"></slot>
-                    <slot name="customerSlot" v-if="customerSlot === true"></slot>
+                    <slot name="customerSlot" v-if="customerSlot"></slot>
+                    <slot name="openAccountSlot" v-if="openAccountSlot"></slot>
+                    <slot name="payingSlot" v-if="payingSlot"></slot>
+                    <slot name="releaseNews" v-if="releaseNewsSlot"></slot>
+                    <slot name="addNumberSlot" v-if="addNumberSlot"></slot>
                 </div>
-                <div class="flex flex-column justify-center items-center mx-4">
-                    <slot name="batchImport" v-if="batchImportSlot === true"></slot>
-                    <el-button type="text" @click="selectExportExcel(selectExport,tableTitle,exportName)">选择导出
-                    </el-button>
-                    <el-button type="text" @click="allExportExcel(tableData,tableTitle,exportName)">全部导出</el-button>
-                    <el-popover placement="bottom" :width="150" popper-class="h-60 overflow-y-scroll" trigger="click">
-                        <template #reference>
-                            <el-button type="text" style="margin-right: 16px">筛选列</el-button>
-                        </template>
-                        <el-checkbox v-for="item in tableTitle" v-model="item.show" :label="item.label" size="large"/>
-                    </el-popover>
-                    <el-button type="text" plain class="mr-2">
-                        <el-icon>
-                            <refresh/>
-                        </el-icon>
-                    </el-button>
+                <div v-if="buttonGroups">
+                    <div class="flex flex-column justify-center items-center mx-4">
+                        <slot name="batchImport" v-if="batchImportSlot === true"></slot>
+                        <el-button @click="selectExportExcel(selectDate,tableTitle,exportName)">选择导出
+                        </el-button>
+                        <el-button @click="allExportExcel(tableData,tableTitle,exportName)">全部导出</el-button>
+                        <el-popover placement="bottom" :width="150" popper-class="h-60 overflow-y-scroll" trigger="click">
+                            <template #reference>
+                                <el-button style="margin-right: 16px">筛选列</el-button>
+                            </template>
+                            <el-checkbox v-for="item in tableTitle" v-model="item.show" :label="item.label" size="large"/>
+                        </el-popover>
+                        <el-button plain class="mr-2">
+                            <el-icon>
+                                <refresh/>
+                            </el-icon>
+                        </el-button>
+                    </div>
                 </div>
             </div>
+
             <el-table
                 :data="tableData"
                 v-loading="loading"
                 style="width: 100%"
                 ref="multipleTableRef"
-                id="print"
                 row-key="id"
+                v-if="showTable"
                 :sum-text="'合计'"
                 :show-summary="showSummary"
                 @selection-change="handleSelectionChange"
@@ -44,14 +50,14 @@
                     :label="item.label"
                     :sortable="item.sortable === true"
                 >
-                    <template v-slot="scope" v-if="item.value === 'called_number'">
+                    <template v-slot="scope" v-if="item.value === 'axb_number'">
                         <slot name="specialNumber" :scope="scope"></slot>
-                    </template>
-                    <template v-slot="scope" v-if="item.value === 'user_id'">
-                        <slot name="specialUser" :scope="scope"></slot>
                     </template>
                     <template v-slot="scope" v-if="item.value === 'username'">
                         <slot name="specialUsername" :scope="scope"></slot>
+                    </template>
+                    <template v-slot="scope" v-if="item.value === 'user_id'">
+                        <slot name="specialUser" :scope="scope"></slot>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -80,11 +86,6 @@
                         <slot name="status" :scope="scope"></slot>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="operates" :label="operates.label" fixed="right" width="120">
-                    <template v-slot="scope">
-                        <slot name="operates" :scope="scope"></slot>
-                    </template>
-                </el-table-column>
                 <el-table-column
                     :label="payType.label"
                     v-if="payType"
@@ -111,8 +112,26 @@
                         <slot name="payStatus" :scope="scope"></slot>
                     </template>
                 </el-table-column>
+                <el-table-column
+                    :label="testNumbers.label"
+                    v-if="testNumbers"
+                    prop="testNumbers"
+                    :filters="[{ text: '是', value: '0' },{ text: '否', value: '1' }]"
+                    :filter-method="filterTestNumbers"
+                    filter-placement="bottom-end"
+                    column-key="testNumbers"
+                >
+                    <template v-slot="scope">
+                        <slot name="testNumbers" :scope="scope"></slot>
+                    </template>
+                </el-table-column>
+                <el-table-column v-if="operates" :label="operates.label" fixed="right" :width="operatesWidth">
+                    <template v-slot="scope">
+                        <slot name="operates" :scope="scope"></slot>
+                    </template>
+                </el-table-column>
             </el-table>
-            <div class="table-bottom m-4" v-if="pagination === true">
+            <div class="table-bottom m-4" v-if="pagination">
                 <v-pagination
                     :pageSize="params.limit"
                     :total="total"
@@ -135,30 +154,38 @@ export default {
     components: {
         vPagination,Refresh
     },
-    props: [
-        'tableTitle',
-        'operates',
-        'specialNumber',
-        'specialUser',
-        'isTest',
-        'status',
-        'specialUsername',
-        'selectionType',
-        'pagination',
-        'where',
-        'payType',
-        'payStatus',
-        'showSummary',
-        'buttonGroups',
-        'url',
-        'exportName',
-        'payingSlot',
-        'customerSlot',
-        'batchImportSlot',
-    ],
+    props: {
+        //基本
+        tableTitle: {type: Array},
+        operates: {type: Object},
+        selectionType: {type: Boolean, default: true},
+        pagination: {type: Boolean, default: true},
+        where: {type: Object},
+        buttonGroups:{type: Boolean, default: true},
+        url:{type: String},
+        operatesWidth:{type: Number, default: 120},
+        showTable: {type: Boolean, default: true},
+        // 特别操作
+        exportName:{type: String},
+        customerSlot:{type: Boolean},
+        batchImportSlot:{type: Boolean},
+        specialNumber:{type: Boolean},
+        isTest:{type: Object},
+        status:{type: Object},
+        openAccountSlot: {type: Boolean},
+        payingSlot: {type:Boolean},
+        payType:{type:Object},
+        payStatus:{type:Object},
+        showSummary:{type:Boolean},
+        specialUsername:{type:Boolean},
+        testNumbers:{type:Object},
+        specialUser:{type:Boolean},
+        releaseNewsSlot:{type:Boolean},
+        addNumberSlot:{type:Boolean}
+    },
     setup(props, context) {
-        const {allExportExcel, selectExportExcel, replaceStr} = require("@/lqp")
-        const selectExport = ref([])
+        const {allExportExcel, selectExportExcel} = require("@/lqp")
+        const selectDate = ref([])
         const selectTableData = ref([])
         const total = ref(0)
         const loading = ref(false)
@@ -168,7 +195,23 @@ export default {
             limit: 15,
         }, props.where))
         const handleSelectionChange = async (val) => {
-            selectExport.value = val
+            selectDate.value = val
+            context.emit('selectDate', selectDate.value)
+        }
+        const filterStatus = (value, row) => {
+            console.log(value)
+            console.log(row)
+            row.status = value
+            console.log(row.status)
+            context.emit('getPayStatus', row.status)
+
+        }
+        const filterIsTest = (value, row) => {
+            console.log(value)
+            console.log(row)
+            row.is_test = value
+            console.log(row.is_test)
+            context.emit('getIsTest', row.is_test)
         }
         const handleColumn = (row, column, event, cell) => {
             // 隐藏电话号码
@@ -183,37 +226,12 @@ export default {
                 context.emit('dialogUserList', true, row.id)
             }
         }
-        const filterIsTest = (value, row) => {
-            console.log(value)
-            console.log(row)
-            row.is_test = value
-            console.log(row.is_test)
-            context.emit('getIsTest', row.is_test)
-        }
-        const filterWays = (value, row) => {
-            console.log(value)
-            console.log(row)
-            row.status = value
-            console.log(row.status)
-            context.emit('getPayType', row.status)
-
-        }
-        const filterStatus = (value, row) => {
-            console.log(value)
-            console.log(row)
-            row.status = value
-            console.log(row.status)
-            context.emit('getPayStatus', row.status)
-
-        }
         return {
-            selectExport,
-            handleSelectionChange,
             handleColumn,
-            replaceStr,
-            filterWays,
-            filterStatus,
             filterIsTest,
+            filterStatus,
+            selectDate,
+            handleSelectionChange,
             selectExportExcel,
             allExportExcel,
             selectTableData,
@@ -225,6 +243,7 @@ export default {
     },
     mounted() {
         this.getTableData()
+
     },
     watch: {
         // 需要每个页面传参数是因为搜索的时候，除了页码和每页数还有搜索字段要接收。
@@ -236,11 +255,11 @@ export default {
         getTableData () {
             this.loading = true
             post(this.url, this.params).then((res) => {
-                console.log(res)
                 if (res.code === 1) {
                     this.loading = false
                     this.tableData = res.data
                     this.total = res.total
+                    console.log('gbm', this.tableData)
                 }
             })
         }

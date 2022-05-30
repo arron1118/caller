@@ -22,7 +22,7 @@
                     v-if="collapsed"
                     class="trigger"
                     @click="changeCollapsed"
-                                   title="展开"
+                    title="展开"
                 />
                 <font-awesome-icon :icon="['fas', 'outdent']" v-else class="trigger" @click="changeCollapsed" title="收起"/>
                 <a-dropdown class="float-right">

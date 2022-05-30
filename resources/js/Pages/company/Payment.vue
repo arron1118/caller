@@ -6,17 +6,14 @@
         <div class="mb-6 border rounded">
             <basic-table
                 :tableTitle="tableTitle"
-                :selectionType="true"
-                :pagination="true"
-                :buttonGroups="true"
                 :where="params"
                 :url="'getHistoryList'"
                 :exportName="exportName"
                 :payType="payType"
-                :payingSlot="true"
                 @getPayType="getPayType"
                 :payStatus="payStatus"
                 @getPayStatus="getPayStatus"
+                :payingSlot="true"
             >
                 <template v-slot:payingSlot="scope">
                     <div>
@@ -48,7 +45,7 @@
 <script>
 import CompanyLayout from "@/Layouts/CompanyLayout";
 import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/company/components/tables/BasicTable.vue';
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import AddForm from '@/Pages/company/subPay/Add.vue'
 import { ref } from "vue"
 import {ElMessage} from "element-plus";

@@ -7,10 +7,13 @@
                     :tableTitle="tableTitle"
                     :where="params"
                     :url="'getHistoryList'"
-                    :customerSlot="true"
                     :operates="operates"
                     :showTable="showTable"
+                    :customerSlot="true"
                     :specialNumber="true"
+                    :buttonGroups="false"
+                    :pagination="false"
+                    :selectionType="false"
                 >
                     <template v-slot:specialNumber="scope">
                         <span class="text-blue-500">{{ scope.scope.row.axb_number }}</span>
@@ -81,7 +84,7 @@ import HomeLayout from "@/Layouts/HomeLayout"
 import { InfoFilled } from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
 import { ref } from "vue"
-import BasicTable from '@/Pages/home/components/tables/BasicTable.vue'
+import BasicTable from '@/Pages/common/tables/BasicTable.vue'
 import TableOperation from "@/Pages/admin/components/tables/TableOperation";
 import importCustomer from '@/Pages/home/sub/importCustomer.vue'
 

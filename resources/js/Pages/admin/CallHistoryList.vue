@@ -7,9 +7,6 @@
             <basic-table
                 :tableTitle="tableTitle"
                 :operates="operates"
-                :selectionType="true"
-                :pagination="true"
-                :buttonGroups="true"
                 :where="params"
                 :url="'getHistoryList'"
                 :exportName="exportName"
@@ -35,7 +32,7 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import TableOperation from "@/Pages/admin/components/tables/TableOperation";
 import ButtonGroup from '@/Pages/admin/components/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/admin/subUser/Add.vue'
