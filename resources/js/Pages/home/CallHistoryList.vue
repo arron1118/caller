@@ -28,7 +28,7 @@ import HomeLayout from "@/Layouts/HomeLayout";
 import SearchForm from "@/Pages/home/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import TableOperation from "@/Pages/common/tables/TableOperation";
-import ButtonGroup from '@/Pages/home/components/buttons/ButtonGroup.vue';
+import ButtonGroup from '@/Pages/common/buttons/ButtonGroup.vue';
 import { ref } from "vue"
 export default {
     name: "CallHistoryList",

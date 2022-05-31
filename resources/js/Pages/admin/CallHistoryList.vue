@@ -34,7 +34,7 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import TableOperation from "@/Pages/common/tables/TableOperation";
-import ButtonGroup from '@/Pages/admin/components/buttons/ButtonGroup.vue';
+import ButtonGroup from '@/Pages/common/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/admin/sub/subUser/Add.vue'
 import EditForm from '@/Pages/admin/sub/subUser/Edit.vue'
 import {h, reactive, ref} from "vue"

@@ -140,9 +140,9 @@ import CompanyLayout from "@/Layouts/CompanyLayout"
 import { Money, Headset, Phone, CircleCheck, CircleClose, ColdDrink } from '@element-plus/icons-vue'
 import { ref } from "vue";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue'
-import lineEcharts from '@/Pages/company/components/echarts/lineEcharts.vue'
-import barEcharts from '@/Pages/company/components/echarts/barEcharts.vue'
-import pieEcharts from '@/Pages/company/components/echarts/pieEcharts.vue'
+import lineEcharts from '@/Pages/common/echarts/lineEcharts.vue'
+import barEcharts from '@/Pages/common/echarts/barEcharts.vue'
+import pieEcharts from '@/Pages/common/echarts/pieEcharts.vue'
 export default {
     name: "Dashboard",
     components: {

@@ -77,7 +77,7 @@ import CompanyLayout from "@/Layouts/CompanyLayout";
 import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import TableOperation from "@/Pages/common/tables/TableOperation";
-import ButtonGroup from '@/Pages/company/components/buttons/ButtonGroup.vue';
+import ButtonGroup from '@/Pages/common/buttons/ButtonGroup.vue';
 import AddForm from '@/Pages/company/sub/subUser/Add.vue'
 import EditForm from '@/Pages/company/sub/subUser/Edit.vue'
 import UserTable from '@/Pages/company/sub/subUser/List.vue'
