@@ -33,18 +33,17 @@
 import CompanyLayout from "@/Layouts/CompanyLayout";
 import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue';
-import TableOperation from "@/Pages/company/components/tables/TableOperation";
+import TableOperation from "@/Pages/common/tables/TableOperation";
 import ButtonGroup from '@/Pages/company/components/buttons/ButtonGroup.vue';
-import AddForm from '@/Pages/company/subUser/Add.vue'
-import EditForm from '@/Pages/company/subUser/Edit.vue'
-import PrintTable from '@/Pages/company/components/tables/PrintTable.vue'
+import AddForm from '@/Pages/company/sub/subUser/Add.vue'
+import EditForm from '@/Pages/company/sub/subUser/Edit.vue'
 import {h, reactive, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus"
 export default {
     name: "CallHistoryList",
     components: {
         ButtonGroup,
-        CompanyLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable
+        CompanyLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm
     },
     setup() {
         const {replaceStr} = require("@/lqp")

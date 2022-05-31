@@ -85,7 +85,7 @@ import { InfoFilled } from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
 import { ref } from "vue"
 import BasicTable from '@/Pages/common/tables/BasicTable.vue'
-import TableOperation from "@/Pages/admin/components/tables/TableOperation";
+import TableOperation from "@/Pages/common/tables/TableOperation";
 import importCustomer from '@/Pages/home/sub/importCustomer.vue'
 
 export default {

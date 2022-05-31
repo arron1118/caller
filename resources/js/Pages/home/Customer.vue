@@ -64,7 +64,7 @@ import SearchForm from "@/Pages/home/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import AddForm from '@/Pages/home/sub/subCustomers/Add.vue'
 import EditForm from '@/Pages/home/sub/subCustomers/Edit.vue'
-import TableOperation from "@/Pages/home/components/tables/TableOperation";
+import TableOperation from "@/Pages/common/tables/TableOperation";
 import importCustomer from '@/Pages/home/sub/importCustomer.vue'
 import categoryCustomer from '@/Pages/home/sub/categoryCustomer.vue'
 import { ref } from "vue"

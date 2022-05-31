@@ -43,9 +43,9 @@
 import CompanyLayout from "@/Layouts/CompanyLayout";
 import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue';
-import AddForm from '@/Pages/company/subCustomers/Add.vue'
-import EditForm from '@/Pages/company/subCustomers/Edit.vue'
-import TableOperation from "@/Pages/company/components/tables/TableOperation";
+import AddForm from '@/Pages/company/sub/subCustomers/Add.vue'
+import EditForm from '@/Pages/company/sub/subCustomers/Edit.vue'
+import TableOperation from "@/Pages/common/tables/TableOperation";
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 export default {

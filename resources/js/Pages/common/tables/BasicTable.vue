@@ -3,10 +3,13 @@
         <el-col>
             <div class="m-2 text-right border-b pb-2 flex flex-row justify-between">
                 <div>
-                    <slot name="customerSlot" v-if="customerSlot"></slot>
+<!--                    // admin-->
                     <slot name="openAccountSlot" v-if="openAccountSlot"></slot>
-                    <slot name="payingSlot" v-if="payingSlot"></slot>
                     <slot name="releaseNews" v-if="releaseNewsSlot"></slot>
+<!--                    componay-->
+                    <slot name="customerSlot" v-if="customerSlot"></slot>
+                    <slot name="payingSlot" v-if="payingSlot"></slot>
+<!--                  home-->
                     <slot name="addNumberSlot" v-if="addNumberSlot"></slot>
                 </div>
                 <div v-if="buttonGroups">
@@ -91,7 +94,7 @@
                     v-if="payType"
                     prop="payType"
                     :filters="[{ text: '微信', value: '1' },{ text: '支付宝', value: '2' },{ text: '手动充值', value: '3' }]"
-                    :filter-method="filterWays"
+                    :filter-method="filterPayType"
                     filter-placement="bottom-end"
                     column-key="payType"
                 >
@@ -104,7 +107,7 @@
                     v-if="payStatus"
                     prop="payStatus"
                     :filters="[{ text: '已付款', value: '1' },{ text: '未付款', value: '2' },{ text: '已关闭', value: '3' }]"
-                    :filter-method="filterStatus"
+                    :filter-method="filterPayStatus"
                     filter-placement="bottom-end"
                     column-key="payStatus"
                 >
@@ -181,7 +184,7 @@ export default {
         testNumbers:{type:Object},
         specialUser:{type:Boolean},
         releaseNewsSlot:{type:Boolean},
-        addNumberSlot:{type:Boolean}
+        addNumberSlot:{type:Boolean},
     },
     setup(props, context) {
         const {allExportExcel, selectExportExcel} = require("@/lqp")
@@ -198,21 +201,6 @@ export default {
             selectDate.value = val
             context.emit('selectDate', selectDate.value)
         }
-        const filterStatus = (value, row) => {
-            console.log(value)
-            console.log(row)
-            row.status = value
-            console.log(row.status)
-            context.emit('getPayStatus', row.status)
-
-        }
-        const filterIsTest = (value, row) => {
-            console.log(value)
-            console.log(row)
-            row.is_test = value
-            console.log(row.is_test)
-            context.emit('getIsTest', row.is_test)
-        }
         const handleColumn = (row, column, event, cell) => {
             // 隐藏电话号码
             row.isCalled = !row.isCalled
@@ -226,7 +214,47 @@ export default {
                 context.emit('dialogUserList', true, row.id)
             }
         }
+        const filterIsTest = (value, row) => {
+            console.log(value)
+            console.log(row)
+            row.is_test = value
+            console.log(row.is_test)
+            context.emit('getIsTest', row.is_test)
+        }
+        const filterTestNumbers = (value, row) => {
+            console.log(value)
+            console.log(row)
+            row.testNumbers = value
+            console.log(row.testNumbers)
+            context.emit('getTestNumbers', row.testNumbers)
+        }
+        const filterPayType = (value, row) => {
+            console.log(value)
+            console.log(row)
+            row.status = value
+            console.log(row.status)
+            context.emit('getPayWays', row.status)
+
+        }
+        const filterPayStatus = (value, row) => {
+            console.log(value)
+            console.log(row)
+            row.status = value
+            console.log(row.status)
+            // context.emit('getPayStatus', row.status)
+        }
+        const filterStatus = (value, row) => {
+            console.log(value)
+            console.log(row)
+            row.status = value
+            console.log(row.status)
+            context.emit('getPayStatus', row.status)
+
+        }
         return {
+            filterPayStatus,
+            filterPayType,
+            filterTestNumbers,
             handleColumn,
             filterIsTest,
             filterStatus,

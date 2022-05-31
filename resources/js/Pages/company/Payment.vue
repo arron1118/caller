@@ -46,7 +46,7 @@
 import CompanyLayout from "@/Layouts/CompanyLayout";
 import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue';
-import AddForm from '@/Pages/company/subPay/Add.vue'
+import AddForm from '@/Pages/company/sub/subPayment/Add.vue'
 import { ref } from "vue"
 import {ElMessage} from "element-plus";
 export default {

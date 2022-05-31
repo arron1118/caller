@@ -40,9 +40,9 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue';
-import TableOperation from "@/Pages/admin/components/tables/TableOperation";
-import AddForm from '@/Pages/admin/subNumbers/Add.vue'
-import EditForm from '@/Pages/admin/subNumbers/Edit.vue'
+import TableOperation from "@/Pages/common/tables/TableOperation";
+import AddForm from '@/Pages/admin/sub/subNumbers/Add.vue'
+import EditForm from '@/Pages/admin/sub/subNumbers/Edit.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 export default {

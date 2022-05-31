@@ -50,17 +50,16 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue';
-import TableOperation from "@/Pages/admin/components/tables/TableOperation";
+import TableOperation from "@/Pages/common/tables/TableOperation";
 import ButtonGroup from '@/Pages/admin/components/buttons/ButtonGroup.vue';
-import AddForm from '@/Pages/admin/subNews/Add.vue'
-import EditForm from '@/Pages/admin/subNews/Edit.vue'
-import PrintTable from '@/Pages/admin/components/tables/PrintTable.vue'
+import AddForm from '@/Pages/admin/sub/subNews/Add.vue'
+import EditForm from '@/Pages/admin/sub/subNews/Edit.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 export default {
     name: "News",
     components: {
-        ButtonGroup,AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable
+        ButtonGroup,AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm
     },
     setup: function () {
         // 搜索框

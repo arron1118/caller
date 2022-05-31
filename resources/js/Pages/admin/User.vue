@@ -82,12 +82,11 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
 import BasicTable from '@/Pages/common/tables/BasicTable.vue';
-import TableOperation from "@/Pages/admin/components/tables/TableOperation";
+import TableOperation from "@/Pages/common/tables/TableOperation";
 import ButtonGroup from '@/Pages/admin/components/buttons/ButtonGroup.vue';
-import AddForm from '@/Pages/admin/subUser/Add.vue'
-import EditForm from '@/Pages/admin/subUser/Edit.vue'
-import UserTable from '@/Pages/admin/subUser/List.vue'
-import PrintTable from '@/Pages/admin/components/tables/PrintTable.vue'
+import AddForm from '@/Pages/admin/sub/subUser/Add.vue'
+import EditForm from '@/Pages/admin/sub/subUser/Edit.vue'
+import UserTable from '@/Pages/admin/sub/subUser/List.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Phone} from '@element-plus/icons-vue'
@@ -96,7 +95,7 @@ export default {
     name: "User",
     components: {
         ButtonGroup,Phone,
-        AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable, UserTable, VAsides
+        AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, UserTable, VAsides
     },
     setup() {
         const role = ref('user')
