@@ -1,9 +1,8 @@
 <template>
     <admin-layout title="Dashboard">
-        <div class="mb-6 bg-white rounded shadow pt-4">
+        <div class="mb-6 bg-white rounded border pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
-        <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
                 <basic-table
                     :tableTitle="tableTitle"
@@ -35,8 +34,7 @@
                     </template>
                                                     </basic-table>
                                                 </div>
-                                            </div>
-                                        </admin-layout>
+    </admin-layout>
                                         <!--        弹框-->
     <el-dialog v-model="addFormDialog" title="发布资讯">
         <add-form @clickAdd="receiveAddForm" @clickCancelAdd="cancelAddForm" :loading="loading"></add-form>

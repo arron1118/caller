@@ -1,9 +1,8 @@
 <template>
     <AdminLayout>
-        <div class="mb-6 bg-white rounded shadow pt-4">
+        <div class="mb-6 bg-white rounded border pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
-        <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
                 <basic-table
                     :tableTitle="tableTitle"
@@ -14,7 +13,6 @@
                 >
                 </basic-table>
             </div>
-        </div>
     </AdminLayout>
 </template>
 

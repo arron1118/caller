@@ -2,21 +2,26 @@
     <div>
         <basic-tabs :tabsList="tabsList" :activeName="activeName" @getTabs="getTab">
             <div class="mt-4" v-show="activeName === 'first'">
-                <el-form class="px-6" ref="addFormRef" :model="ruleForm2" :label-position="labelPosition">
+                <el-form class="px-6"
+                         ref="addFormRef"
+                         :model="ruleForm"
+                         :label-position="labelPosition"
+                         :rules="rules"
+                >
                     <el-form-item label="账号" label-width="140px" prop="number">
-                        <el-input v-model.trim="ruleForm2.number" autocomplete="off" />
+                        <el-input v-model.trim="ruleForm.number" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="密码" label-width="140px" prop="password">
-                        <el-input v-model.trim="ruleForm2.password" type="password" autocomplete="off" />
+                        <el-input v-model.trim="ruleForm.password" type="password" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="公司名称" label-width="140px" prop="name">
-                        <el-input v-model.trim="ruleForm2.name" autocomplete="off" />
+                        <el-input v-model.trim="ruleForm.name" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="跟进人" label-width="140px" prop="name">
-                        <el-input v-model.trim="ruleForm2.sale" autocomplete="off" />
+                        <el-input v-model.trim="ruleForm.sale" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="小号" label-width="140px" prop="minNumber">
-                        <el-select v-model="ruleForm2.minNumber" placeholder="请选择名下小号">
+                        <el-select v-model="ruleForm.minNumber" placeholder="请选择名下小号">
                             <el-option label="Zone No.1" value="shanghai" />
                             <el-option label="Zone No.2" value="beijing" />
                         </el-select>
@@ -25,7 +30,7 @@
                         <div>
                             <div class="block">
                                 <el-input-number
-                                    v-model="ruleForm2.sit"
+                                    v-model="ruleForm.sit"
                                     :min="1"
                                     controls-position="right"
                                     @change="handleChangeSit"
@@ -38,7 +43,7 @@
                         <div>
                             <div class="block">
                                 <el-input-number
-                                    v-model="ruleForm2.limitNumber"
+                                    v-model="ruleForm.limitNumber"
                                     :min="0"
                                     controls-position="right"
                                     @change="handleChangeLimitNumber"
@@ -51,7 +56,7 @@
                         <div>
                             <div class="block">
                                 <el-input-number
-                                    v-model="ruleForm2.rate"
+                                    v-model="ruleForm.rate"
                                     :min="0.15"
                                     controls-position="right"
                                     @change="handleChangeRate"
@@ -62,7 +67,7 @@
                     </el-form-item>
                     <el-form-item label="测试账号" label-width="140px" prop="testNumber">
                         <el-switch
-                            v-model="ruleForm2.testNumber"
+                            v-model="ruleForm.testNumber"
                             inline-prompt
                             active-text="是"
                             inactive-text="否"
@@ -70,11 +75,11 @@
                             @change="changeSwitch"
                         />
                     </el-form-item>
-                    <el-form-item label="结束时间" label-width="140px" prop="state" v-show="ruleForm2.testNumber">
+                    <el-form-item label="结束时间" label-width="140px" prop="state" v-show="ruleForm.testNumber">
                         <div>
                             <div class="block">
                                 <el-date-picker
-                                    v-model="ruleForm2.dataTime"
+                                    v-model="ruleForm.dataTime"
                                     type="datetime"
                                     placeholder=""
                                     @change="handleChangeDateTime"
@@ -88,7 +93,7 @@
                         <div>
                             <div class="block">
                                 <el-switch
-                                    v-model="ruleForm2.state"
+                                    v-model="ruleForm.state"
                                     inline-prompt
                                     active-text="启用"
                                     inactive-text="禁止"
@@ -101,21 +106,21 @@
                 </el-form>
             </div>
             <div class="mt-4" v-show="activeName === 'second'">
-                <el-form class="px-6" ref="addFormRef" :model="ruleForm2" :label-position="labelPosition">
+                <el-form class="px-6" ref="addFormRef" :model="ruleForm" :label-position="labelPosition">
                     <el-form-item label="公司名称" label-width="140px" prop="company">
-                        <el-input v-model.trim="ruleForm2.company" autocomplete="off" />
+                        <el-input v-model.trim="ruleForm.company" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="联系人" label-width="140px" prop="contacts">
-                        <el-input v-model.trim="ruleForm2.contacts" autocomplete="off" />
+                        <el-input v-model.trim="ruleForm.contacts" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="联系方式" label-width="140px" prop="ways">
-                        <el-input v-model.trim="ruleForm2.ways" autocomplete="off" />
+                        <el-input v-model.trim="ruleForm.ways" autocomplete="off" />
                     </el-form-item>
                     <el-form-item label="合同时间" label-width="140px" prop="contractTime">
                         <div>
                             <div class="block">
                                 <el-date-picker
-                                    v-model="ruleForm2.contractTime"
+                                    v-model="ruleForm.contractTime"
                                     type="datetimerange"
                                     placeholder=""
                                     @change="handleChangeContractTime"
@@ -126,7 +131,7 @@
                     </el-form-item>
                     <el-form-item label="合同" label-width="140px" prop="contractImage">
                         <image-upload></image-upload>
-<!--                        <el-input v-model.trim="ruleForm2.contractImage" autocomplete="off" />-->
+<!--                        <el-input v-model.trim="ruleForm.contractImage" autocomplete="off" />-->
                     </el-form-item>
                 </el-form>
             </div>
@@ -152,6 +157,7 @@ export default {
     setup(props, context){
         // tabs
         const activeName = ref('first')
+        const { checkNumber, checkPassword, checkCompany } = require("@/validator")
         const tabsList = ref([
             {label: '账户信息', name: 'first'},
             {label: '客户信息', name: 'second'},
@@ -166,25 +172,25 @@ export default {
         const loading = ref(props.loading)
         const changeSwitch = (val) =>{
             if(val === false){
-                ruleForm2.dataTime = ''
+                ruleForm.dataTime = ''
             }
         }
         const handleChangeSit = (value) => {
-            ruleForm2.sit = value
+            ruleForm.sit = value
         }
         const handleChangeLimitNumber = (value) => {
-            ruleForm2.limitNumber = value
+            ruleForm.limitNumber = value
         }
         const handleChangeRate = (value) => {
-            ruleForm2.rate = value
+            ruleForm.rate = value
         }
         const handleChangeDateTime = (value) => {
-            ruleForm2.dataTime = value
+            ruleForm.dataTime = value
         }
         const handleChangeContractTime = (value) => {
-            ruleForm2.contractTime = value
+            ruleForm.contractTime = value
         }
-        const ruleForm2 = reactive({
+        const ruleForm = reactive({
             number: '',
             password: '',
             sit: 1,
@@ -202,77 +208,99 @@ export default {
             contractTime:'',
             contractImage:'',
         })
+        const rules = reactive({
+            number:[{
+                validator: checkNumber,
+                required: true,
+                trigger: 'blur'
+            }],
+            password: [{
+                validator: checkPassword,
+                required: true,
+                trigger: 'blur'
+            }],
+            company: [{
+                validator: checkCompany,
+                required: true,
+                trigger: 'blur'
+            }]
+        })
         const submitAdd = async () => {
             loading.value = true
-            const form = unref(addFormRef)
-            if (!form) return
-            try {
-                await form.validate()
-                const {
-                    number,
-                    password,
-                    sit,
-                    limitNumber,
-                    minNumber,
-                    rate,
-                    name,
-                    testNumber,
-                    state,
-                    dataTime,
-                    sale,
-                    company,
-                    contacts,
-                    ways,
-                    contractTime,
-                    contractImage,
-                } = ruleForm2
-                const params = {
-                    number: number,
-                    password: password,
-                    sit: sit,
-                    limitNumber: limitNumber,
-                    minNumber: minNumber,
-                    rate: rate,
-                    name: name,
-                    testNumber: testNumber,
-                    state: state,
-                    dataTime: dataTime,
-                    sale:sale,
-                    company:company,
-                    contacts:contacts,
-                    ways:ways,
-                    contractTime:contractTime,
-                    contractImage:contractImage,
-                }
-                console.log('开通参数', params, loading.value)
-                context.emit('clickAdd', params, loading.value)
-                // todo
-            } catch (error) {
-            }
-        }
+            const formEl = unref(addFormRef)
+            if (!formEl) return
+            let fields = ["number", "password","company"]
+            formEl.validateField(fields, (valid)=>{
+                    if(valid) {
+                        try {
+                            const {
+                                number,
+                                password,
+                                sit,
+                                limitNumber,
+                                minNumber,
+                                rate,
+                                name,
+                                testNumber,
+                                state,
+                                dataTime,
+                                sale,
+                                company,
+                                contacts,
+                                ways,
+                                contractTime,
+                                contractImage,
+                            } = ruleForm
+                            const params = {
+                                number: number,
+                                password: password,
+                                sit: sit,
+                                limitNumber: limitNumber,
+                                minNumber: minNumber,
+                                rate: rate,
+                                name: name,
+                                testNumber: testNumber,
+                                state: state,
+                                dataTime: dataTime,
+                                sale: sale,
+                                company: company,
+                                contacts: contacts,
+                                ways: ways,
+                                contractTime: contractTime,
+                                contractImage: contractImage,
+                            }
+                            console.log('开通参数', params, loading.value)
+                            context.emit('clickAdd', params, loading.value)
+                            // todo
+                        } catch (error) {
+                        }
+                    }
+        })}
         const cancelAdd = async () => {
             context.emit('clickCancelAdd', false)
         }
         return{
-            getTab,
-            activeName,
-            tabsList,
-            changeSwitch,
-            width,
-            handleChangeSit,
-            handleChangeLimitNumber,
-            handleChangeRate,
-            addFormRef,
-            ruleForm2,
-            loading,
-            submitAdd,
-            cancelAdd,
-            handleChangeDateTime,
-            handleChangeContractTime,
-            labelPosition
-        }
-    },
-    props:['loading'],
+                rules,
+                getTab,
+                activeName,
+                tabsList,
+                changeSwitch,
+                width,
+                handleChangeSit,
+                handleChangeLimitNumber,
+                handleChangeRate,
+                addFormRef,
+                ruleForm,
+                loading,
+                submitAdd,
+                cancelAdd,
+                handleChangeDateTime,
+                handleChangeContractTime,
+                labelPosition
+            }
+
+},
+    props:['loading']
 }
 </script>
 

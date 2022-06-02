@@ -1,9 +1,8 @@
 <template>
     <admin-layout title="Dashboard">
-        <div class="mb-6 bg-white rounded shadow pt-4">
+        <div class="mb-6 bg-white rounded pt-4 border">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
-        <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
                 <el-row class="relative">
                     <el-col :span="2" class="border-r">
@@ -63,7 +62,6 @@
                     </el-col>
                 </el-row>
             </div>
-        </div>
     </admin-layout>
     <!--        弹框-->
     <el-dialog v-model="addFormDialog" title="开通账号">

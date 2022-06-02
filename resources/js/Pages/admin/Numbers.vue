@@ -1,6 +1,5 @@
 <template>
     <admin-layout title="Dashboard">
-        <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
                 <basic-table
                     :tableTitle="tableTitle"
@@ -26,7 +25,6 @@
                     </template>
                 </basic-table>
             </div>
-        </div>
     </admin-layout>
     <!--        弹框-->
     <el-dialog v-model="addFormDialog" title="添加号码">
