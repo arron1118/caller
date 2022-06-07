@@ -1,15 +1,12 @@
 <template>
     <admin-layout title="Dashboard">
-        <div class="mb-6 bg-white rounded shadow pt-4">
+        <div class="mb-6 bg-white rounded border pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
         <div class="border rounded">
             <basic-table
                 :tableTitle="tableTitle"
                 :operates="operates"
-                :selectionType="true"
-                :pagination="true"
-                :buttonGroups="true"
                 :where="params"
                 :url="'getHistoryList'"
                 :exportName="exportName"
@@ -35,22 +32,20 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
-import TableOperation from "@/Pages/admin/components/tables/TableOperation";
-import ButtonGroup from '@/Pages/admin/components/buttons/ButtonGroup.vue';
-import AddForm from '@/Pages/admin/subUser/Add.vue'
-import EditForm from '@/Pages/admin/subUser/Edit.vue'
-import PrintTable from '@/Pages/admin/components/tables/PrintTable.vue'
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
+import TableOperation from "@/Pages/common/tables/TableOperation";
+import ButtonGroup from '@/Pages/common/buttons/ButtonGroup.vue';
+import AddForm from '@/Pages/admin/sub/subUser/Add.vue'
+import EditForm from '@/Pages/admin/sub/subUser/Edit.vue'
 import {h, reactive, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus"
 export default {
     name: "CallHistoryList",
     components: {
         ButtonGroup,
-        AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable
+        AdminLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm
     },
     setup() {
-        const {replaceStr} = require("@/lqp")
         const role = ref('callHistory')
         const params = ref({
             limit: 30,
@@ -222,7 +217,6 @@ export default {
         }
         return {
             exportName,
-            replaceStr,
             search,
             role,
             changeState,

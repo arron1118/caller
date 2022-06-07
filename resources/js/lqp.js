@@ -1,14 +1,26 @@
 import {ref} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
-
+import {TipsBox} from "@/feedback"
 const aa = 'aaa';
 
 function bb() {
     return 'bb';
 }
-
+// 拨打
+const makeCall = (phone) => {
+    if(phone.length<1){
+        TipsBox('warning', '请输入号码!')
+        return false
+    }
+    if(!phoneCode(phone)){
+        TipsBox('warning', '请输入正确的号码!')
+        return false
+    }
+    console.log('submit', phone)
+    // todo
+}
 // 验证为11位数的手机
-const code = (phone) => {
+const phoneCode = (phone) => {
     let telVerify = /^1[3456789]{1}\d{9}$/;
     //验证是验证手机号码为11位，且以1开头。
     // /^1[3456789]{1}\d{9}$/;
@@ -93,4 +105,4 @@ const formatJson2 = (filterVal, jsonData) => {
     return jsonData.map(v => filterVal.map(j => v[j]))
 }
 // 其他方法
-export {aa, bb, allExportExcel, selectExportExcel, replaceStr, code};
+export {aa, bb, allExportExcel, selectExportExcel, replaceStr, phoneCode, makeCall};

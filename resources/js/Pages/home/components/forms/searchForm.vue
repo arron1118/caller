@@ -37,6 +37,12 @@
                 />
             </el-form-item>
             <!--            客户管理-->
+            <el-form-item label="类型" label-width="" prop="cate" v-if="role==='customer'">
+                <el-select v-model="searchRuleForm.cate" placeholder="请选择类型" @change="change10">
+                    <el-option label="Zone No.1" value="shanghai" />
+                    <el-option label="Zone No.2" value="beijing" />
+                </el-select>
+            </el-form-item>
             <el-form-item label="客户名称" class="mr-4" prop="title" v-if="role==='customer'">
                 <el-input v-model.trim="searchRuleForm.title" placeholder="输入客户名称" @blur="change9(searchRuleForm.title)"/>
             </el-form-item>
@@ -64,6 +70,7 @@ export default {
         const searchFormRef = ref(null)
         const loading = ref(props.loading)
         const searchRuleForm = ref({
+            cate: '',
             startDate: '',
             endDate: '',
             operate: '',
@@ -136,6 +143,9 @@ export default {
         },
         change9 (v) {
             this.searchRuleForm = Object.assign({}, this.searchRuleForm, {title: v})
+        },
+        change10 (v) {
+            this.searchRuleForm = Object.assign({}, this.searchRuleForm, {cate: v})
         }
     }
 }

@@ -1,23 +1,21 @@
 <template>
     <admin-layout title="Dashboard">
-        <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
-                <div class="m-2 flex flex-row justify-between border-b pb-2">
-                    <el-button type="primary" @click="addFormDialog = true">添加</el-button>
-                    <div class="flex flex-column justify-center items-center mx-4">
-                    </div>
-                </div>
                 <basic-table
                     :tableTitle="tableTitle"
                     :operates="operates"
-                    :selectionType="true"
-                    :pagination="true"
-                    :buttonGroups="true"
                     :where="params"
                     :url="'getHistoryList'"
                     :exportName="exportName"
                     :loading="loading"
+                    :addNumberSlot="true"
                 >
+                    <template v-slot:addNumberSlot="scope">
+                        <div>
+                            <el-button type="primary" @click="addFormDialog = true">添加</el-button>
+                        </div>
+                    </template>
+
                     <template v-slot:operates="scope">
                         <table-operation
                             :operations="operations"
@@ -27,7 +25,6 @@
                     </template>
                 </basic-table>
             </div>
-        </div>
     </admin-layout>
     <!--        弹框-->
     <el-dialog v-model="addFormDialog" title="添加号码">
@@ -40,17 +37,16 @@
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
-import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
-import TableOperation from "@/Pages/admin/components/tables/TableOperation";
-import ButtonGroup from '@/Pages/admin/components/buttons/ButtonGroup.vue';
-import AddForm from '@/Pages/admin/subNumbers/Add.vue'
-import EditForm from '@/Pages/admin/subNumbers/Edit.vue'
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
+import TableOperation from "@/Pages/common/tables/TableOperation";
+import AddForm from '@/Pages/admin/sub/subNumbers/Add.vue'
+import EditForm from '@/Pages/admin/sub/subNumbers/Edit.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 export default {
     name: "Numbers",
     components: {
-        ButtonGroup,AdminLayout,BasicTable,TableOperation,EditForm, AddForm
+        AdminLayout,BasicTable,TableOperation,EditForm, AddForm
     },
     setup(){
         const role = ref('user')

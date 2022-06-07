@@ -1,15 +1,11 @@
 <template>
     <AdminLayout>
-        <div class="mb-6 bg-white rounded shadow pt-4">
+        <div class="mb-6 bg-white rounded border pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
-        <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
                 <basic-table
                     :tableTitle="tableTitle"
-                    :selectionType="true"
-                    :pagination="true"
-                    :buttonGroups="true"
                     :where="params"
                     :url="'getHistoryList'"
                     :exportName="exportName"
@@ -17,14 +13,13 @@
                 >
                 </basic-table>
             </div>
-        </div>
     </AdminLayout>
 </template>
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import { ref } from "vue"
 export default {
     name: "Report",

@@ -1,26 +1,12 @@
 <template>
     <admin-layout title="Dashboard">
-        <div class="mb-6 bg-white rounded shadow pt-4">
+        <div class="mb-6 bg-white rounded border pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
-        <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
-<!--                <div class="m-2 flex flex-row justify-between border-b pb-2">-->
-<!--                    <el-button type="primary" @click="addFormDialog = true">发布</el-button>-->
-<!--                    <div class="flex flex-column justify-center items-center mx-4">-->
-<!--                        <el-upload action="" :auto-upload="false" :multiple="false" :show-file-list="false" :on-change="uploadXlsx" :file-list="xlsxList">-->
-<!--                            <el-button type="text">批量导入</el-button>-->
-<!--                        </el-upload>-->
-<!--                        <el-button type="text" @click="selectExportExcel(selectTableData,tableTitle,'资讯报表')">选择导出</el-button>-->
-<!--                        <el-button type="text" @click="allExportExcel(tableData,tableTitle,'资讯报表')">全部导出</el-button>-->
-<!--                    </div>-->
-<!--                </div>-->
                 <basic-table
                     :tableTitle="tableTitle"
                     :operates="operates"
-                    :selectionType="true"
-                    :pagination="true"
-                    :buttonGroups="true"
                     :where="params"
                     :url="'getHistoryList'"
                     :exportName="exportName"
@@ -48,8 +34,7 @@
                     </template>
                                                     </basic-table>
                                                 </div>
-                                            </div>
-                                        </admin-layout>
+    </admin-layout>
                                         <!--        弹框-->
     <el-dialog v-model="addFormDialog" title="发布资讯">
         <add-form @clickAdd="receiveAddForm" @clickCancelAdd="cancelAddForm" :loading="loading"></add-form>
@@ -62,18 +47,17 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
-import TableOperation from "@/Pages/admin/components/tables/TableOperation";
-import ButtonGroup from '@/Pages/admin/components/buttons/ButtonGroup.vue';
-import AddForm from '@/Pages/admin/subNews/Add.vue'
-import EditForm from '@/Pages/admin/subNews/Edit.vue'
-import PrintTable from '@/Pages/admin/components/tables/PrintTable.vue'
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
+import TableOperation from "@/Pages/common/tables/TableOperation";
+import ButtonGroup from '@/Pages/common/buttons/ButtonGroup.vue';
+import AddForm from '@/Pages/admin/sub/subNews/Add.vue'
+import EditForm from '@/Pages/admin/sub/subNews/Edit.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
 export default {
     name: "News",
     components: {
-        ButtonGroup,AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm,PrintTable
+        ButtonGroup,AdminLayout, SearchForm,BasicTable,TableOperation,EditForm, AddForm
     },
     setup: function () {
         // 搜索框

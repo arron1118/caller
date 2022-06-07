@@ -1,9 +1,8 @@
 <template>
     <AdminLayout>
-        <div class="mb-6 bg-white rounded shadow pt-4">
+        <div class="mb-6 bg-white rounded border pt-4">
             <search-form :role="role" @clickSearch="search"></search-form>
         </div>
-        <div class="mb-6 bg-white rounded shadow p-4">
             <div class="border rounded">
                 <basic-table
                     :tableTitle="tableTitle"
@@ -13,33 +12,33 @@
                     :where="params"
                     :url="'getHistoryList'"
                     :exportName="exportName"
-                    :payWays="payWays"
-                    @getPayWay="getPayWays"
+                    :payType="payType"
+                    @getPayType="getPayType"
                     :payStatus="payStatus"
                     @getPayStatus="getPayStatus"
                 >
-                    <template v-slot:payWays="scope">
-                        <el-tag
-                            :type="scope.scope.row.status === 0 ? '' : 'success'"
-                            disable-transitions
-                        ><font-awesome-icon :icon="scope.scope.row.status === 0 ? ['fas', 'pen-to-square'] : ['fas', 'trash-can']"></font-awesome-icon></el-tag>
+                    <template v-slot:payType="scope">
+                        <el-tag :type="scope.scope.row.status === 1 ? '' : scope.scope.row.status === 2? '' : 'success'" disable-transitions>
+                            <font-awesome-icon :icon="scope.scope.row.status === 1 ? ['fas', 'pen-to-square']:scope.scope.row.status === 2?['fas', 'pen-to-square'] : ['fas', 'trash-can']" />
+                        </el-tag>
                     </template>
                     <template v-slot:payStatus="scope">
                         <el-tag
-                            :type="scope.scope.row.status === 0 ? '' : scope.scope.row.status === 1? 'danger' : 'success'"
+                            :type="scope.scope.row.status === 1 ? 'success' : scope.scope.row.status === 2? 'info' : 'danger'"
                             disable-transitions
-                        >{{ scope.scope.row.status === 0 ? "已付款" : scope.scope.row.status === 1? "未付款" : ""}}</el-tag>
+                        >
+                            {{ scope.scope.row.status === 1 ? "已付款" : scope.scope.row.status === 2? "未付款" : "已关闭"}}
+                        </el-tag>
                     </template>
                 </basic-table>
             </div>
-        </div>
     </AdminLayout>
 </template>
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout";
 import SearchForm from "@/Pages/admin/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/admin/components/tables/BasicTable.vue';
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
 import { ref } from "vue"
 export default {
     name: "Payment",
@@ -48,7 +47,7 @@ export default {
     },
     setup(){
         const role = ref('payment')
-        const payWays = ref({
+        const payType = ref({
             label: '支付方式',
             width: 60
         })
@@ -131,7 +130,7 @@ export default {
             console.log('子传父参数', f)
             params.value = Object.assign({}, params.value, f)
         }
-        const getPayWays = (v) => {
+        const getPayType = (v) => {
             console.log('支付方式',v)
             // todo
         }
@@ -140,7 +139,16 @@ export default {
             // todo
         }
         return{
-            role,search,tableTitle,params,payWays,getPayWays,payStatus,getPayStatus,payWayIcon,exportName
+            role,
+            search,
+            tableTitle,
+            params,
+            payType,
+            getPayType,
+            payStatus,
+            getPayStatus,
+            payWayIcon,
+            exportName
         }
     }
 }

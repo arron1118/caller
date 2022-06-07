@@ -7,9 +7,6 @@
             <basic-table
                 :tableTitle="tableTitle"
                 :operates="operates"
-                :selectionType="true"
-                :pagination="true"
-                :buttonGroups="true"
                 :where="params"
                 :url="'getHistoryList'"
                 :exportName="exportName"
@@ -29,17 +26,17 @@
 <script>
 import HomeLayout from "@/Layouts/HomeLayout";
 import SearchForm from "@/Pages/home/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/home/components/tables/BasicTable.vue';
-import TableOperation from "@/Pages/home/components/tables/TableOperation";
-import ButtonGroup from '@/Pages/home/components/buttons/ButtonGroup.vue';
-import {h, reactive, ref} from "vue"
-import {ElMessage, ElMessageBox} from "element-plus"
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
+import TableOperation from "@/Pages/common/tables/TableOperation";
+import ButtonGroup from '@/Pages/common/buttons/ButtonGroup.vue';
+import { ref } from "vue"
 export default {
     name: "CallHistoryList",
     components: {
         HomeLayout, ButtonGroup, SearchForm, BasicTable, TableOperation
     },
     setup() {
+        const { QueryBox } = require("@/feedback")
         const role = ref('callHistory')
         const params = ref({
             limit: 30,
@@ -104,39 +101,14 @@ export default {
             {
                 types: 'del',
                 type: 'danger',
-                // icon: 'Delete',
                 icon: ['far', 'trash-can'],
                 title: '删除'
-
             }
         ])
-        const editData = ref({})
-        const addFormDialog = ref(false)
         const exportName = ref('通话记录报表')
         const search = (f) => {
             console.log('子传父参数', f)
             params.value = Object.assign({}, params.value, f)
-        }
-        const receiveAddForm = (e, r) => {
-            console.log('zhe', e)
-            console.log('zhe', r)
-            loading.value = r
-            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
-            setTimeout(function () {
-                loading.value = false
-                addFormDialog.value = false
-                ElMessage({
-                    type: 'success',
-                    // message: `action: ${action}`,
-                    message: '已提交'
-                })
-                // 重载表格数据
-
-            }, 3000);
-
-        }
-        const cancelAddForm = (e) => {
-            addFormDialog.value = e
         }
         const handleOperation = (op, row) => {
             if (op.types === 'edit') {
@@ -145,85 +117,18 @@ export default {
 
             } else if (op.types === 'del') {
                 console.log(row.value.id)
-                ElMessageBox({
-                    title: '确认删除此id=' + row.value.id + '数据吗？',
-                    message: h('p', null, [
-                        h('span', null, '此数据将会被'),
-                        h('i', {style: 'color: #F56C6C'}, '删除'),
-                    ]),
-                    showCancelButton: true,
-                    confirmButtonText: '删除',
-                    cancelButtonText: '取消',
-                    beforeClose: (action, instance, done) => {
-                        if (action === 'confirm') {
-                            let params = row.value.id
-                            console.log('删除项id', params)
-                            instance.confirmButtonLoading = true
-                            instance.confirmButtonText = 'Loading...'
-                            setTimeout(() => {
-                                done()
-                                setTimeout(() => {
-                                    instance.confirmButtonLoading = false
-                                }, 300)
-                            }, 3000)
-                            // todo
-                        } else {
-                            done()
-                        }
-                    },
-                }).then(() => {
-                    ElMessage({
-                        type: 'success',
-                        message: '已删除'
-                    })
-                })
+                QueryBox('提示', '确定要删除数据吗？', 'error', '已删除')
             }
         }
-        const receiveEditForm = (e, r) => {
-            console.log('参数', e)
-            console.log('zhe', r)
-            loading.value = r
-            // todo
-            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
-            setTimeout(function () {
-                loading.value = false
-                editFormDialog.value = false
-                ElMessage({
-                    type: 'success',
-                    // message: `action: ${action}`,
-                    message: '已提交'
-                })
-                // 重载表格数据
 
-            }, 3000);
-
-        }
-        const cancelEditForm = (e) => {
-            editFormDialog.value = e
-        }
-        const changeState = (e, row, index) => {
-            // e返回状态，row当前行数据， index下标
-            console.log('zhe2', e)
-            console.log(row)
-            console.log(index)
-            //todo
-        }
         return {
             exportName,
             search,
             role,
-            changeState,
-            addFormDialog,
-            receiveAddForm,
-            cancelAddForm,
             operates,
             operations,
             handleOperation,
             tableTitle,
-            editFormDialog,
-            editData,
-            cancelEditForm,
-            receiveEditForm,
             params,
         }
     }

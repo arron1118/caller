@@ -7,16 +7,22 @@
                     :tableTitle="tableTitle"
                     :where="params"
                     :url="'getHistoryList'"
-                    :customerSlot="true"
                     :operates="operates"
+                    :showTable="showTable"
+                    :customerSlot="true"
+                    :specialNumber="true"
+                    :buttonGroups="false"
+                    :pagination="false"
+                    :selectionType="false"
                 >
+                    <template v-slot:specialNumber="scope">
+                        <span class="text-blue-500">{{ scope.scope.row.axb_number }}</span>
+                    </template>
                     <template v-slot:customerSlot="scope">
                         <el-button-group>
-                            <el-button type="primary" @click="addFormDialog = true">导入客户</el-button>
-                            <el-button type="primary" plain @click="addFormDialog = true">上次导入</el-button>
-                            <el-button type="danger" plain @click="addFormDialog = true">清空列表</el-button>
-                            <el-button type="success" plain @click="addFormDialog = true">下载模板</el-button>
-                            <el-button type="info" plain @click="addFormDialog = true">导入说明</el-button>
+                            <el-button type="primary" @click="importDialog = true">导入客户</el-button>
+                            <el-button type="primary" plain @click="showTable = true">上次导入</el-button>
+                            <el-button type="danger" plain @click="showTable = false">清除列表</el-button>
                         </el-button-group>
                     </template>
                     <template v-slot:operates="scope">
@@ -28,16 +34,20 @@
                     </template>
                 </basic-table>
             </div>
-            <div class="bg-white rounded shadow-lg text-center p-4">
-                <div class="text-right mb-6">
-                    <el-tooltip
-                        class="box-item"
-                        effect="dark"
-                        content="点击查看注意事项"
-                        placement="top-start"
-                    >
-                    <el-icon :size="18" @click="infosDialog"><InfoFilled /></el-icon>
-                    </el-tooltip>
+            <div class="bg-white rounded shadow-lg p-4">
+                <div class="text-lg font-semibold text-gray-600 mb-4 ml-2 flex flex-row justify-between">
+                    <div>拨打面板</div>
+                   <div>
+                       <el-tooltip
+                           class="box-item"
+                           effect="dark"
+                           content="点击查看注意事项"
+                           placement="top-start"
+                           :visible="visible"
+                       >
+                           <el-icon :size="18" @click="infosDialog"><InfoFilled /></el-icon>
+                       </el-tooltip>
+                   </div>
                 </div>
                <div>
                    <el-input class="h-20 mb-4 text-center"
@@ -45,6 +55,7 @@
                              maxlength="11"
                              placeholder="请输入号码"
                              clearable
+                             @keyup.enter.native="makeCall(text)"
                    ></el-input>
                </div>
                 <div class=" grid grid-cols-3">
@@ -53,27 +64,38 @@
                     </div>
                 </div>
                 <div class="mt-6">
-                    <el-button type="primary" class="w-full">拨号</el-button>
+                    <el-button type="primary" class="w-full" @click="makeCall(text)">拨号</el-button>
                 </div>
             </div>
         </div>
     </home-layout>
+    <!--        弹框-->
+    <el-dialog v-model="importDialog" title="导入客户">
+        <import-customer
+            @clickAdd="receiveAddForm"
+            @clickCancelAdd="cancelAddForm"
+            :loading="loading"
+        ></import-customer>
+    </el-dialog>
 </template>
 
 <script>
 import HomeLayout from "@/Layouts/HomeLayout"
 import { InfoFilled } from '@element-plus/icons-vue'
-import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
-import { ref,h } from "vue"
-import BasicTable from '@/Pages/home/components/tables/BasicTable.vue'
-import TableOperation from "@/Pages/admin/components/tables/TableOperation";
+import {ElMessage} from 'element-plus'
+import { ref } from "vue"
+import BasicTable from '@/Pages/common/tables/BasicTable.vue'
+import TableOperation from "@/Pages/common/tables/TableOperation";
+import importCustomer from '@/Pages/home/sub/importCustomer.vue'
+
 export default {
     name: "Dashboard",
     components: {
-        InfoFilled, HomeLayout, BasicTable,TableOperation
+        importCustomer,InfoFilled, HomeLayout, BasicTable,TableOperation
     },
     setup(){
-        const {replaceStr} = require("@/lqp")
+        const {replaceStr, getCountDown, makeCall} = require("@/lqp")
+        const { ContextBox, ContextBox2 } = require("@/feedback")
         const operates = ref({
             operate: true,
             label: '操作',
@@ -103,27 +125,22 @@ export default {
         ])
         const tableTitle = ref([
             {
-                label: '公司名称',
+                label: '客户名称',
                 value: 'username',
                 show: true
             },
             {
-                label: '未接听',
+                label: '电话号码',
                 value: 'axb_number',
                 show: true
             },
             {
-                label: '已接听',
+                label: '所在地',
                 value: 'axb_number',
                 show: true
             },
             {
-                label: '时间（分）',
-                value: 'axb_number',
-                show: true
-            },
-            {
-                label: '消费金额',
+                label: '邮箱',
                 value: 'axb_number',
                 show: true
             }
@@ -132,48 +149,26 @@ export default {
             page: 1,
             limit: 8,
         })
+        const importDialog = ref(false)
+        const loading = ref(false)
+        const showTable = ref(false)
+        const time = ref(10)
+        const number = ref('13450031402')
+        const visible = ref(true)
+        const getTime = (t) => {
+            let interval = setInterval(() => {
+                    if(t === 0){
+                        clearInterval(interval)
+                    }else{
+                        t--
+                        return t
+                    }
+                },
+                1000)
+        }
         const infosDialog = () => {
-            ElNotification({
-                title: '温馨提示',
-                message: h(
-                    "div",
-                    {
-                        style:"padding: 2px;",
-                    },
-                   [
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '1、只允许拨打本公司业务电话，不允许拨打其他行业电话。'
-                       ),
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '2、拨号当中不允许出现：金融、地产相关高频行业。'
-                       ),
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '3、通话中不允许出现：代开发票、造假等违法字眼。'
-                       ),
-                       h(
-                           "div",
-                           {
-                               style: 'color: #E6A23C'
-                           },
-                           '4、不允许在通话中辱骂。'
-                       ),
-                   ]
-                ),
-                type: 'info',
-                duration: 0,
-            })
+            visible.value = false
+            ContextBox()
         }
         const getNumber = (v) => {
             if(v.text === '-'){
@@ -184,42 +179,39 @@ export default {
         }
         const handleOperation = (op, row) => {
           if (op.types === 'edit') {
-                console.log(row.value)
-                // ElMessageBox({
-                //     title: '确认删除此id=' + row.value.id + '数据吗？',
-                //     message: h('p', null, [
-                //         h('span', null, '此数据将会被'),
-                //         h('i', {style: 'color: #F56C6C'}, '删除'),
-                //     ]),
-                //     showCancelButton: true,
-                //     confirmButtonText: '删除',
-                //     cancelButtonText: '取消',
-                //     beforeClose: (action, instance, done) => {
-                //         if (action === 'confirm') {
-                //             let params = row.value.id
-                //             console.log('删除项id', params)
-                //             instance.confirmButtonLoading = true
-                //             instance.confirmButtonText = 'Loading...'
-                //             setTimeout(() => {
-                //                 done()
-                //                 setTimeout(() => {
-                //                     instance.confirmButtonLoading = false
-                //                 }, 300)
-                //             }, 3000)
-                //             // todo
-                //         } else {
-                //             done()
-                //         }
-                //     },
-                // }).then(() => {
-                //     ElMessage({
-                //         type: 'success',
-                //         message: '已删除'
-                //     })
-                // })
+              text.value = row.value.axb_number
+              makeCall(text.value)
+              ContextBox2(time.value, number.value)
             }
         }
+        const receiveAddForm = (e, r) => {
+            loading.value = r
+            // 提交参数处理完成后，后台返回数据成功后，关闭加载。提示成功。刷新页面。
+            setTimeout(function () {
+                loading.value = false
+                addFormDialog.value = false
+                ElMessage({
+                    type: 'success',
+                    // message: `action: ${action}`,
+                    message: '已提交'
+                })
+                // 重载表格数据
+
+            }, 3000);
+
+        }
+        const cancelAddForm = (e) => {
+            addFormDialog.value = e
+        }
         return {
+            makeCall,
+            visible,
+            getTime,
+            showTable,
+            receiveAddForm,
+            cancelAddForm,
+            loading,
+            importDialog,
             operates,
             operations,
             handleOperation,
@@ -229,9 +221,12 @@ export default {
             numberList,
             tableTitle,
             params,
-            replaceStr
+            replaceStr,
+            getCountDown,
+            time,
+            number
         }
-    }
+    },
 }
 </script>
 

@@ -13,36 +13,22 @@
                         <basic-table
                             :tableTitle="tableTitle"
                             :operates="operates"
-                            :selectionType="true"
-                            :pagination="true"
-                            :buttonGroups="true"
                             :where="params"
                             :url="'getHistoryList'"
                             :exportName="exportName"
                             :isTest="isTest"
                             :status="status"
-                            :specialNumber="specialNumber"
-                            :specialUser="specialUser"
                             :loading="loading"
                             :openAccountSlot="true"
                             @getIsTest="getIsTest"
                             @getStatus="getStatus"
                             @dialogUserList="dialogUserList"
                         >
-                            <template v-slot:openAccount="scope">
+                            <template v-slot:openAccountSlot="scope">
                                 <div>
                                     <el-button type="primary" @click="addFormDialog = true">开通账户</el-button>
                                     <span class="pl-2 text-gray-400">注：点击'已开通用户'列可查看用户列表内容</span>
                                 </div>
-                            </template>
-                            <template v-slot:specialNumber="scope">
-                                <el-icon>
-                                    <phone color="#409EFC"/>
-                                </el-icon>
-                                <span class="">{{ scope.scope.row.called_number }}</span>
-                            </template>
-                            <template v-slot:specialUser="scope">
-                                <span class="text-brand">{{ scope.scope.row.user_id }}</span>
                             </template>
                             <template v-slot:IsTest="scope">
                                 <span
@@ -89,13 +75,12 @@
 <script>
 import CompanyLayout from "@/Layouts/CompanyLayout";
 import SearchForm from "@/Pages/company/components/forms/searchForm.vue";
-import BasicTable from '@/Pages/company/components/tables/BasicTable.vue';
-import TableOperation from "@/Pages/company/components/tables/TableOperation";
-import ButtonGroup from '@/Pages/company/components/buttons/ButtonGroup.vue';
-import PrintTable from '@/Pages/company/components/tables/PrintTable.vue'
-import AddForm from '@/Pages/company/subUser/Add.vue'
-import EditForm from '@/Pages/company/subUser/Edit.vue'
-import UserTable from '@/Pages/company/subUser/List.vue'
+import BasicTable from '@/Pages/common/tables/BasicTable.vue';
+import TableOperation from "@/Pages/common/tables/TableOperation";
+import ButtonGroup from '@/Pages/common/buttons/ButtonGroup.vue';
+import AddForm from '@/Pages/company/sub/subUser/Add.vue'
+import EditForm from '@/Pages/company/sub/subUser/Edit.vue'
+import UserTable from '@/Pages/company/sub/subUser/List.vue'
 import VAsides from '@/Pages/company/vAsides/VAsides.vue'
 import {h, ref} from "vue"
 import {ElMessage, ElMessageBox} from "element-plus";
@@ -105,7 +90,7 @@ export default {
     name: "User",
     components: {
         ButtonGroup,Phone,
-        CompanyLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, PrintTable, UserTable, VAsides
+        CompanyLayout, SearchForm, BasicTable, TableOperation, EditForm, AddForm, UserTable, VAsides
     },
     setup() {
         const role = ref('user')
@@ -175,7 +160,6 @@ export default {
             operate: true,
             label: '操作',
         })
-        const specialNumber = ref('')
         const specialUser = ref('')
         const openAccount = ref('')
         const isTest = ref({
@@ -335,7 +319,6 @@ export default {
             operates,
             isTest,
             status,
-            specialNumber,
             specialUser,
             operations,
             handleOperation,
