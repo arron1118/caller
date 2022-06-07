@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CallHistory;
-use Illuminate\Http\Request;
+use App\Models\Config as SiteConfig;
+use App\Http\Requests\StoreConfigRequest;
+use App\Http\Requests\UpdateConfigRequest;
+use Inertia\Inertia;
 
-class CallHistoryController extends Controller
+class ConfigController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index()
     {
+
+        $list = SiteConfig::get();
+        return Inertia::render('admin/Settings', [
+            'config' => SiteConfig::get()
+        ]);
     }
 
     /**
@@ -29,10 +34,10 @@ class CallHistoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreConfigRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreConfigRequest $request)
     {
         //
     }
@@ -40,10 +45,10 @@ class CallHistoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CallHistory  $callHistory
+     * @param  \App\Models\Config  $config
      * @return \Illuminate\Http\Response
      */
-    public function show(CallHistory $callHistory)
+    public function show(Config $config)
     {
         //
     }
@@ -51,10 +56,10 @@ class CallHistoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\CallHistory  $callHistory
+     * @param  \App\Models\Config  $config
      * @return \Illuminate\Http\Response
      */
-    public function edit(CallHistory $callHistory)
+    public function edit(Config $config)
     {
         //
     }
@@ -62,11 +67,11 @@ class CallHistoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CallHistory  $callHistory
+     * @param  \App\Http\Requests\UpdateConfigRequest  $request
+     * @param  \App\Models\Config  $config
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CallHistory $callHistory)
+    public function update(UpdateConfigRequest $request, Config $config)
     {
         //
     }
@@ -74,10 +79,10 @@ class CallHistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\CallHistory  $callHistory
+     * @param  \App\Models\Config  $config
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CallHistory $callHistory)
+    public function destroy(Config $config)
     {
         //
     }

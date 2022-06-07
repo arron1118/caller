@@ -11,6 +11,9 @@ export default {
     name: "Settings",
     components: {
         AdminLayout,
+    },
+    mounted() {
+        console.log(this.$page.props.config)
     }
 }
 </script>

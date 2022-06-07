@@ -40,7 +40,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'site' => [
                 'siteName' => Config::get('app.name'),
-                'logo' => '/img/logo.png'
+                'logo' => '/img/logo.png',
             ],
             'menus' => Config::get('menu')
         ]);
